@@ -3,7 +3,7 @@ On this website, you can find the companion material for the paper "Virtual Assi
 This website is produced directly from the project’s github repository. 
 
 ## About Project Rosie
-Project Rosie is set to study in depth how families with young children (aged 3 - 8 years) adopt, use, and eventually trust virtual assistants that are installed on smart speakers, like Google Home Nest or Amazon Echo, in their home. 
+[Project Rosie](https://www.uva.nl/en/shared-content/faculteiten/en/faculteit-der-maatschappij-en-gedragswetenschappen/news/2020/05/in-rosie-we-trust%E2%80%A6how-are-families-using-virtual-assistants.html) is set to study in depth how families with young children (aged 3 - 8 years) adopt, use, and eventually trust virtual assistants that are installed on smart speakers, like Google Home Nest or Amazon Echo, in their home. 
 
 ## Preregistration
 [Here](https://osf.io/pmwud/?view_only=aaa1b70f0f75468388c8f50e2fed508f) you can find the prergistratration plans for the two surveys that form the first part of project Rosie looking into families' individual characteristics that potentially influence their decision (not) to adopt and continue using a vitual assistant in their home.
