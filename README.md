@@ -11,45 +11,22 @@ Project Rosie is set to study in depth how families with young children (aged 3 
 ## Analyses
 In what follows, you can find the analysis steps and respective R code that was used to answer the research question. Since this study holds datasets of two related but different surveys, the same set of analyses, if not mentioned otherwise, was performed on both datasets separately. 
 
-### Survey 1
+### Data Cleaning
 
-#### Data Cleaning
+### Filtering Participants
 
-#### Filtering Participants
+### Missingness
 
-#### Missingness
+### Descriptives
 
-#### Descriptives
+### Associations
 
-#### Associations
+### Preregistered Analyses
 
-#### Preregistered Analyses
+#### Framework Method: Domestication (Domestication theory)
 
-##### Latent Class Analysis
+#### Latent Class Analysis: Individual differencs (DSMM)
 
-##### Structural Equation Modelling
+#### Structural Equation Modelling: Technology acceptance (TAM + U&G)
 
-#### Exploratory Analyses
-
-### Survey 2
-
-#### Data Cleaning
-
-#### Filtering Participants
-
-#### Missingness
-
-#### Descriptives
-
-#### Associations
-
-#### Preregistered Analyses
-
-##### Latent Class Analysis
-
-##### Structural Equation Modelling
-
-##### Framework Method
-
-#### Exploratory Analyses
-
+### Exploratory Analyses
