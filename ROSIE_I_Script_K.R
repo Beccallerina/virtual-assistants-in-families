@@ -1,12 +1,11 @@
-#..............................................#
-#          ROSIE STUDY I (FYP) SCRIPT          #  
-#..............................................#
 
-###############################################################################################################
+#---------------------------------------------------#
+### ROSIE STUDY I (FYP) SCRIPT ######################
+#---------------------------------------------------#
 
-#.................................... .#
-#          PRE-SETTINGS                #  
-#.................................... .#
+#----------------------------------------#
+### PRE-SETTING ##########################
+#----------------------------------------#
 
  #setting the working directory
  setwd('/Users/rebeccawald/Desktop/ROSIE_surfdrive/Project ROSIE/Study_1/Analysis/Datasets/HumaneAIROSIE')
@@ -18,7 +17,6 @@
  options(scipen = 20)
   
  #reading data file
- install.packages("foreign")
  library(foreign)
  data <- read.spss('244408473_clientfile.sav', to.data.frame=TRUE, use.value.labels = FALSE)
  View(data)
@@ -33,23 +31,24 @@
  citation("pastecs") #Philippe Grosjean and Frederic Ibanez (2018). pastecs: Package for Analysis of Space-Time Ecological Series. R package version 1.3.21. https://CRAN.R-project.org/package=pastecs
  citation("psych") #Revelle, W. (2020) psych: Procedures for Personality and Psychological Research, Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 2.0.12,.
   
-###----------------------------------------------------------------------------------------------------------------###    
-  
-#........................................#
-#          DATA MANAGEMENT               #  
-#........................................#
+#----------------------------------------------------------------------------------------------------------------#    
+ 
+#--------------------------------------------#
+### DATA MANAGEMENT ##########################
+#--------------------------------------------#
 
-  ##########################################################################
+#------------------------------# 
   #Merging datasets
   #Getting overview
   #Identifying Rosie target group
   #Data cleaning
   #Inspecting missingness
-  ########################################################################## 
+#------------------------------#  
   
-  #####################################################
-  ### MERGING DATASETS ################################
-  #####################################################
+
+#---------------------------------------------#
+### MERGING DATASETS ##########################
+#---------------------------------------------#
   
   #***If we end up merging datasets:
   
@@ -60,12 +59,13 @@
   rbind(Kantar, DigSocAdopters)
   #View(data_all) 
   
- #----------------------------------------------------------------------#
- #       CONTINUE WITH COMBINED DATASET IF APPLICABLE
+#----------------------------------------------------------------------#
+#       CONTINUE WITH COMBINED DATASET IF APPLICABLE
  
-  #####################################################
-  ### GETTING OVERVIEW ################################
-  #####################################################
+ 
+#---------------------------------------------#
+### GETTING OVERVIEW ##########################
+#---------------------------------------------#
 
   #getting variable names and index numbers of total dataset
   names(data)
@@ -171,13 +171,13 @@
    #[169] "Q26_3"             "STATUS"            "PERSONEN"          "SOCIALEKLASSE2016" "GSL"               "LFT" 
    
    
-   #----------------------------------------------------------------------#
-   #       CONTINUE WITH REDUCED DATASET
+#----------------------------------------------------------------------#
+#       CONTINUE WITH REDUCED DATASET
    
    
-   #####################################################
-   ### ROSIE TARGET GROUP ##############################
-   #####################################################
+#-----------------------------------------------#
+### ROSIE TARGET GROUP ##########################
+#-----------------------------------------------#
    
    #renaming variables
    library(dplyr)
@@ -314,12 +314,12 @@
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Gender != 0 & STATUS == 1)
    View(rosie_dataset_renamed_families_complete)
    
-   #----------------------------------------------------------------------#
-   #       CONTINUE WITH FILTERED DATASET
+#----------------------------------------------------------------------#
+#       CONTINUE WITH FILTERED DATASET
    
-   #####################################################
-   ### DATA CLEANING ###################################
-   #####################################################
+#------------------------------------------#
+### DATA CLEANING ##########################
+#------------------------------------------#
   
   #make sure the following variables are coded as explicit factors:
     #Q4 IoT_Usage
@@ -403,21 +403,21 @@
         #Co-usage and child-usage (meaning meaning >= 2 for ICU_togetehrwithchild & >= 2 for ICU_childindividually) => 4
         
         #THIS SYNTAX IS NOT WORKING PROPERLY (YET), MAYBE FIX THIS LATER?
-        library(dplyr)
-        rosie_dataset_renamed_families_complete$ICU_groups <- rosie_dataset_renamed_families_complete[c(177:178)] %>% mutate(group = case_when(
-          ICU_togetherwithchild >= 2 & ICU_childindividually == 1 ~ "1", 
-          ICU_togetherwithchild == 1 & ICU_childindividually >= 2 ~ "2", 
-          ICU_togetherwithchild == 1 & ICU_childindividually == 1 ~ "3",
-          ICU_togetherwithchild >= 2 & ICU_childindividually >= 2 ~ "4"))
-        rosie_dataset_renamed_families_complete$ICU_groups
-        View(rosie_dataset_renamed_families_complete)
+        #library(dplyr)
+        #rosie_dataset_renamed_families_complete$ICU_groups <- rosie_dataset_renamed_families_complete[c(177:178)] %>% mutate(group = case_when(
+        #  ICU_togetherwithchild >= 2 & ICU_childindividually == 1 ~ "1", 
+        #  ICU_togetherwithchild == 1 & ICU_childindividually >= 2 ~ "2", 
+        #  ICU_togetherwithchild == 1 & ICU_childindividually == 1 ~ "3",
+        #  ICU_togetherwithchild >= 2 & ICU_childindividually >= 2 ~ "4"))
+        #rosie_dataset_renamed_families_complete$ICU_groups
+        #View(rosie_dataset_renamed_families_complete)
         
-        is.factor(rosie_dataset_renamed_families_complete$ICU_groups.group)
-        as.factor(rosie_dataset_renamed_families_complete$ICU_groups.group)
-        is.factor(rosie_dataset_renamed_families_complete$ICU_groups.group)
+        #is.factor(rosie_dataset_renamed_families_complete$ICU_groups.group)
+        #as.factor(rosie_dataset_renamed_families_complete$ICU_groups.group)
+        #is.factor(rosie_dataset_renamed_families_complete$ICU_groups.group)
         
-  #----------------------------------------------------------------------#
-  #       CONTINUE WITH CLEANED DATASET
+#----------------------------------------------------------------------#
+#       CONTINUE WITH CLEANED DATASET
   
   View(rosie_dataset_renamed_families_complete)
   
@@ -457,9 +457,9 @@
   #[175] "PE"                    "SHL"                   "ICU_togetherwithchild" "ICU_childindividually" "ICU_groups"           
   
   
-  ###########################################
-  ### DESCRIPTIVES ##########################
-  ###########################################
+#-----------------------------------------#
+### DESCRIPTIVES ##########################
+#-----------------------------------------#
   
   
   #taking a first numerical look
@@ -533,11 +533,21 @@
   
   #more descriptives on our DV-levels
   hist(rosie$ICU_togetherwithchild)
-  hist(rosie$ICU_childindividually)
+  mean(rosie$ICU_togetherwithchild) # 3.34153
+  describe(rosie$ICU_togetherwithchild)
+  #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
+  #X1    1 183 3.34 1.45      4    3.35 1.48   1   6     5 -0.18     -0.9 0.11
   
-  #####################################################
-  ### INSPECTING MISSINGNESS ##########################
-  #####################################################
+  hist(rosie$ICU_childindividually)
+  mean(rosie$ICU_childindividually, na.rm=T) # 3.214286
+  describe(rosie$ICU_childindividually, na.rm=T)
+  #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
+  #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
+  
+  
+#---------------------------------------------------#
+### INSPECTING MISSINGNESS ##########################
+#---------------------------------------------------#
   
   #Where are missing values?
   complete.cases(rosie[c(93:104, 122:126, 143:178)])
@@ -571,15 +581,15 @@
         # >> for some reason this participant has NAs for SS_childusage 
   
 
-###----------------------------------------------------------------------------------------------------------------###
+#----------------------------------------------------------------------------------------------------------------#
   
-#............................................#
-#          CHECKING MEASUREMENTS             #  
-#............................................#
+#------------------------------------------------------#
+### CHECKING MEASUREMENTMENTS ##########################
+#------------------------------------------------------#
   
-  ##########################################################################
+  #-------------------------------------------------------------------------------------#
   #Confirmatory Factor Analysis for all model variables built up of two or more items
-  #TAM_IMG and TAM_ICU only consist of one item and were therefore excluded here
+    #TAM_IMG and TAM_ICU only consist of one item and were therefore excluded here
   
     #Dispositional: 
       #Q26 TT >> 3 items
@@ -602,11 +612,11 @@
   #Extract factor scores???
   #Cronbach's Alpha
   
-  ##########################################################################
+#-------------------------------------------------------------------------------------#
   
-  ###############################################################
-  ### CFA (Measurement model) ####################################
-  ##############################################################
+#---------------------------------------------------#
+### CFA (Measurement model)##########################
+#---------------------------------------------------#
   
   #https://stats.idre.ucla.edu/r/seminars/rcfa/ 
   #https://stats.idre.ucla.edu/wp-content/uploads/2020/02/cfa.r
@@ -1648,7 +1658,7 @@
                 #IL_4  0.906       
                 #IL_5  0.601       
                 
-                #MR2   MR1
+                #                 MR2   MR1
                 #SS loadings    1.594 1.330
                 #Proportion Var 0.319 0.266
                 #Cumulative Var 0.319 0.585
@@ -1688,18 +1698,6 @@
           #Q26 TT >> 3 items
           TT <- rosie[, c(167:169)]
           psych::alpha(TT) ### --> 0.77
-          
-          #Q30 Child_Temp >> 3 items
-          Child_Temp <- rosie[, c(96:98)]
-          psych::alpha(Child_Temp) ### --> 0.11
-          #Warning message:
-          #  In psych::alpha(Child_Temp) :
-          #  Some items were negatively correlated with the total scale and probably 
-          #should be reversed. --> Indeed, the second item is reversed coded, with 3 indicating problematic behavior.
-          #To do this, run the function again with the 'check.keys=TRUE' option
-          
-                #Thus:
-                psych::alpha(Child_Temp, keys = c(1, -1, 1)) ### --> 0.13 NOT GOOD! Corresponding to weird model fit above and decision to look at items as three separate variables
           
           #Q32 Child_Parasocial >> 5 items
           Child_Parasocial <- rosie[, c(122:126)]
@@ -1762,34 +1760,33 @@
         
 ###----------------------------------------------------------------------------------------------------------------###
     
-#........................................#
-#          KNOWING YOUR DATA             #  
-#........................................#
+#----------------------------------------------#
+### KNOWING YOUR DATA ##########################
+#----------------------------------------------#
 
           
-##########################################################################   
+#--------------------------------------------------------------------------------#   
   #Check multivariate assumptions prior to analysis
    #multivariate normality
    #multivariate ouliers
-##########################################################################
+#--------------------------------------------------------------------------------# 
           
   #check multivariate normality
   ??pathex
   pathex_multinorm <- pathex[complete.cases(pathex),]
           
   #check univariate distributions, multivariate normality and identify multivariate outliers
-  MVpathex <- mvn(pathex_comp[, c(5,8,11:13)] mvnTest = “mardia”, multivariatePlot = “qq”, multivariateOutlierMethod = “adj”, showOutliers = T, showNewData = T)
-  library(gdtools)
-  library(MVN)
-  mvn(rosie, subset = c(96:104, 122:126, 143:169, 175:176), mvnTest = c("mardia"), covariance = TRUE, tol = 1e-25, alpha = 0.5,
-              scale = FALSE, desc = TRUE, transform = "none", R = 1000,
-              univariateTest = c("SW"),
-              univariatePlot = "qq", multivariatePlot = "qq",
-              multivariateOutlierMethod = "adj", showOutliers = FALSE, showNewData = FALSE)
-   #this syntax takes super long and crashes all the time without giving me an error, so I do not know if I did something wrong here
+  #MVpathex <- mvn(pathex_comp[, c(5,8,11:13)] mvnTest = “mardia”, multivariatePlot = “qq”, multivariateOutlierMethod = “adj”, showOutliers = T, showNewData = T)
+  #library(gdtools)
+  #library(MVN)
+  #mvn(rosie, subset = c(96:104, 122:126, 143:169, 175:176), mvnTest = c("mardia"), covariance = TRUE, tol = 1e-25, alpha = 0.5,
+  #            scale = FALSE, desc = TRUE, transform = "none", R = 1000,
+  #            univariateTest = c("SW"),
+  #            univariatePlot = "qq", multivariatePlot = "qq",
+  #            multivariateOutlierMethod = "adj", showOutliers = FALSE, showNewData = FALSE)
+  #this syntax takes super long and crashes all the time without giving me an error, so I do not know if I did something wrong here
           
    #therefore, I alternatively run a multivariate normality test using the package QuantPsyc's multi.norm function:
-   install.packages("QuantPsyc")
    library(QuantPsyc)
    mult.norm(rosie[c(96:104, 122:126, 143:169, 175:176)])$mult.test
           
@@ -1803,33 +1800,28 @@
 ###----------------------------------------------------------------------------------------------------------------###   
 
    ######### SCRIPT RUN UNTIL HERE #################
-   ######### SCRIPT RUN UNTIL HERE #################
-   ######### SCRIPT RUN UNTIL HERE #################
-   ######### SCRIPT RUN UNTIL HERE #################
-   ######### SCRIPT RUN UNTIL HERE #################
-   ######### SCRIPT RUN UNTIL HERE #################
    
-#..............................................#
-#          LATENT PROFILE ANALYSIS             #  
-#..............................................#
-          
-##########################################################################   
-   #define model
-   #fit model
-##########################################################################
+#----------------------------------------------------------#
+### LATENT PROFILE/CLASS ANALYSIS ##########################
+#----------------------------------------------------------#
+        
   
    #https://www.youtube.com/watch?v=17JRfEtte58
    
-   install.packages("tidyLPA")
-   library(tidyLPA)
+   library(tidyLPA) #for continuous indicators only, which we do not have
    library(dplyr)
    
-   #Which variables should go in the LCA?
+   View(rosie)
+   
+   #Which variables should go in the LCA? >> All individual characteristics! Those are:
    
          #Dispositional: 
          #Q26 TT >> 3 items
-         #Q30 Child_Temp >> 3 items
+         #Q30_1 Child_Temp_Extraversion
+         #Q30_2 Child_Temp_Negative_Affectivity
+         #Q30_3 Child_Temp_Effortful_Control 
          #Q32 Child_Parasocial >> 5 items
+         # SOCIALEKLASSE2016
          
          #Developmental: 
          # Child_Age
@@ -1841,30 +1833,183 @@
          #Q31 PMMS >> 6 items
 
    lpa <- rosie %>%
-     select (TT, Child_Temp, Child_Parasocial, Child_Age, Child_Gender, LFT, GSL, PMMS) %>%
-     single_imputation() %>%
-     scale()
-     estimate_profiles(1:3, variances="equal", covariances="zero")
+             select(TT_1, TT_2, TT_3,
+                     Child_Temp_Extraversion, Child_Temp_Negative_Affectivity, Child_Temp_Effortful_Control, 
+                     Child_Parasocial_1, Child_Parasocial_2, Child_Parasocial_3, Child_Parasocial_4, Child_Parasocial_5,
+                     SOCIALEKLASSE2016,
+                     Child_Age, 
+                     Child_Gender, 
+                     LFT, 
+                     GSL, 
+                     PMMS_1, PMMS_2, PMMS_3, PMMS_4, PMMS_5, PMMS_6) %>%
+             single_imputation() %>%
+             scale() %>%
+             estimate_profiles(2)
      
    
-   ### OR DO MEAN SPLITS AND CREATE CATEGORIES THAT WAY IN ORDER TO FIT THE INDICATORS IN THE LCA MODEL STRUCTURE ### 
+   ### OR DO MEANSPLITS AND CREATE CATEGORIES THAT WAY IN ORDER TO FIT THE INDICATORS IN THE LCA MODEL STRUCTURE ### 
      
-   install.packages("poLCA")
-   library(poLCA) # >> only allows categorical indicators, which we do not have, pr can/should we somehow convert them into factors?
-          
-   poLCA(cbind(TT, Child_Temp, Child_Parasocial, Child_Age, Child_Gender, LFT, GSL, PMMS, TAM_ICU_1, TAM_ICU_2, TAM_ICU_3)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
+   library(poLCA) # >> only allows categorical indicators, which we do not have. Perhaps alternative: median split method, but this approach is controversally discussed
+   
+   #mean-split factor creation for all continuous variables, which are:
+   # - TT
+   rosie$TT_1_factor[rosie$TT_1<mean(rosie$TT_1)] = 1
+   rosie$TT_1_factor[rosie$TT_1==mean(rosie$TT_1)] = 2
+   rosie$TT_1_factor[rosie$TT_1>mean(rosie$TT_1)] = 3
+   
+   rosie$TT_2_factor[rosie$TT_1<mean(rosie$TT_2)] = 1
+   rosie$TT_2_factor[rosie$TT_1==mean(rosie$TT_2)] = 2
+   rosie$TT_2_factor[rosie$TT_1>mean(rosie$TT_2)] = 3
+   
+   rosie$TT_3_factor[rosie$TT_1<mean(rosie$TT_3)] = 1
+   rosie$TT_3_factor[rosie$TT_1==mean(rosie$TT_3)] = 2
+   rosie$TT_3_factor[rosie$TT_1>mean(rosie$TT_3)] = 3
+   
+   # - Child_Temp
+   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<mean(rosie$Child_Temp_Extraversion)] = "low"
+   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion==mean(rosie$Child_Temp_Extraversion)] = "average"
+   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>mean(rosie$Child_Temp_Extraversion)] = "high"
+   
+   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity<mean(rosie$Child_Temp_Negative_Affectivity)] = "low"
+   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivityn==mean(rosie$Child_Temp_Negative_Affectivity)] = "average"
+   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity>mean(rosie$Child_Temp_Negative_Affectivity)] = "high"
+   
+   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control<mean(rosie$Child_Temp_Effortful_Control)] = "low"
+   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control==mean(rosie$Child_Temp_Effortful_Control)] = "average"
+   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control>mean(rosie$Child_Temp_Effortful_Control)] = "high"
+   
+   # - Child_Parasocial
+   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1<mean(rosie$Child_Parasocial_1)] = "low"
+   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1==mean(rosie$Child_Parasocial_1)] = "average"
+   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1>mean(rosie$Child_Parasocial_1)] = "high"
+   
+   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2<mean(rosie$Child_Parasocial_2)] = "low"
+   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2==mean(rosie$Child_Parasocial_2)] = "average"
+   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2>mean(rosie$Child_Parasocial_2)] = "high"
+   
+   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3<mean(rosie$Child_Parasocial_3)] = "low"
+   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3==mean(rosie$Child_Parasocial_3)] = "average"
+   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3>mean(rosie$Child_Parasocial_3)] = "high"
+   
+   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4<mean(rosie$Child_Parasocial_4)] = "low"
+   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4==mean(rosie$Child_Parasocial_4)] = "average"
+   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4>mean(rosie$Child_Parasocial_4)] = "high"
+   
+   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5<mean(rosie$Child_Parasocial_5)] = "low"
+   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5==mean(rosie$Child_Parasocial_5)] = "average"
+   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5>mean(rosie$Child_Parasocial_5)] = "high"
+   
+   # - Child_Age
+   rosie$Child_Age_factor[rosie$Child_Age<mean(rosie$Child_Age)] = "low"
+   rosie$Child_Age_factor[rosie$Child_Age==mean(rosie$Child_Age)] = "average"
+   rosie$Child_Age_factor[rosie$Child_Age>mean(rosie$Child_Age)] = "high"
+   
+   # - LFT
+   rosie$LFT_factor[rosie$LFT<mean(rosie$LFT)] = "low"
+   rosie$LFT_factor[rosie$LFT==mean(rosie$LFT)] = "average"
+   rosie$LFT_factor[rosie$LFT>mean(rosie$LFT)] = "high"
+   
+   # - PMMS
+   rosie$PMMS_1_factor[rosie$PMMS_1<mean(rosie$PMMS_1)] = "low"
+   rosie$PMMS_1_factor[rosie$PMMS_1==mean(rosie$PMMS_1)] = "average"
+   rosie$PMMS_1_factor[rosie$PMMS_1>mean(rosie$PMMS_1)] = "high"
+   
+   rosie$PMMS_2_factor[rosie$PMMS_2<mean(rosie$PMMS_2)] = "low"
+   rosie$PMMS_2_factor[rosie$PMMS_2==mean(rosie$PMMS_2)] = "average"
+   rosie$PMMS_2_factor[rosie$PMMS_2>mean(rosie$PMMS_2)] = "high"
+   
+   rosie$PMMS_3_factor[rosie$PMMS_3<mean(rosie$PMMS_3)] = "low"
+   rosie$PMMS_3_factor[rosie$PMMS_3==mean(rosie$PMMS_3)] = "average"
+   rosie$PMMS_3_factor[rosie$PMMS_3>mean(rosie$PMMS_3)] = "high"
+   
+   rosie$PMMS_4_factor[rosie$PMMS_4<mean(rosie$PMMS_4)] = "low"
+   rosie$PMMS_4_factor[rosie$PMMS_4==mean(rosie$PMMS_4)] = "average"
+   rosie$PMMS_4_factor[rosie$PMMS_4>mean(rosie$PMMS_4)] = "high"
+   
+   rosie$PMMS_5_factor[rosie$PMMS_5<mean(rosie$PMMS_5)] = "low"
+   rosie$PMMS_5_factor[rosie$PMMS_5==mean(rosie$PMMS_5)] = "average"
+   rosie$PMMS_5_factor[rosie$PMMS_5>mean(rosie$PMMS_5)] = "high"
+   
+   rosie$PMMS_6_factor[rosie$PMMS_6<mean(rosie$PMMS_6)] = "low"
+   rosie$PMMS_6_factor[rosie$PMMS_6==mean(rosie$PMMS_6)] = "average"
+   rosie$PMMS_6_factor[rosie$PMMS_6>mean(rosie$PMMS_6)] = "high"
+   
+   View(rosie) 
+   
+   rm(rosie)
+   is.numeric(rosie$TT_1_factor)
+   as.numeric(rosie$TT_1_factor)
+   as.numeric(rosie$TT_2_factor)
+   as.numeric(rosie$TT_3_factor)
+   
+   LCAmodel_test <- cbind(TT_1_factor, TT_2_factor, TT_3_factor)~1
+   
+   M1 <- poLCA(LCAmodel_test, data=rosie, nclass=2, graphs=TRUE, na.rm=TRUE)
+   
+   #LCA
+   LCAmodel <- cbind(TT_1_factor, TT_2_factor, TT_3_factor,
+                     Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor, 
+                     Child_Parasocial_1_factor, Child_Parasocial_2_factor, Child_Parasocial_3_factor, Child_Parasocial_4_factor, Child_Parasocial_5_factor,
+                     SOCIALEKLASSE2016,
+                     Child_Age_factor, 
+                     Child_Gender, 
+                     LFT_factor, 
+                     GSL, 
+                     PMMS_1_factor, PMMS_2_factor, PMMS_3_factor, PMMS_4_factor, PMMS_5_factor, PMMS_6_factor)~1
+   
+   M1 <- poLCA(LCAmodel, data=rosie, nclass=2, graphs=TRUE, na.rm=TRUE)
+   
+   poLCA(cbind(TT_1_factor, TT_2_factor, TT_3_factor,
+               Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor, 
+               Child_Parasocial_1_factor, Child_Parasocial_2_factor, Child_Parasocial_3_factor, Child_Parasocial_4_factor, Child_Parasocial_5_factor,
+               SOCIALEKLASSE2016,
+               Child_Age_factor, 
+               Child_Gender, 
+               LFT_factor, 
+               GSL, 
+               PMMS_1_factor, PMMS_2_factor, PMMS_3_factor, PMMS_4_factor, PMMS_5_factor, PMMS_6_factor)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
   
-   ### OR instead: depmixS4 which also allows continuous indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
    
-   install.packages("depmixS4")
+   poLCA(cbind(TT_1_factor, TT_2_factor, TT_3_factor)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
+   poLCA(cbind(Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
+   
+   is.factor(rosie$TT_1_factor)
+   
+   is.factor(rosie$GSL)
+   summary(rosie$GSL)
+   as.factor(rosie$GSL)
+   summary(rosie$GSL)
+   
+   ### OR instead: depmixS4 which also allows continuous and categorical indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
+   
    library(depmixS4)
+   install.packages("stats")
+   library(stats)
   
    #define model     
-   ?mix
-   model_definition <- mix(list(TT ~ 1, Child_Temp ~ 1, Child_Parasocial ~ 1, Child_Age ~ 1, Child_Gender ~ 1, GSL ~ 1, LFT ~ 1, PMMS ~ 1, TAM_ICU ~ 1),
+   ??mix
+   model_definition <- depmix(list(TT_1 ~ 1, TT_2 ~ 1, TT_3 ~ 1, 
+                                Child_Temp_Extraversion ~ 1, Child_Temp_Negative_Affectivity ~ 1, Child_Temp_Effortful_Control ~ 1,
+                                Child_Parasocial_1 ~ 1, Child_Parasocial_2 ~ 1, Child_Parasocial_3 ~ 1, Child_Parasocial_4 ~ 1, Child_Parasocial_5 ~ 1,
+                                SOCIALEKLASSE2016 ~ 1,
+                                Child_Age ~ 1, 
+                                Child_Gender ~ 1, 
+                                GSL ~ 1, 
+                                LFT ~ 1, 
+                                PMMS_1 ~ 1, PMMS_2 ~ 1, PMMS_3 ~ 1, PMMS_4 ~ 1, PMMS_5 ~ 1, PMMS_6 ~ 1),
                            data = rosie, nstates = 2, 
-                           family = list(gaussian(), multinomial(),multinomial(),multinomial(),multinomial(),multinomial(),multinomial(),multinomial(),multinomial())
-                           respstart = respstart, instart = instart)
+                           family = list(Gamma(),Gamma(),Gamma(),
+                                         Gamma(),Gamma(),Gamma(),
+                                         Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),
+                                         poisson(),
+                                         Gamma(),
+                                         poisson(),
+                                         poisson(),
+                                         Gamma(),
+                                         Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),Gamma()),
+                           respstart=runif(44))
+   
+   ?depmixS4::GLMresponse
    
    #fit model       
    fit.mod <- fit(model_definition)   # Fit the model
@@ -1874,9 +2019,9 @@
 
 ###----------------------------------------------------------------------------------------------------------------###      
       
-#.....................................................#
-#          UNDERLYING ANALYSES FOR SEM                #  
-#.....................................................#   
+#------------------------------------------------------#
+### STRUCTURAL EQUATION MODEL ##########################
+#------------------------------------------------------#
       
       #CHI-SQUARE
       install.packages("gmodels")
@@ -1902,10 +2047,7 @@
       #add standardized residuals to the data frame
       dataSet$NameOfVariableThatShowsStandardizedResiduals <- rstandard(NameOfModel)
       
-#.............................#
-#          SEM                #  
-#.............................#
-      
+
       install.packages("lavaan", dependencies = T)
       install.packages("MVN", dependencies = T)
       library(lavaan)
@@ -1953,12 +2095,22 @@
           #adding modification indices
           summary(fit, modindices = TRUE)
       
-      
+###----------------------------------------------------------------------------------------------------------------###
+          
+#------------------------------------------------#
+### MODEL VISUALIZATION ##########################
+#------------------------------------------------#
+          
+### SemPaths Model Visualization ###
+          
+    semPaths(fit_final, what = "col", "std", layout = "tree", rotation = 2, 
+                   intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
+                   edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
 ###----------------------------------------------------------------------------------------------------------------###
 
-#................................................#
-#          LATENT VARIABLE ANALYSIS              #  
-#................................................#      
+#----------------------------------------------------------#
+### OTHER POTENTIALLY USEFUL CODE ##########################
+#----------------------------------------------------------#
 
       
       #testing a three factor model
@@ -2042,14 +2194,3 @@
       summary(ho_f_model_lavaan_fit, standardized = T, fit.measures = T)
       
       
-###----------------------------------------------------------------------------------------------------------------###
-
-#............................................#
-#          MODEL VISUALIZATION               #  
-#............................................#
-      
-      ### SemPaths Model Visualization ###
-      
-      semPaths(fit_final, what = "col", "std", layout = "tree", rotation = 2, 
-               intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
-               edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
