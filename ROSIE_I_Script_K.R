@@ -1857,82 +1857,82 @@
    rosie$TT_1_factor[rosie$TT_1==mean(rosie$TT_1)] = 2
    rosie$TT_1_factor[rosie$TT_1>mean(rosie$TT_1)] = 3
    
-   rosie$TT_2_factor[rosie$TT_1<mean(rosie$TT_2)] = 1
-   rosie$TT_2_factor[rosie$TT_1==mean(rosie$TT_2)] = 2
-   rosie$TT_2_factor[rosie$TT_1>mean(rosie$TT_2)] = 3
+   rosie$TT_2_factor[rosie$TT_2<mean(rosie$TT_2)] = 1
+   rosie$TT_2_factor[rosie$TT_2==mean(rosie$TT_2)] = 2
+   rosie$TT_2_factor[rosie$TT_2>mean(rosie$TT_2)] = 3
    
-   rosie$TT_3_factor[rosie$TT_1<mean(rosie$TT_3)] = 1
-   rosie$TT_3_factor[rosie$TT_1==mean(rosie$TT_3)] = 2
-   rosie$TT_3_factor[rosie$TT_1>mean(rosie$TT_3)] = 3
+   rosie$TT_3_factor[rosie$TT_3<mean(rosie$TT_3)] = 1
+   rosie$TT_3_factor[rosie$TT_3==mean(rosie$TT_3)] = 2
+   rosie$TT_3_factor[rosie$TT_3>mean(rosie$TT_3)] = 3
    
    # - Child_Temp
-   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<mean(rosie$Child_Temp_Extraversion)] = "low"
-   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion==mean(rosie$Child_Temp_Extraversion)] = "average"
-   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>mean(rosie$Child_Temp_Extraversion)] = "high"
+   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<mean(rosie$Child_Temp_Extraversion)] = 1
+   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion==mean(rosie$Child_Temp_Extraversion)] = 2
+   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>mean(rosie$Child_Temp_Extraversion)] = 3
    
-   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity<mean(rosie$Child_Temp_Negative_Affectivity)] = "low"
-   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivityn==mean(rosie$Child_Temp_Negative_Affectivity)] = "average"
-   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity>mean(rosie$Child_Temp_Negative_Affectivity)] = "high"
+   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity<mean(rosie$Child_Temp_Negative_Affectivity)] = 1
+   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivityn==mean(rosie$Child_Temp_Negative_Affectivity)] = 2
+   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity>mean(rosie$Child_Temp_Negative_Affectivity)] = 3
    
-   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control<mean(rosie$Child_Temp_Effortful_Control)] = "low"
-   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control==mean(rosie$Child_Temp_Effortful_Control)] = "average"
-   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control>mean(rosie$Child_Temp_Effortful_Control)] = "high"
+   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control<mean(rosie$Child_Temp_Effortful_Control)] = 1
+   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control==mean(rosie$Child_Temp_Effortful_Control)] = 2
+   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control>mean(rosie$Child_Temp_Effortful_Control)] = 3
    
    # - Child_Parasocial
-   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1<mean(rosie$Child_Parasocial_1)] = "low"
-   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1==mean(rosie$Child_Parasocial_1)] = "average"
-   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1>mean(rosie$Child_Parasocial_1)] = "high"
+   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1<mean(rosie$Child_Parasocial_1)] = 1
+   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1==mean(rosie$Child_Parasocial_1)] = 2
+   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1>mean(rosie$Child_Parasocial_1)] = 3
    
-   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2<mean(rosie$Child_Parasocial_2)] = "low"
-   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2==mean(rosie$Child_Parasocial_2)] = "average"
-   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2>mean(rosie$Child_Parasocial_2)] = "high"
+   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2<mean(rosie$Child_Parasocial_2)] = 1
+   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2==mean(rosie$Child_Parasocial_2)] = 2
+   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2>mean(rosie$Child_Parasocial_2)] = 3
    
-   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3<mean(rosie$Child_Parasocial_3)] = "low"
-   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3==mean(rosie$Child_Parasocial_3)] = "average"
-   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3>mean(rosie$Child_Parasocial_3)] = "high"
+   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3<mean(rosie$Child_Parasocial_3)] = 1
+   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3==mean(rosie$Child_Parasocial_3)] = 2
+   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3>mean(rosie$Child_Parasocial_3)] = 3
    
-   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4<mean(rosie$Child_Parasocial_4)] = "low"
-   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4==mean(rosie$Child_Parasocial_4)] = "average"
-   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4>mean(rosie$Child_Parasocial_4)] = "high"
+   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4<mean(rosie$Child_Parasocial_4)] = 1
+   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4==mean(rosie$Child_Parasocial_4)] = 2
+   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4>mean(rosie$Child_Parasocial_4)] = 3
    
-   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5<mean(rosie$Child_Parasocial_5)] = "low"
-   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5==mean(rosie$Child_Parasocial_5)] = "average"
-   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5>mean(rosie$Child_Parasocial_5)] = "high"
+   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5<mean(rosie$Child_Parasocial_5)] = 1
+   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5==mean(rosie$Child_Parasocial_5)] = 2
+   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5>mean(rosie$Child_Parasocial_5)] = 3
    
    # - Child_Age
-   rosie$Child_Age_factor[rosie$Child_Age<mean(rosie$Child_Age)] = "low"
-   rosie$Child_Age_factor[rosie$Child_Age==mean(rosie$Child_Age)] = "average"
-   rosie$Child_Age_factor[rosie$Child_Age>mean(rosie$Child_Age)] = "high"
+   rosie$Child_Age_factor[rosie$Child_Age<mean(rosie$Child_Age)] = 1
+   rosie$Child_Age_factor[rosie$Child_Age==mean(rosie$Child_Age)] = 2
+   rosie$Child_Age_factor[rosie$Child_Age>mean(rosie$Child_Age)] = 3
    
    # - LFT
-   rosie$LFT_factor[rosie$LFT<mean(rosie$LFT)] = "low"
-   rosie$LFT_factor[rosie$LFT==mean(rosie$LFT)] = "average"
-   rosie$LFT_factor[rosie$LFT>mean(rosie$LFT)] = "high"
+   rosie$LFT_factor[rosie$LFT<mean(rosie$LFT)] = 1
+   rosie$LFT_factor[rosie$LFT==mean(rosie$LFT)] = 2
+   rosie$LFT_factor[rosie$LFT>mean(rosie$LFT)] = 3
    
    # - PMMS
-   rosie$PMMS_1_factor[rosie$PMMS_1<mean(rosie$PMMS_1)] = "low"
-   rosie$PMMS_1_factor[rosie$PMMS_1==mean(rosie$PMMS_1)] = "average"
-   rosie$PMMS_1_factor[rosie$PMMS_1>mean(rosie$PMMS_1)] = "high"
+   rosie$PMMS_1_factor[rosie$PMMS_1<mean(rosie$PMMS_1)] = 1
+   rosie$PMMS_1_factor[rosie$PMMS_1==mean(rosie$PMMS_1)] = 2
+   rosie$PMMS_1_factor[rosie$PMMS_1>mean(rosie$PMMS_1)] = 3
    
-   rosie$PMMS_2_factor[rosie$PMMS_2<mean(rosie$PMMS_2)] = "low"
-   rosie$PMMS_2_factor[rosie$PMMS_2==mean(rosie$PMMS_2)] = "average"
-   rosie$PMMS_2_factor[rosie$PMMS_2>mean(rosie$PMMS_2)] = "high"
+   rosie$PMMS_2_factor[rosie$PMMS_2<mean(rosie$PMMS_2)] = 1
+   rosie$PMMS_2_factor[rosie$PMMS_2==mean(rosie$PMMS_2)] = 2
+   rosie$PMMS_2_factor[rosie$PMMS_2>mean(rosie$PMMS_2)] = 3
    
-   rosie$PMMS_3_factor[rosie$PMMS_3<mean(rosie$PMMS_3)] = "low"
-   rosie$PMMS_3_factor[rosie$PMMS_3==mean(rosie$PMMS_3)] = "average"
-   rosie$PMMS_3_factor[rosie$PMMS_3>mean(rosie$PMMS_3)] = "high"
+   rosie$PMMS_3_factor[rosie$PMMS_3<mean(rosie$PMMS_3)] = 1
+   rosie$PMMS_3_factor[rosie$PMMS_3==mean(rosie$PMMS_3)] = 2
+   rosie$PMMS_3_factor[rosie$PMMS_3>mean(rosie$PMMS_3)] = 3
    
-   rosie$PMMS_4_factor[rosie$PMMS_4<mean(rosie$PMMS_4)] = "low"
-   rosie$PMMS_4_factor[rosie$PMMS_4==mean(rosie$PMMS_4)] = "average"
-   rosie$PMMS_4_factor[rosie$PMMS_4>mean(rosie$PMMS_4)] = "high"
+   rosie$PMMS_4_factor[rosie$PMMS_4<mean(rosie$PMMS_4)] = 1
+   rosie$PMMS_4_factor[rosie$PMMS_4==mean(rosie$PMMS_4)] = 2
+   rosie$PMMS_4_factor[rosie$PMMS_4>mean(rosie$PMMS_4)] = 3
    
-   rosie$PMMS_5_factor[rosie$PMMS_5<mean(rosie$PMMS_5)] = "low"
-   rosie$PMMS_5_factor[rosie$PMMS_5==mean(rosie$PMMS_5)] = "average"
-   rosie$PMMS_5_factor[rosie$PMMS_5>mean(rosie$PMMS_5)] = "high"
+   rosie$PMMS_5_factor[rosie$PMMS_5<mean(rosie$PMMS_5)] = 1
+   rosie$PMMS_5_factor[rosie$PMMS_5==mean(rosie$PMMS_5)] = 2
+   rosie$PMMS_5_factor[rosie$PMMS_5>mean(rosie$PMMS_5)] = 3
    
-   rosie$PMMS_6_factor[rosie$PMMS_6<mean(rosie$PMMS_6)] = "low"
-   rosie$PMMS_6_factor[rosie$PMMS_6==mean(rosie$PMMS_6)] = "average"
-   rosie$PMMS_6_factor[rosie$PMMS_6>mean(rosie$PMMS_6)] = "high"
+   rosie$PMMS_6_factor[rosie$PMMS_6<mean(rosie$PMMS_6)] = 1
+   rosie$PMMS_6_factor[rosie$PMMS_6==mean(rosie$PMMS_6)] = 2
+   rosie$PMMS_6_factor[rosie$PMMS_6>mean(rosie$PMMS_6)] = 3
    
    View(rosie) 
    
@@ -1944,7 +1944,7 @@
    
    LCAmodel_test <- cbind(TT_1_factor, TT_2_factor, TT_3_factor)~1
    
-   M1 <- poLCA(LCAmodel_test, data=rosie, nclass=2, graphs=TRUE, na.rm=TRUE)
+   M1 <- poLCA(LCAmodel_test, data=rosie, nclass=3, graphs=TRUE, na.rm=TRUE)
    
    #LCA
    LCAmodel <- cbind(TT_1_factor, TT_2_factor, TT_3_factor,
@@ -1957,28 +1957,9 @@
                      GSL, 
                      PMMS_1_factor, PMMS_2_factor, PMMS_3_factor, PMMS_4_factor, PMMS_5_factor, PMMS_6_factor)~1
    
-   M1 <- poLCA(LCAmodel, data=rosie, nclass=2, graphs=TRUE, na.rm=TRUE)
+   M_2class <- poLCA(LCAmodel, data=rosie, nclass=2, graphs=TRUE, na.rm=TRUE)
    
-   poLCA(cbind(TT_1_factor, TT_2_factor, TT_3_factor,
-               Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor, 
-               Child_Parasocial_1_factor, Child_Parasocial_2_factor, Child_Parasocial_3_factor, Child_Parasocial_4_factor, Child_Parasocial_5_factor,
-               SOCIALEKLASSE2016,
-               Child_Age_factor, 
-               Child_Gender, 
-               LFT_factor, 
-               GSL, 
-               PMMS_1_factor, PMMS_2_factor, PMMS_3_factor, PMMS_4_factor, PMMS_5_factor, PMMS_6_factor)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
-  
-   
-   poLCA(cbind(TT_1_factor, TT_2_factor, TT_3_factor)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
-   poLCA(cbind(Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor)~1, data=rosie, nclass=2, na.rm=T, graphs=T)
-   
-   is.factor(rosie$TT_1_factor)
-   
-   is.factor(rosie$GSL)
-   summary(rosie$GSL)
-   as.factor(rosie$GSL)
-   summary(rosie$GSL)
+   M_3class <- poLCA(LCAmodel, data=rosie, nclass=3, graphs=TRUE, na.rm=TRUE)
    
    ### OR instead: depmixS4 which also allows continuous and categorical indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
    
