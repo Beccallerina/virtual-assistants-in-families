@@ -46,9 +46,9 @@
 #------------------------------#  
   
 
-#---------------------------------------------#
-### MERGING DATASETS ##########################
-#---------------------------------------------#
+#-------------------------------------------------------------#
+### Only if needed: MERGING DATASETS ##########################
+#-------------------------------------------------------------#
   
   #***If we end up merging datasets:
   
@@ -56,7 +56,7 @@
   #We can use the rbind() function to stack data frames. Make sure the number of 
   #columns match. Also, the names and classes of values being joined must match.
   #Here we stack the first, the second and then the first again:
-  rbind(Kantar, DigSocAdopters)
+  #rbind(Kantar, DigSocAdopters)
   #View(data_all) 
   
 #----------------------------------------------------------------------#
@@ -69,48 +69,7 @@
 
   #getting variable names and index numbers of total dataset
   names(data)
-  #[1] "INTNR"             [2] "INTTIME"           "STIME"             "STIME0"            "STIME1"            "STIME2"            "STIME3"            "STIME4"           
-  #[9] "STIME5"            "STIME6"            "STIME7"            "STIME8"            "STIME9"            "STIMEA"            "STIMEB"             [17]"Q3"               
-  #[17] "Q401"              "Q402"              "Q403"              "Q404"              "Q405"              "Q406"              "Q407"              "Q408"             
-  #[25] "Q409"              "Q410"              "Q411"              "Q412"              "Q413"              "Q414"              "Q415"              "Q416"             
-  #[33] "Q417"              "Q418"              "Q419"              "Q420"              "Q421"              "Q422"              "Q423"              "Q424"             
-  #[41] "Q425"              "Q4_4"              "Q4_40"             "Q4_41"             "Q4_42"             "Q4_43"             "Q4_44"             "Q4_45"            
-  #[49] "Q4_46"             "Q4_47"             "Q4_48"             "Q4_49"             "Q4_4A"             "Q4_4B"             "Q4_7"              "Q4_70"            
-  #[57] "Q4_71"             "Q4_72"             "Q4_73"             "Q4_74"             "Q4_75"             "Q4_76"             "Q4_77"             "Q4_78"            
-  #[65] "Q4_79"             "Q4_7A"             "Q4_7B"             "Q4_96"             "Q4_960"            "Q4_961"            "Q4_962"            "Q4_963"           
-  #[73] "Q4_964"            "Q4_965"            "Q4_966"            "Q4_967"            "Q4_968"            "Q4_969"            "Q4_96A"            "Q4_96B"           
-  #[81] "Q5_1"              "Q5_2"              "Q5_3"              "Q5_4"              "Q5_5"              "Q5_6"              "Q5_7"              "Q5_8"             
-  #[89] "Q5_9"              "Q5_10"             "Q5_11"             "Q6_1"              "Q6_2"              "Q6_3"              "Q6_4"              "Q6_5"             
-  #[97] "Q6_6"              "Q6_7"              "Q6_8"              "Q6_9"              "Q6_10"             "Q6_11"             "Q6_12"             "Q6_13"            
-  #[105] "Q6_14"             "Q6_15"             "Q6_16"            [108] "Q9"                "Q90"               "Q91"               "Q92"          "Q93"              
-  #[113] "Q94"               "Q95"               "Q96"               "Q97"               "Q98"               "Q99"               "Q9A"               [120] "Q9B"              
-  #[121] "Q8"                "Q28"               "Q29"               "Q30_1"             "Q30_2"             "Q30_3"             "Q31_1"             "Q31_2"            
-  #[129] "Q31_3"             "Q31_4"             "Q31_5"             "Q31_6"             "Q11_1"             "Q11_2"             "Q42_1"             "Q42_2"            
-  #[137] "Q12"               "Q120"              "Q121"              "Q122"              "Q123"              "Q124"              "Q125"              "Q126"             
-  #[145] "Q127"              "Q128"              "Q129"              "Q12A"              "Q12B"              "Q32_1"             "Q32_2"             "Q32_3"            
-  #[153] "Q32_4"             "Q32_5"             "Q13"               "Q13_96"            "Q13_90"            "Q13_91"            "Q13_92"            "Q13_93"           
-  #[161] "Q13_94"            "Q13_95"            "Q13_97"            "Q13_98"            "Q13_99"            "Q13_9A"            "Q13_9B"            "Q13_9C"           
-  #[169] "Q14"               "Q15"               "Q17_1"             "Q17_2"             "Q17_3"             "Q17_4"             "Q18_1"             "Q18_2"            
-  #[177] "Q18_3"             "Q18_4"             "Q19_1"             "Q19_2"             "Q19_3"             "Q19_4"             "Q20"               "Q21_1"            
-  #[185] "Q21_2"             "Q21_3"             "Q22_1"             "Q22_2"             "Q22_3"              [190] "Q23"               "Q25_1"             "Q25_2"            
-  #[193] "Q25_3"             "Q25_4"             "Q25_5"             "Q26_1"             "Q26_2"             "Q26_3"            [199] "Q33_1"             "Q33_2"            
-  #[201] "Q33_3"             "Q33_4"             "Q33_5"             "Q34_1"             "Q34_2"             "Q34_3"             "Q34_4"             "Q35_1"            
-  #[209] "Q35_2"             "Q35_3"             "Q36_1"             "Q36_2"             "Q36_3"             "Q36_4"             "Q37_1"             "Q37_2"            
-  #[217] "Q37_3"             "Q37_4"             "Q38_1"             "Q38_2"             "Q38_3"             "Q38_4"             "Q38_5"             "Q38_6"            
-  #[225] "Q38_7"             "Q38_8"             "Q38_9"             "Q38_10"            "Q39_1"             "Q39_2"             "Q39_3"             "Q39_4"            
-  #[233] "Q39_5"             "Q39_6"             "Q39_7"             "Q39_8"             "Q39_9"             "Q39_10"            "Q40"               "Q400"             
-  #[241] "Q40A"              "Q40B"              "Q40C"              "Q40D"              "Q40E"              "Q40F"              "Q40G"              "Q40H"             
-  #[249] "Q40I"              "Q40J"              "Q40K"              "Q41"               "Q41A"              "Q41B"              "Q41C"              "Q41D"             
-  #[257] "Q41E"              "Q41F"              "Q41G"              "Q41H"              "Q41I"              "Q41J"              "Q41K"              "Q41L"             
-  #[265] "Q43"               "Q430"              "Q431"              "Q432"              "Q433"              "Q434"              "Q435"              "Q436"             
-  #[273] "Q437"              "Q438"              "Q439"              "Q43A"              "Q43B"              "Q43_Buttons"       "V9615"             "V96150"           
-  #[281] "V96151"            "V96152"            "V96153"            "V96154"            "V96155"            "V96156"            "V96157"            "V96158"           
-  #[289] "V96159"            "V9615A"           [291] "V9615B"            "STATUS"            "PERSONEN"        [294]  "NKINDKLMOA1"       "GEZINSCYCLUS"      "INKOMENLANG"      
-  #[297] "INKOMENKORT"       "WELSTAND"          "WONING"            "TYPEHUIS"          "AUTOS"             "HKW_LB"            "GEMEENTECODE"      "CEBUCO"           
-  #[305] "COROP"             "GEMGROOTTE"        "NIELSENCBS"        "PROVINCIE"         [309] "STED_GM"           "SOCIALEKLASSE2016" "GSL"               "LFT"              
-  #[313] [313] "LFTCAT"            "OPL"               "OPL_VOLT"          "WSIT"              "INKJN"             "BEROEPSGROEP"      "WERKUREN"          "WERKURENCAT"      
-  #[321] "LEIDING"           "VAKOPL"            "BEROEPMOA1"        "HERKOMST_G1"      [325] "HERKOMST_G2"
-  
+
  #--> For Rosie we will only need the following variables: 
       #Q4 IoT_Usage >> selection out of 25 options
       #Q5 GA_Freq (for previous experience) >> selection out of 11 options
@@ -120,8 +79,8 @@
       #Q29 Child_Gender >> 1
       #Q30 Child_Temp >> 3 items
       #Q31 PMMS >> 6 items
-      #Q11 SS_co_usage >> 1 bzw. 2
-      #Q42 SS_child_usage >> 1 bzw 2
+      #Q11 SS_co_usage >> 1 bzw. 2 (with and without display)
+      #Q42 SS_child_usage >> 1 bzw. 2 (with and without display)
       #Q12 Incorporation >> 1 
       #Q32 Child_Parasocial >> 5 items
       #Q13 Location >> 1
@@ -132,12 +91,12 @@
       #Q19 TAM_E >> 4
       #Q20 TAM_IMG >> 1
       #Q21 TAM_SN >> 3
-      #Q22 TAM_ICU >> 3 (how to get one score here?)
+      #Q22 TAM_ICU >> 3 
       #Q25 IL >> 5 items
       #Q26 TT >> 3 items
       #STATUS
       #PERSONEN (for household size)
-      #SOCIALEKLASSE2016 (for SES) --> outdated???
+      #SOCIALEKLASSE2016 (for SES) 
       #GSL (for parent gender)
       #LFT (for parent age)
  
@@ -369,8 +328,10 @@
         rosie_dataset_renamed_families_complete$ICU_childindividually
         View(rosie_dataset_renamed_families_complete)
         
+        
         summary(rosie_dataset_renamed_families_complete[,c(177:178, 159:161)]) #there seems to be one NA in ICU_childindividually, this is row 74 (in R) = pp 888
         
+          #inspecting this 1 NA further  
           #create new subset df 
           rosie_ICU <- rosie_dataset_renamed_families_complete[,c(177:178, 159:161)]
           View(rosie_ICU)
@@ -402,7 +363,7 @@
         #no Co-usage and no child-usage (meaning == 1 for ICU_togetehrwithchild & == 1 for ICU_childindividually)=> 3
         #Co-usage and child-usage (meaning meaning >= 2 for ICU_togetehrwithchild & >= 2 for ICU_childindividually) => 4
         
-        #THIS SYNTAX IS NOT WORKING PROPERLY (YET), MAYBE FIX THIS LATER?
+        #THIS SYNTAX IS NOT WORKING PROPERLY (YET), MAYBE FIX THIS LATER BUT WE MIGHT NOT NEED IT
         #library(dplyr)
         #rosie_dataset_renamed_families_complete$ICU_groups <- rosie_dataset_renamed_families_complete[c(177:178)] %>% mutate(group = case_when(
         #  ICU_togetherwithchild >= 2 & ICU_childindividually == 1 ~ "1", 
@@ -460,7 +421,6 @@
 #-----------------------------------------#
 ### DESCRIPTIVES ##########################
 #-----------------------------------------#
-  
   
   #taking a first numerical look
   summary(rosie)
@@ -544,6 +504,30 @@
   #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
   #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
   
+  hist(rosie$TT_1) #faily normally distributed
+  hist(rosie$TT_2)
+  hist(rosie$TT_3)
+  
+  hist(rosie$Child_Temp_Extraversion)
+  hist(rosie$Child_Temp_Negative_Affectivity)
+  hist(rosie$Child_Temp_Effortful_Control)
+  
+  hist(rosie$Child_Parasocial_1) #strong deviation from normal distribution
+  hist(rosie$Child_Parasocial_2)
+  hist(rosie$Child_Parasocial_3)
+  hist(rosie$Child_Parasocial_4)
+  hist(rosie$Child_Parasocial_5)
+  
+  hist(rosie$PMMS_1)
+  hist(rosie$PMMS_2)
+  hist(rosie$PMMS_3)
+  hist(rosie$PMMS_4)
+  hist(rosie$PMMS_5)
+  hist(rosie$PMMS_6)
+  
+  hist(rosie$LFT) #most parents between 30-50, only very few between 60 - 80
+  hist(rosie$Child_Age) #almost equally distributed, most 8-year olds
+
   
 #---------------------------------------------------#
 ### INSPECTING MISSINGNESS ##########################
@@ -1684,8 +1668,11 @@
                 summary(twofac5items_IL, fit.measures=TRUE, standardized=TRUE) 
                 # >> fit index criteria: Chi-Square = .228 > .05, CFI = .996 > 0.95, TLI = .991 > 0.90 and RMSEA = .047 < 0.10 #VERY NICE
                 
-                
-        #MAYBE Step 4: Extract factor scores for descriptes >> Along resources from Theo (https://www.rdocumentation.org/packages/lavaan/versions/0.6-7/topics/lavPredict), but really needed? Journal of Computer sin human Behaviour 
+        
+        #----------------------------------------------#
+        ### !!! Solve the factor scores and run correlations among TAM variables ##########################
+        #----------------------------------------------#        
+        #Extract factor scores for correlations >> Along resources from Theo (https://www.rdocumentation.org/packages/lavaan/versions/0.6-7/topics/lavPredict), but really needed? Journal of Computer sin human Behaviour 
         #usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
 
         
@@ -1798,20 +1785,11 @@
    # >> Together with the non-normality detected earlier, we will run our main analyses using bottstrapping
 
 ###----------------------------------------------------------------------------------------------------------------###   
-
-   ######### SCRIPT RUN UNTIL HERE #################
    
 #----------------------------------------------------------#
 ### LATENT PROFILE/CLASS ANALYSIS ##########################
 #----------------------------------------------------------#
-        
-  
-   #https://www.youtube.com/watch?v=17JRfEtte58
-   
-   library(tidyLPA) #for continuous indicators only, which we do not have
-   library(dplyr)
-   
-   View(rosie)
+      
    
    #Which variables should go in the LCA? >> All individual characteristics! Those are:
    
@@ -1831,25 +1809,27 @@
          
          #Social: 
          #Q31 PMMS >> 6 items
-
-   lpa <- rosie %>%
-             select(TT_1, TT_2, TT_3,
-                     Child_Temp_Extraversion, Child_Temp_Negative_Affectivity, Child_Temp_Effortful_Control, 
-                     Child_Parasocial_1, Child_Parasocial_2, Child_Parasocial_3, Child_Parasocial_4, Child_Parasocial_5,
-                     SOCIALEKLASSE2016,
-                     Child_Age, 
-                     Child_Gender, 
-                     LFT, 
-                     GSL, 
-                     PMMS_1, PMMS_2, PMMS_3, PMMS_4, PMMS_5, PMMS_6) %>%
-             single_imputation() %>%
-             scale() %>%
-             estimate_profiles(2)
+  
      
+   library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
    
-   ### OR DO MEANSPLITS AND CREATE CATEGORIES THAT WAY IN ORDER TO FIT THE INDICATORS IN THE LCA MODEL STRUCTURE ### 
-     
-   library(poLCA) # >> only allows categorical indicators, which we do not have. Perhaps alternative: median split method, but this approach is controversally discussed
+         #Dispositional: 
+         #Q26 TT >> 3 items >> 
+         #Q30_1 Child_Temp_Extraversion >> 0-split method appropriate since scale went from -3 (not at all like this description to +3 exactly like this description, so all answers below 0 can be regarded as "no" while all alswers above 0 can be ragrded as "yes")
+         #Q30_2 Child_Temp_Negative_Affectivity
+         #Q30_3 Child_Temp_Effortful_Control 
+         #Q32 Child_Parasocial >> 5 items
+         # SOCIALEKLASSE2016
+         
+         #Developmental: 
+         # Child_Age
+         # Child-Gender
+         # LFT
+         # GSL
+         
+         #Social: 
+         #Q31 PMMS >> 6 items
+   
    
    #mean-split factor creation for all continuous variables, which are:
    # - TT
@@ -1936,15 +1916,6 @@
    
    View(rosie) 
    
-   rm(rosie)
-   is.numeric(rosie$TT_1_factor)
-   as.numeric(rosie$TT_1_factor)
-   as.numeric(rosie$TT_2_factor)
-   as.numeric(rosie$TT_3_factor)
-   
-   LCAmodel_test <- cbind(TT_1_factor, TT_2_factor, TT_3_factor)~1
-   
-   M1 <- poLCA(LCAmodel_test, data=rosie, nclass=3, graphs=TRUE, na.rm=TRUE)
    
    #LCA
    LCAmodel <- cbind(TT_1_factor, TT_2_factor, TT_3_factor,
@@ -1961,49 +1932,72 @@
    
    M_3class <- poLCA(LCAmodel, data=rosie, nclass=3, graphs=TRUE, na.rm=TRUE)
    
+   M_4class <- poLCA(LCAmodel, data=rosie, nclass=4, graphs=TRUE, na.rm=TRUE)
+   
+   # https://statistics.ohlsen-web.de/latent-class-analysis-polca/
+   #Since we do not have a solid theoretical assumption of the number of unobserved subpopulations (aka family types)
+   #we take an exploratory approach and compare multiple models (2-4 classes) against each other. 
+   #If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+   #Additionally one could compare the different solutions by BIC or AIC information criteria. 
+   #BIC is preferred over AIC in latent class models, but usually both are used. 
+   #A smaller BIC is better than a bigger BIC. 
+   #Next to AIC and BIC one also gets a Chi-Square goodness of fit, which one can compare.
+   
+   
    ### OR instead: depmixS4 which also allows continuous and categorical indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
    
    library(depmixS4)
-   install.packages("stats")
    library(stats)
   
    #define model     
-   ??mix
-   model_definition <- depmix(list(TT_1 ~ 1, TT_2 ~ 1, TT_3 ~ 1, 
-                                Child_Temp_Extraversion ~ 1, Child_Temp_Negative_Affectivity ~ 1, Child_Temp_Effortful_Control ~ 1,
-                                Child_Parasocial_1 ~ 1, Child_Parasocial_2 ~ 1, Child_Parasocial_3 ~ 1, Child_Parasocial_4 ~ 1, Child_Parasocial_5 ~ 1,
-                                SOCIALEKLASSE2016 ~ 1,
-                                Child_Age ~ 1, 
-                                Child_Gender ~ 1, 
-                                GSL ~ 1, 
-                                LFT ~ 1, 
-                                PMMS_1 ~ 1, PMMS_2 ~ 1, PMMS_3 ~ 1, PMMS_4 ~ 1, PMMS_5 ~ 1, PMMS_6 ~ 1),
-                           data = rosie, nstates = 2, 
-                           family = list(Gamma(),Gamma(),Gamma(),
-                                         Gamma(),Gamma(),Gamma(),
-                                         Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),
-                                         poisson(),
-                                         Gamma(),
-                                         poisson(),
-                                         poisson(),
-                                         Gamma(),
-                                         Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),Gamma()),
-                           respstart=runif(44))
+   #??mix
+   #model_definition <- depmix(list(TT_1 ~ 1, TT_2 ~ 1, TT_3 ~ 1, 
+    #                            Child_Temp_Extraversion ~ 1, Child_Temp_Negative_Affectivity ~ 1, Child_Temp_Effortful_Control ~ 1,
+    #                            Child_Parasocial_1 ~ 1, Child_Parasocial_2 ~ 1, Child_Parasocial_3 ~ 1, Child_Parasocial_4 ~ 1, Child_Parasocial_5 ~ 1,
+    #                            SOCIALEKLASSE2016 ~ 1,
+    #                            Child_Age ~ 1, 
+    #                            Child_Gender ~ 1, 
+    #                            GSL ~ 1, 
+    #                            LFT ~ 1, 
+    #                            PMMS_1 ~ 1, PMMS_2 ~ 1, PMMS_3 ~ 1, PMMS_4 ~ 1, PMMS_5 ~ 1, PMMS_6 ~ 1),
+    #                       data = rosie, nstates = 2, 
+    #                       family = list(Gamma(),Gamma(),Gamma(),
+    #                                     Gamma(),Gamma(),Gamma(),
+    #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),
+    #                                     poisson(),
+    #                                     Gamma(),
+    #                                     poisson(),
+    #                                     poisson(),
+    #                                     Gamma(),
+    #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),Gamma()),
+    #                       respstart=runif(44))
    
-   ?depmixS4::GLMresponse
+   #?depmixS4::GLMresponse
    
    #fit model       
-   fit.mod <- fit(model_definition)   # Fit the model
+   #fit.mod <- fit(model_definition)   # Fit the model
           
-   fit.mod
+   #fit.mod
           
-
+   #########  :) Script run until here #################
+   
 ###----------------------------------------------------------------------------------------------------------------###      
       
-#------------------------------------------------------#
-### STRUCTURAL EQUATION MODEL ##########################
-#------------------------------------------------------#
+#----------------------------------------------------------#
+### STRUCTURAL EQUATION MODELLING ##########################
+#----------------------------------------------------------#
       
+   #-----------------------------------------------#
+   ### SEM-POWER ANALYSIS ##########################
+   #-----------------------------------------------#
+   
+   ??simsem
+   #http://rstudio-pubs-static.s3.amazonaws.com/253855_164b16e3a9074cf9a6f3045cbe1f99ce.html 
+   
+   #--------------------------------#
+   ### SEM ##########################
+   #--------------------------------#
+   
       #CHI-SQUARE
       install.packages("gmodels")
       library(gmodels)
@@ -2016,6 +2010,21 @@
       #pairwise correlations all in one scatterplot matrix
       library(car)
       scatterplotMatrix(~Variable1+Variable2+Variable3, data = DataSet)
+      
+      #inspecting correlations of all TAM model components using the CFA-factor scores
+      rosie_correlations <- rosie[,c(143:169, 171, 175:176)] #dataset with CFA-factor scores needs to be used here
+      round(cor(rosie_correlations), 2)
+      
+            #for better visual overivew 
+            library(devtools)
+            devtools::install_github("laresbernardo/lares")
+            library(lares)
+            
+            ??corr_cross
+            corr_cross(rosie_correlations, # name of dataset
+                       max_pvalue = 0.05, # display only significant correlations (at 5% level)
+                       top = 10 # display top 10 couples of variables (by correlation coefficient)
+            )
       
       #MULTIPLE LINEAR REGRESSION (!!! use centered predictors)
       #centering predictors
