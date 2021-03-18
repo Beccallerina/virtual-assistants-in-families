@@ -30,7 +30,7 @@
  #for descriptives
  citation("pastecs") #Philippe Grosjean and Frederic Ibanez (2018). pastecs: Package for Analysis of Space-Time Ecological Series. R package version 1.3.21. https://CRAN.R-project.org/package=pastecs
  citation("psych") #Revelle, W. (2020) psych: Procedures for Personality and Psychological Research, Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 2.0.12,.
-  
+ 
 #----------------------------------------------------------------------------------------------------------------#    
  
 #--------------------------------------------#
@@ -417,116 +417,7 @@
   #[169] "TT_3"                  "STATUS"                "PERSONEN"              "SOCIALEKLASSE2016"     "GSL"                   "LFT"                  
   #[175] "PE"                    "SHL"                   "ICU_togetherwithchild" "ICU_childindividually" "ICU_groups"           
   
-  
-#-----------------------------------------#
-### DESCRIPTIVES ##########################
-#-----------------------------------------#
-  
-  #taking a first numerical look
-  summary(rosie)
-  str(rosie)
-  
-  library(pastecs)
-  stat.desc(rosie)
-  
-  library(psych)
-  describe(rosie[c(93:104, 122:126, 143:178)]) #without the last ICU_group because of their syntax error, otherwise describe function does not run
-  #                      vars   n  mean   sd median trimmed  mad  min max range  skew kurtosis   se
-  #Child_Nr                 1 183  2.36 0.55    2.0    2.28 0.00  2.0   5   3.0  1.45     2.18 0.04
-  #Child_Age                2 183  3.83 1.71    4.0    3.91 1.48  1.0   6   5.0 -0.20    -1.25 0.13
-  #Child_Gender*            3 183  1.55 0.50    2.0    1.56 0.00  1.0   2   1.0 -0.19    -1.98 0.04
-  #Child_Temp_1             4 183  5.18 1.47    6.0    5.30 1.48  1.0   7   6.0 -0.62    -0.38 0.11
-  #Child_Temp_2             5 183  3.30 1.76    3.0    3.21 1.48  1.0   7   6.0  0.29    -1.01 0.13
-  #Child_Temp_3             6 183  4.78 1.62    5.0    4.90 1.48  1.0   7   6.0 -0.53    -0.39 0.12
-  #PMMS_1                   7 183  2.93 0.78    3.0    2.99 0.00  1.0   4   3.0 -0.57     0.16 0.06
-  #PMMS_2                   8 183  3.08 0.94    3.0    3.21 1.48  1.0   4   3.0 -0.80    -0.26 0.07
-  #PMMS_3                   9 183  2.87 0.85    3.0    2.96 0.00  1.0   4   3.0 -0.66     0.00 0.06
-  #PMMS_4                  10 183  3.26 0.72    3.0    3.36 0.00  1.0   4   3.0 -0.95     1.17 0.05
-  #PMMS_5                  11 183  2.74 0.97    3.0    2.80 1.48  1.0   4   3.0 -0.41    -0.79 0.07
-  #PMMS_6                  12 183  2.95 0.80    3.0    2.99 0.00  1.0   4   3.0 -0.49    -0.12 0.06
-  #Child_Parasocial_1      13 183  1.92 1.18    1.0    1.73 0.00  1.0   5   4.0  1.00    -0.15 0.09
-  #Child_Parasocial_2      14 183  3.24 1.22    3.0    3.30 1.48  1.0   5   4.0 -0.37    -0.72 0.09
-  #Child_Parasocial_3      15 183  2.11 1.18    2.0    1.99 1.48  1.0   5   4.0  0.59    -1.00 0.09
-  #Child_Parasocial_4      16 183  1.72 1.01    1.0    1.54 0.00  1.0   5   4.0  1.26     0.70 0.07
-  #Child_Parasocial_5      17 183  1.77 1.07    1.0    1.56 0.00  1.0   5   4.0  1.23     0.44 0.08
-  #TAM_PEoU_1              18 183  5.20 1.30    5.0    5.34 1.48  1.0   7   6.0 -1.14     1.25 0.10
-  #TAM_PEoU_2              19 183  5.11 1.50    6.0    5.26 1.48  1.0   7   6.0 -0.88     0.02 0.11
-  #TAM_PEoU_3              20 183  5.36 1.37    6.0    5.54 1.48  1.0   7   6.0 -1.21     1.14 0.10
-  #TAM_PEoU_4              21 183  5.01 1.42    5.0    5.16 1.48  1.0   7   6.0 -1.01     0.54 0.11
-  #TAM_PU_1                22 183  4.16 1.57    4.0    4.24 1.48  1.0   7   6.0 -0.35    -0.59 0.12
-  #TAM_PU_2                23 183  3.88 1.57    4.0    3.95 1.48  1.0   7   6.0 -0.28    -0.68 0.12
-  #TAM_PU_3                24 183  4.32 1.61    5.0    4.46 1.48  1.0   7   6.0 -0.58    -0.47 0.12
-  #TAM_PU_4                25 183  4.76 1.44    5.0    4.86 1.48  1.0   7   6.0 -0.68     0.08 0.11
-  #TAM_E_1                 26 183  5.07 1.38    5.0    5.20 1.48  1.0   7   6.0 -1.00     0.87 0.10
-  #TAM_E_2                 27 183  5.14 1.34    5.0    5.28 1.48  1.0   7   6.0 -1.09     1.22 0.10
-  #TAM_E_3                 28 183  5.26 1.35    5.0    5.41 1.48  1.0   7   6.0 -1.18     1.67 0.10
-  #TAM_E_4                 29 183  4.50 1.48    5.0    4.63 1.48  1.0   7   6.0 -0.62    -0.09 0.11
-  #TAM_IMG                 30 183  3.63 1.90    4.0    3.50 1.48  1.0   8   7.0  0.44    -0.35 0.14
-  #TAM_SN_1                31 183  2.69 1.64    2.0    2.50 1.48  1.0   7   6.0  0.60    -0.64 0.12
-  #TAM_SN_2                32 183  2.74 1.69    2.0    2.57 1.48  1.0   7   6.0  0.59    -0.83 0.13
-  #TAM_SN_3                33 183  3.21 1.82    3.0    3.10 2.97  1.0   7   6.0  0.27    -1.11 0.13
-  #TAM_ICU_1               34 183  3.40 1.72    3.0    3.33 1.48  1.0   7   6.0  0.36    -0.92 0.13
-  #TAM_ICU_2               35 183  5.30 1.37    6.0    5.46 1.48  1.0   7   6.0 -1.13     1.20 0.10
-  #TAM_ICU_3               36 183  4.44 1.78    5.0    4.56 1.48  1.0   7   6.0 -0.51    -0.84 0.13
-  #IL_1                    37 183  2.19 1.39    2.0    1.93 1.48  1.0   7   6.0  1.50     1.88 0.10
-  #IL_2                    38 183  2.03 1.30    2.0    1.78 1.48  1.0   7   6.0  1.49     1.82 0.10
-  #IL_3                    39 183  2.25 1.38    2.0    2.03 1.48  1.0   7   6.0  1.29     1.10 0.10
-  #IL_4                    40 183  2.49 1.76    2.0    2.23 1.48  1.0   7   6.0  1.03    -0.17 0.13
-  #IL_5                    41 183  2.73 1.61    2.0    2.55 1.48  1.0   7   6.0  0.78    -0.37 0.12
-  #TT_1                    42 183  4.21 1.47    4.0    4.26 1.48  1.0   7   6.0 -0.31    -0.64 0.11
-  #TT_2                    43 183  4.77 1.41    5.0    4.83 1.48  1.0   7   6.0 -0.51    -0.17 0.10
-  #TT_3                    44 183  4.91 1.22    5.0    5.00 1.48  1.0   7   6.0 -0.67     0.75 0.09
-  #STATUS*                 45 183  1.00 0.00    1.0    1.00 0.00  1.0   1   0.0   NaN      NaN 0.00
-  #PERSONEN                46 183  3.78 1.04    4.0    3.85 0.00  1.0   6   5.0 -0.59     0.79 0.08
-  #SOCIALEKLASSE2016*      47 183  2.07 1.24    2.0    1.92 1.48  1.0   5   4.0  0.92    -0.47 0.09
-  #GSL                     48 183  1.51 0.50    2.0    1.51 0.00  1.0   2   1.0 -0.03    -2.01 0.04
-  #LFT                     49 183 41.11 7.76   40.0   40.01 5.93 28.0  76  48.0  1.74     4.05 0.57
-  #PE                      50 183  4.41 1.34    5.0    4.53 1.48  1.0   6   5.0 -0.51    -0.72 0.10
-  #SHL                     51 183  3.78 1.35    4.0    3.77 1.48  1.2   6   4.8 -0.03    -1.10 0.10
-  #ICU_togetherwithchild   52 183  3.34 1.45    4.0    3.35 1.48  1.0   6   5.0 -0.18    -0.90 0.11
-  #ICU_childindividually   53 182  3.21 1.62    3.5    3.18 2.22  1.0   6   5.0 -0.07    -1.22 0.12
- 
-  
-  library(psych)
-  psych::describeBy(rosie[c(93:104, 122:126, 143:178)], group = "GSL")
-  # 1 = male, 2 = female
-  
-  #more descriptives on our DV-levels
-  hist(rosie$ICU_togetherwithchild)
-  mean(rosie$ICU_togetherwithchild) # 3.34153
-  describe(rosie$ICU_togetherwithchild)
-  #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
-  #X1    1 183 3.34 1.45      4    3.35 1.48   1   6     5 -0.18     -0.9 0.11
-  
-  hist(rosie$ICU_childindividually)
-  mean(rosie$ICU_childindividually, na.rm=T) # 3.214286
-  describe(rosie$ICU_childindividually, na.rm=T)
-  #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
-  #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
-  
-  hist(rosie$TT_1) #faily normally distributed
-  hist(rosie$TT_2)
-  hist(rosie$TT_3)
-  
-  hist(rosie$Child_Temp_Extraversion)
-  hist(rosie$Child_Temp_Negative_Affectivity)
-  hist(rosie$Child_Temp_Effortful_Control)
-  
-  hist(rosie$Child_Parasocial_1) #strong deviation from normal distribution
-  hist(rosie$Child_Parasocial_2)
-  hist(rosie$Child_Parasocial_3)
-  hist(rosie$Child_Parasocial_4)
-  hist(rosie$Child_Parasocial_5)
-  
-  hist(rosie$PMMS_1)
-  hist(rosie$PMMS_2)
-  hist(rosie$PMMS_3)
-  hist(rosie$PMMS_4)
-  hist(rosie$PMMS_5)
-  hist(rosie$PMMS_6)
-  
-  hist(rosie$LFT) #most parents between 30-50, only very few between 60 - 80
-  hist(rosie$Child_Age) #almost equally distributed, most 8-year olds
+
 
   
 #---------------------------------------------------#
@@ -636,7 +527,7 @@
   
         #Dispositional: 
   
-          #Q26 TT >> 3 items
+          ### TT >> 3 items ##########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -708,13 +599,13 @@
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1a  <- ' f  =~ TT_1 + TT_2 + TT_3' 
+          m1a  <- ' TT_f  =~ TT_1 + TT_2 + TT_3' 
           onefac3items_TT <- cfa(m1a, data=rosie) 
           summary(onefac3items_TT, fit.measures=TRUE, standardized=TRUE) # >> Seems like a "just" identified model. Wait and see for testing whole measurement model in SEM.
           # >> fit index criteria: Chi-Square = / because 0 df just identified, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10
     
   
-          #Q30 Child_Temp >> 3 items
+          ### Child_Temp >> 3 items ##########################
   
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -785,7 +676,7 @@
                   names(rosie)
           
           
-          #Q32 Child_Parasocial >> 5 items
+          ### Child_Parasocial >> 5 items#########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -956,7 +847,7 @@
           
         #Social: 
           
-          #Q31 PMMS >> 6 items
+          ### PMMS >> 6 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1046,7 +937,7 @@
           
         #TAM: 
         
-          #Q17 TAM_PEoU >> 4
+          ### TAM_PEoU >> 4 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1142,12 +1033,12 @@
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1e  <- ' f  =~ TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4'
+          m1e  <- ' TAM_PEoU_f  =~ TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4'
           onefac4items_TAM_PEoU <- cfa(m1e, data=rosie, std.lv=TRUE) 
           summary(onefac4items_TAM_PEoU, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .861 > .05, CFI = 1 > 0.95, TLI = 1.012 > 0.90 and RMSEA  = 0 < 0.10 >> VERY NICE
           
-          #Q18 TAM_PU >> 4
+          ### TAM_PU >> 4 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1210,12 +1101,12 @@
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1f  <- ' f  =~ TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4'
+          m1f  <- ' TAM_PU_f  =~ TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4'
           onefac4items_TAM_PU <- cfa(m1f, data=rosie, std.lv=TRUE) 
           summary(onefac4items_TAM_PU, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .234 > .05, CFI = .998 > 0.95, TLI = .995 > 0.90 and RMSEA = .050 < 0.10 >> VERY NICE
           
-          #Q19 TAM_E >> 4
+          ### TAM_E >> 4 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1311,13 +1202,13 @@
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1g  <- ' f  =~ TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4'
+          m1g  <- ' TAM_E_f  =~ TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4'
           onefac4items_TAM_E <- cfa(m1g, data=rosie,std.lv=TRUE) 
           summary(onefac4items_TAM_E, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .058 > .05, CFI = .993 > 0.95, TLI = .979 > 0.90 and RMSEA = .100 < 0.10 >> NICE
           
           
-          #Q21 TAM_SN >> 3
+          ### TAM_SN >> 3 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1368,12 +1259,12 @@
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1h  <- ' f  =~ TAM_SN_1 + TAM_SN_2 + TAM_SN_3 '
+          m1h  <- ' TAM_SN_f  =~ TAM_SN_1 + TAM_SN_2 + TAM_SN_3 '
           onefac3items_TAM_SN <- cfa(m1h, data=rosie) 
           summary(onefac3items_TAM_SN, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = 0 > .05, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10 >> AGAIN, problematic because just identified        
           
-          #Q22 TAM_ICU >> 3 EXCEPTION 
+          ### TAM_ICU >> 3 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1429,7 +1320,7 @@
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1r  <- ' f  =~ TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3'
+          m1r  <- ' TAM_ICU_f  =~ TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3'
           onefac3items_TAM_ICU <- cfa(m1r, data=rosie, std.lv=TRUE) 
           summary(onefac3items_TAM_ICU, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .091 > .05, CFI = .999 > 0.95, TLI = 1.00 > 0.90 and RMSEA = 0 < 0.10 >> VERY NICE BUT I HAVE A WEIRD GUT FEELING BECAUSE OF THE NAs FOR SEs
@@ -1485,7 +1376,7 @@
                       
               
        
-          #Q25 IL >> 5 items      
+          ### IL >> 5 items #########################      
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1669,14 +1560,41 @@
                 # >> fit index criteria: Chi-Square = .228 > .05, CFI = .996 > 0.95, TLI = .991 > 0.90 and RMSEA = .047 < 0.10 #VERY NICE
                 
         
-        #----------------------------------------------#
-        ### !!! Solve the factor scores and run correlations among TAM variables ##########################
-        #----------------------------------------------#        
-        #Extract factor scores for correlations >> Along resources from Theo (https://www.rdocumentation.org/packages/lavaan/versions/0.6-7/topics/lavPredict), but really needed? Journal of Computer sin human Behaviour 
-        #usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
-
+      
+          ####----Extracting factors scores----####
+            #Journal of Computer sin human Behaviour usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
+                
+                #summary of all CFA models (from above)
+                # onefac3items_TT
+                # onefac3items_Child_Temp
+                # twofac5items_Child_Parasocial
+                # threefac2items_PMMS
+                # onefac4items_TAM_PeoU
+                # onefac4items_TAM_PU
+                # onefac4items_TAM_E
+                # onefac3items_TAM_SN
+                # onefac3items_TAM_ICU
+                # twofac5items_IL
+                
+                #predicting factor scores of all CFA models
+                onefac3items_TTfitPredict <- as.data.frame(predict(onefac3items_TT))
+                twofac5items_Child_ParasocialfitPredict <- as.data.frame(predict(twofac5items_Child_Parasocial))
+                threefac2items_PMMSfitPredict <- as.data.frame(predict(threefac2items_PMMS)) 
+                onefac4items_TAM_PeoUfitPredict <- as.data.frame(predict(onefac4items_TAM_PEoU))
+                onefac4items_TAM_PUfitPredict <- as.data.frame(predict(onefac4items_TAM_PU))
+                onefac4items_TAM_EfitPredict <- as.data.frame(predict(onefac4items_TAM_E))
+                onefac3items_TAM_SNfitPredict <- as.data.frame(predict(onefac3items_TAM_SN))
+                onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU))
+                twofac5items_ILfitPredict <- as.data.frame(predict(twofac5items_IL))
+                
+                #adding to rosie-dataset
+                rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_Child_ParasocialfitPredict,
+                                       threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
+                                       onefac3items_TAM_SNfitPredict, onefac3items_TAM_ICUfitPredict, twofac5items_ILfitPredict)
+                View(rosie_fscores)
+                
         
-        ####----RELIABILITY ANALSIS----####
+        ####----Reliability analysis----####
         #https://rpubs.com/hauselin/reliabilityanalysis
         #raw_alpha: Cronbach’s α (values ≥ .7 or .8 indicate good reliability; Kline (1999))
           
@@ -1744,7 +1662,198 @@
                 
                 Navigation <- rosie[, c(163, 165:166)]
                 psych::alpha(Navigation) ### --> 0.8
-        
+
+###----------------------------------------------------------------------------------------------------------------###   
+                
+#-----------------------------------------#
+### DESCRIPTIVES ##########################
+#-----------------------------------------#
+                
+   #taking a first numerical look
+   summary(rosie)
+   str(rosie)
+                
+   library(pastecs)
+   stat.desc(rosie)
+                
+   library(psych)
+   describe(rosie_fscores[c(93:104, 122:126, 143:178, 189:201)]) #without the last ICU_group because of their syntax error, otherwise describe function does not run
+   #                                vars   n  mean    sd median trimmed   mad    min   max  range  skew kurtosis   se
+   #Child_Nr                           1 183  2.36  0.55   2.00    2.28  0.00   2.00  5.00   3.00  1.45     2.18 0.04
+   #Child_Age                          2 183  3.83  1.71   4.00    3.91  1.48   1.00  6.00   5.00 -0.20    -1.25 0.13
+   #Child_Gender*                      3 183  1.55  0.50   2.00    1.56  0.00   1.00  2.00   1.00 -0.19    -1.98 0.04
+   #Child_Temp_Extraversion            4 183  5.18  1.47   6.00    5.30  1.48   1.00  7.00   6.00 -0.62    -0.38 0.11
+   #Child_Temp_Negative_Affectivity    5 183  3.30  1.76   3.00    3.21  1.48   1.00  7.00   6.00  0.29    -1.01 0.13
+   #Child_Temp_Effortful_Control       6 183  4.78  1.62   5.00    4.90  1.48   1.00  7.00   6.00 -0.53    -0.39 0.12
+   #PMMS_1                             7 183  2.93  0.78   3.00    2.99  0.00   1.00  4.00   3.00 -0.57     0.16 0.06
+   #PMMS_2                             8 183  3.08  0.94   3.00    3.21  1.48   1.00  4.00   3.00 -0.80    -0.26 0.07
+   #PMMS_3                             9 183  2.87  0.85   3.00    2.96  0.00   1.00  4.00   3.00 -0.66     0.00 0.06
+   #PMMS_4                            10 183  3.26  0.72   3.00    3.36  0.00   1.00  4.00   3.00 -0.95     1.17 0.05
+   #PMMS_5                            11 183  2.74  0.97   3.00    2.80  1.48   1.00  4.00   3.00 -0.41    -0.79 0.07
+   #PMMS_6                            12 183  2.95  0.80   3.00    2.99  0.00   1.00  4.00   3.00 -0.49    -0.12 0.06
+   #Child_Parasocial_1                13 183  1.92  1.18   1.00    1.73  0.00   1.00  5.00   4.00  1.00    -0.15 0.09
+   #Child_Parasocial_2                14 183  3.24  1.22   3.00    3.30  1.48   1.00  5.00   4.00 -0.37    -0.72 0.09
+   #Child_Parasocial_3                15 183  2.11  1.18   2.00    1.99  1.48   1.00  5.00   4.00  0.59    -1.00 0.09
+   #Child_Parasocial_4                16 183  1.72  1.01   1.00    1.54  0.00   1.00  5.00   4.00  1.26     0.70 0.07
+   #Child_Parasocial_5                17 183  1.77  1.07   1.00    1.56  0.00   1.00  5.00   4.00  1.23     0.44 0.08
+   #TAM_PEoU_1                        18 183  5.20  1.30   5.00    5.34  1.48   1.00  7.00   6.00 -1.14     1.25 0.10
+   #TAM_PEoU_2                        19 183  5.11  1.50   6.00    5.26  1.48   1.00  7.00   6.00 -0.88     0.02 0.11
+   #TAM_PEoU_3                        20 183  5.36  1.37   6.00    5.54  1.48   1.00  7.00   6.00 -1.21     1.14 0.10
+   #TAM_PEoU_4                        21 183  5.01  1.42   5.00    5.16  1.48   1.00  7.00   6.00 -1.01     0.54 0.11
+   #TAM_PU_1                          22 183  4.16  1.57   4.00    4.24  1.48   1.00  7.00   6.00 -0.35    -0.59 0.12
+   #TAM_PU_2                          23 183  3.88  1.57   4.00    3.95  1.48   1.00  7.00   6.00 -0.28    -0.68 0.12
+   #TAM_PU_3                          24 183  4.32  1.61   5.00    4.46  1.48   1.00  7.00   6.00 -0.58    -0.47 0.12
+   #TAM_PU_4                          25 183  4.76  1.44   5.00    4.86  1.48   1.00  7.00   6.00 -0.68     0.08 0.11
+   #TAM_E_1                           26 183  5.07  1.38   5.00    5.20  1.48   1.00  7.00   6.00 -1.00     0.87 0.10
+   #TAM_E_2                           27 183  5.14  1.34   5.00    5.28  1.48   1.00  7.00   6.00 -1.09     1.22 0.10
+   #TAM_E_3                           28 183  5.26  1.35   5.00    5.41  1.48   1.00  7.00   6.00 -1.18     1.67 0.10
+   #TAM_E_4                           29 183  4.50  1.48   5.00    4.63  1.48   1.00  7.00   6.00 -0.62    -0.09 0.11
+   #TAM_IMG                           30 183  3.63  1.90   4.00    3.50  1.48   1.00  8.00   7.00  0.44    -0.35 0.14
+   #TAM_SN_1                          31 183  2.69  1.64   2.00    2.50  1.48   1.00  7.00   6.00  0.60    -0.64 0.12
+   #TAM_SN_2                          32 183  2.74  1.69   2.00    2.57  1.48   1.00  7.00   6.00  0.59    -0.83 0.13
+   #TAM_SN_3                          33 183  3.21  1.82   3.00    3.10  2.97   1.00  7.00   6.00  0.27    -1.11 0.13
+   #TAM_ICU_1                         34 183  3.40  1.72   3.00    3.33  1.48   1.00  7.00   6.00  0.36    -0.92 0.13
+   #TAM_ICU_2                         35 183  5.30  1.37   6.00    5.46  1.48   1.00  7.00   6.00 -1.13     1.20 0.10
+   #TAM_ICU_3                         36 183  4.44  1.78   5.00    4.56  1.48   1.00  7.00   6.00 -0.51    -0.84 0.13
+   #IL_1                              37 183  2.19  1.39   2.00    1.93  1.48   1.00  7.00   6.00  1.50     1.88 0.10
+   #IL_2                              38 183  2.03  1.30   2.00    1.78  1.48   1.00  7.00   6.00  1.49     1.82 0.10
+   #IL_3                              39 183  2.25  1.38   2.00    2.03  1.48   1.00  7.00   6.00  1.29     1.10 0.10
+   #IL_4                              40 183  2.49  1.76   2.00    2.23  1.48   1.00  7.00   6.00  1.03    -0.17 0.13
+   #IL_5                              41 183  2.73  1.61   2.00    2.55  1.48   1.00  7.00   6.00  0.78    -0.37 0.12
+   #TT_1                              42 183  4.21  1.47   4.00    4.26  1.48   1.00  7.00   6.00 -0.31    -0.64 0.11
+   #TT_2                              43 183  4.77  1.41   5.00    4.83  1.48   1.00  7.00   6.00 -0.51    -0.17 0.10
+   #TT_3                              44 183  4.91  1.22   5.00    5.00  1.48   1.00  7.00   6.00 -0.67     0.75 0.09
+   #STATUS*                           45 183  1.00  0.00   1.00    1.00  0.00   1.00  1.00   0.00   NaN      NaN 0.00
+   #PERSONEN                          46 183  3.78  1.04   4.00    3.85  0.00   1.00  6.00   5.00 -0.59     0.79 0.08
+   #SOCIALEKLASSE2016*                47 183  2.07  1.24   2.00    1.92  1.48   1.00  5.00   4.00  0.92    -0.47 0.09
+   #GSL                               48 183  1.51  0.50   2.00    1.51  0.00   1.00  2.00   1.00 -0.03    -2.01 0.04
+   #LFT                               49 183 41.11  7.76  40.00   40.01  5.93  28.00 76.00  48.00  1.74     4.05 0.57
+   #PE                                50 183  4.41  1.34   5.00    4.53  1.48   1.00  6.00   5.00 -0.51    -0.72 0.10
+   #SHL                               51 183  3.78  1.35   4.00    3.77  1.48   1.20  6.00   4.80 -0.03    -1.10 0.10
+   #ICU_togetherwithchild             52 183  3.34  1.45   4.00    3.35  1.48   1.00  6.00   5.00 -0.18    -0.90 0.11
+   #ICU_childindividually             53 182  3.21  1.62   3.50    3.18  2.22   1.00  6.00   5.00 -0.07    -1.22 0.12
+   #TT_f                              54 183  0.00  1.04   0.07    0.03  0.96  -3.09  2.03   5.12 -0.26    -0.35 0.08
+   #anthropomorphism                  55 183  0.00  0.96  -0.52   -0.15  0.44  -0.81  3.21   4.02  1.14     0.56 0.07
+   #parasocial_relationship           56 183  0.00  0.91  -0.18   -0.08  1.02  -1.03  2.62   3.65  0.60    -0.73 0.07
+   #restrMed                          57 183  0.00  0.89   0.06    0.08  0.86  -2.59  1.29   3.88 -0.82     0.41 0.07
+   #negacMed                          58 183  0.00  0.89   0.15    0.07  0.69  -2.38  1.42   3.80 -0.70     0.17 0.07
+   #posacMed                          59 183  0.00  0.88  -0.08    0.07  0.90  -2.92  1.28   4.20 -0.80     1.15 0.06
+   #TAM_PEoU_f                        60 183  0.00  0.96   0.18    0.11  0.69  -3.28  1.43   4.71 -1.16     1.35 0.07
+   #TAM_PU_f                          61 183  0.00  0.97   0.05    0.06  1.02  -2.19  1.87   4.05 -0.42    -0.43 0.07
+   #TAM_E_f                           62 183  0.00  0.97  -0.06    0.10  1.05  -3.15  1.47   4.62 -1.16     1.71 0.07
+   #TAM_SN_f                          63 183  0.00  1.49  -0.12   -0.15  1.94  -1.66  4.04   5.70  0.57    -0.49 0.11
+   #TAM_ICU_f                         64 183  0.00 26.88   9.03    2.92 18.51 -84.04 51.19 135.22 -1.01     0.67 1.99
+   #navigation                        65 183  0.00  0.93  -0.21   -0.12  0.93  -0.98  3.64   4.62  1.12     0.91 0.07
+   #information                       66 183  0.00  0.94  -0.19   -0.14  0.87  -0.96  3.67   4.63  1.18     0.97 0.07
+                
+                
+   library(psych)
+   psych::describeBy(rosie_fscores[c(93:104, 122:126, 143:178, 189:201)], group = "GSL")
+   # 1 = male, 2 = female
+                
+   #more descriptives on the different DV-levels
+   hist(rosie$ICU_togetherwithchild)
+   mean(rosie$ICU_togetherwithchild) # 3.34153
+   describe(rosie$ICU_togetherwithchild)
+   #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
+   #X1    1 183 3.34 1.45      4    3.35 1.48   1   6     5 -0.18     -0.9 0.11
+                
+   hist(rosie$ICU_childindividually)
+   mean(rosie$ICU_childindividually, na.rm=T) # 3.214286
+   describe(rosie$ICU_childindividually, na.rm=T)
+   #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
+   #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
+                
+   hist(rosie$TT_1) 
+   hist(rosie$TT_2)
+   hist(rosie$TT_3)
+   hist(rosie_fscores$TT_f) #fairly normally distributed
+                
+   hist(rosie$Child_Temp_Extraversion)
+   hist(rosie$Child_Temp_Negative_Affectivity)
+   hist(rosie$Child_Temp_Effortful_Control)
+                
+   hist(rosie$Child_Parasocial_1) 
+   hist(rosie$Child_Parasocial_2)
+   hist(rosie$Child_Parasocial_3)
+   hist(rosie$Child_Parasocial_4)
+   hist(rosie$Child_Parasocial_5)
+   hist(rosie_fscores$anthropomorphism) #strongly positively skewed
+   hist(rosie_fscores$parasocial_relationship) #positively skewed
+                
+   hist(rosie$PMMS_1)
+   hist(rosie$PMMS_2)
+   hist(rosie$PMMS_3)
+   hist(rosie$PMMS_4)
+   hist(rosie$PMMS_5)
+   hist(rosie$PMMS_6)
+   hist(rosie_fscores$restrMed) #negatively skewed
+   hist(rosie_fscores$negacMed) #negatively skewed
+   hist(rosie_fscores$posacMed) #negatively skewed
+                
+   hist(rosie$LFT) #most parents between 30-50, only very few between 60 - 80
+   hist(rosie$Child_Age) #almost equally distributed, most 8-year olds
+   
+   hist(rosie$IL_1)
+   hist(rosie$IL_2)
+   hist(rosie$IL_3)
+   hist(rosie$IL_4)
+   hist(rosie$IL_5)
+   hist(rosie_fscores$navigation)
+   hist(rosie_fscores$information)
+   
+   hist(rosie$SHL)
+
+  
+   #getting correlations matrix for TAM-variables
+   round(cor(rosie_fscores[,c(93, 171, 175, 200:201, 195:198, 155, 199, 176)]),2)
+   #             Child_Nr PERSONEN    PE navigation information TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_IMG TAM_ICU_f   SHL
+   # Child_Nr        1.00     0.06  0.06       0.07        0.09      -0.01     0.00   -0.08     0.02   -0.04     -0.01  0.01
+   # PERSONEN        0.06     1.00  0.06      -0.11       -0.07       0.03     0.09    0.04    -0.08   -0.05     -0.06 -0.03
+   # PE              0.06     0.06  1.00       0.03        0.04       0.32     0.43    0.44     0.09   -0.02      0.00  0.64
+   # navigation      0.07    -0.11  0.03       1.00        0.93      -0.12     0.07   -0.01     0.27    0.10      0.14  0.11
+   # information     0.09    -0.07  0.04       0.93        1.00      -0.07     0.10    0.03     0.25    0.08      0.16  0.11
+   # TAM_PEoU_f     -0.01     0.03  0.32      -0.12       -0.07       1.00     0.44    0.63     0.15   -0.02      0.09  0.31
+   # TAM_PU_f        0.00     0.09  0.43       0.07        0.10       0.44     1.00    0.58     0.40    0.21      0.11  0.32
+   # TAM_E_f        -0.08     0.04  0.44      -0.01        0.03       0.63     0.58    1.00     0.25    0.05      0.02  0.40
+   # TAM_SN_f        0.02    -0.08  0.09       0.27        0.25       0.15     0.40    0.25     1.00    0.26      0.07  0.21
+   # TAM_IMG        -0.04    -0.05 -0.02       0.10        0.08      -0.02     0.21    0.05     0.26    1.00     -0.01  0.06
+   # TAM_ICU_f      -0.01    -0.06  0.00       0.14        0.16       0.09     0.11    0.02     0.07   -0.01      1.00 -0.02
+   # SHL             0.01    -0.03  0.64       0.11        0.11       0.31     0.32    0.40     0.21    0.06     -0.02  1.00
+   
+         #pairwise correlations all in one scatterplot matrix
+         library(car)
+         scatterplotMatrix(~Child_Nr+PERSONEN+PE+navigation+information+TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SN_f+TAM_IMG+TAM_ICU_f+SHL, data = rosie_fscores)
+         
+         #for better visual overivew 
+         library(devtools)
+         devtools::install_github("laresbernardo/lares")
+         library(lares)
+
+         corr_cross(rosie_fscores[,c(93, 171, 175, 200:201, 195:198, 155, 199, 176)], # name of dataset
+                    max_pvalue = 0.05, # display only significant correlations (at 5% level)
+                    top = 20 # display top 10 couples of variables (by correlation coefficient)
+         )
+         
+   #descriptives
+   summary(rosie_fscores)
+   describe(rosie_fscores)
+   #                               vars   n    mean      sd  median trimmed     mad    min     max   range  skew kurtosis     se
+   #TT_f                             189 183    0.00    1.04    0.07    0.03    0.96  -3.09    2.03    5.12 -0.26    -0.35   0.08
+   #anthropomorphism                 190 183    0.00    0.96   -0.52   -0.15    0.44  -0.81    3.21    4.02  1.14     0.56   0.07
+   #parasocial_relationship          191 183    0.00    0.91   -0.18   -0.08    1.02  -1.03    2.62    3.65  0.60    -0.73   0.07
+   #restrMed                         192 183    0.00    0.89    0.06    0.08    0.86  -2.59    1.29    3.88 -0.82     0.41   0.07
+   #negacMed                         193 183    0.00    0.89    0.15    0.07    0.69  -2.38    1.42    3.80 -0.70     0.17   0.07
+   #posacMed                         194 183    0.00    0.88   -0.08    0.07    0.90  -2.92    1.28    4.20 -0.80     1.15   0.06
+   #TAM_PEoU_f                       195 183    0.00    0.96    0.18    0.11    0.69  -3.28    1.43    4.71 -1.16     1.35   0.07
+   #TAM_PU_f                         196 183    0.00    0.97    0.05    0.06    1.02  -2.19    1.87    4.05 -0.42    -0.43   0.07
+   #TAM_E_f                          197 183    0.00    0.97   -0.06    0.10    1.05  -3.15    1.47    4.62 -1.16     1.71   0.07
+   #TAM_SN_f                         198 183    0.00    1.49   -0.12   -0.15    1.94  -1.66    4.04    5.70  0.57    -0.49   0.11
+   #TAM_ICU_f                        199 183    0.00   26.88    9.03    2.92   18.51 -84.04   51.19  135.22 -1.01     0.67   1.99
+   #navigation                       200 183    0.00    0.93   -0.21   -0.12    0.93  -0.98    3.64    4.62  1.12     0.91   0.07
+   #information                      201 183    0.00    0.94   -0.19   -0.14    0.87  -0.96    3.67    4.63  1.18     0.97   0.07
+   
+   
 ###----------------------------------------------------------------------------------------------------------------###
     
 #----------------------------------------------#
@@ -1775,30 +1884,37 @@
           
    #therefore, I alternatively run a multivariate normality test using the package QuantPsyc's multi.norm function:
    library(QuantPsyc)
+   #for rosie dataset
    mult.norm(rosie[c(96:104, 122:126, 143:169, 175:176)])$mult.test
-          
    #Beta-hat        kappa                   p-val
    #Skewness  549.0508 16746.048561 0.000000000000000000000
    #Kurtosis 2008.0810     7.945926 0.000000000000001998401
    
+   #for rosie dataset including extracted factor scores
+   mult.norm(rosie_fscores[c(189:201, 155, 96:98, 175:176)])$mult.test 
+   # Beta-hat       kappa       p-val
+   # Skewness  59.46034 1813.540425 0.000000000
+   # Kurtosis 412.27424    3.178366 0.001481078
+
    # >> Since both p-values are waaaay less than .05, we reject the null hypothesis of the test. We have evidence to say that the variables in our dataset do not follow a multivariate distribution.
    # >> Together with the non-normality detected earlier, we will run our main analyses using bottstrapping
-
+   
 ###----------------------------------------------------------------------------------------------------------------###   
    
-#----------------------------------------------------------#
-### LATENT PROFILE/CLASS ANALYSIS ##########################
-#----------------------------------------------------------#
-      
+#--------------------------------------------------------------------#
+### LATENT PROFILE/CLASS ANALYSIS VERSION 1 ##########################
+#--------------------------------------------------------------------#
+
+   #along preregistered DSMM using original scales  
    
    #Which variables should go in the LCA? >> All individual characteristics! Those are:
    
          #Dispositional: 
-         #Q26 TT >> 3 items
-         #Q30_1 Child_Temp_Extraversion
-         #Q30_2 Child_Temp_Negative_Affectivity
-         #Q30_3 Child_Temp_Effortful_Control 
-         #Q32 Child_Parasocial >> 5 items
+         # TT >> 3 items
+         # Child_Temp_Extraversion
+         # Child_Temp_Negative_Affectivity
+         # Child_Temp_Effortful_Control 
+         # Child_Parasocial >> 5 items
          # SOCIALEKLASSE2016
          
          #Developmental: 
@@ -1808,131 +1924,673 @@
          # GSL
          
          #Social: 
-         #Q31 PMMS >> 6 items
+         # PMMS >> 6 items
   
-     
+
    library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
    
          #Dispositional: 
-         #Q26 TT >> 3 items >> 
-         #Q30_1 Child_Temp_Extraversion >> 0-split method appropriate since scale went from -3 (not at all like this description to +3 exactly like this description, so all answers below 0 can be regarded as "no" while all alswers above 0 can be ragrded as "yes")
-         #Q30_2 Child_Temp_Negative_Affectivity
-         #Q30_3 Child_Temp_Effortful_Control 
-         #Q32 Child_Parasocial >> 5 items
-         # SOCIALEKLASSE2016
+         # TT >> 3 items one factor >> median split method because of fairly normal distribution 
+         # Child_Temp_Extraversion >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+         #Q Child_Temp_Negative_Affectivity >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+         # Child_Temp_Effortful_Control >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+         # Child_Parasocial >> 5 items two factors >> anthropomorphism & parasocial_relationship >> since distributions show that answer options 1+2 as well as 3+4+5 group together: 1-2 = 1, 3-5 = 2
+         # SOCIALEKLASSE2016 >> ALREADY CATEGORICAL
          
          #Developmental: 
-         # Child_Age
-         # Child-Gender
-         # LFT
-         # GSL
+         # Child_Age >> agre group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
+         # Child-Gender >> ALREADY CATEGORICAL
+         # LFT >> mean-split
+         # GSL >> ALREADY CATEGORICAL
          
          #Social: 
-         #Q31 PMMS >> 6 items
+         # PMMS >> 6 items three factors >> restsMed & negacMed & posacMed >> since distributions show that answer options 1+2 group together: 1-2 = 1 (nooit), 3 = 2 (soms), 4 = 3 (vaak)
    
    
-   #mean-split factor creation for all continuous variables, which are:
+   #artificial categorization
    # - TT
-   rosie$TT_1_factor[rosie$TT_1<mean(rosie$TT_1)] = 1
-   rosie$TT_1_factor[rosie$TT_1==mean(rosie$TT_1)] = 2
-   rosie$TT_1_factor[rosie$TT_1>mean(rosie$TT_1)] = 3
+   rosie_fscores$TT_1_factor[rosie_fscores$TT_1<=median(rosie_fscores$TT_1)] = 1
+   rosie_fscores$TT_1_factor[rosie_fscores$TT_1>median(rosie_fscores$TT_1)] = 2
    
-   rosie$TT_2_factor[rosie$TT_2<mean(rosie$TT_2)] = 1
-   rosie$TT_2_factor[rosie$TT_2==mean(rosie$TT_2)] = 2
-   rosie$TT_2_factor[rosie$TT_2>mean(rosie$TT_2)] = 3
+   rosie_fscores$TT_2_factor[rosie_fscores$TT_2<=median(rosie_fscores$TT_2)] = 1
+   rosie_fscores$TT_2_factor[rosie_fscores$TT_2>median(rosie_fscores$TT_2)] = 2
    
-   rosie$TT_3_factor[rosie$TT_3<mean(rosie$TT_3)] = 1
-   rosie$TT_3_factor[rosie$TT_3==mean(rosie$TT_3)] = 2
-   rosie$TT_3_factor[rosie$TT_3>mean(rosie$TT_3)] = 3
+   rosie_fscores$TT_3_factor[rosie_fscores$TT_3<=median(rosie_fscores$TT_3)] = 1
+   rosie_fscores$TT_3_factor[rosie_fscores$TT_3>median(rosie_fscores$TT_3)] = 2
    
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==1 & rosie_fscores$TT_2_factor==1 & rosie_fscores$TT_3_factor==1] = 1
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==2 & rosie_fscores$TT_2_factor==2 & rosie_fscores$TT_3_factor==2] = 2
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==2 & rosie_fscores$TT_2_factor==1 & rosie_fscores$TT_3_factor==2] = 3
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==2 & rosie_fscores$TT_2_factor==2 & rosie_fscores$TT_3_factor==1] = 4
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==2 & rosie_fscores$TT_2_factor==1 & rosie_fscores$TT_3_factor==1] = 5
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==1 & rosie_fscores$TT_2_factor==2 & rosie_fscores$TT_3_factor==2] = 6
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==1 & rosie_fscores$TT_2_factor==1 & rosie_fscores$TT_3_factor==2] = 7
+   rosie_fscores$TT_total_LCA_factor[rosie_fscores$TT_1_factor==1 & rosie_fscores$TT_2_factor==2 & rosie_fscores$TT_3_factor==1] = 8
+   
+   View(rosie_fscores$TT_total_LCA_factor)
+   View(rosie_fscores)
+
+
    # - Child_Temp
-   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<mean(rosie$Child_Temp_Extraversion)] = 1
-   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion==mean(rosie$Child_Temp_Extraversion)] = 2
-   rosie$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>mean(rosie$Child_Temp_Extraversion)] = 3
+   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<=3] = 1
+   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>=4] = 2
    
-   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity<mean(rosie$Child_Temp_Negative_Affectivity)] = 1
-   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivityn==mean(rosie$Child_Temp_Negative_Affectivity)] = 2
-   rosie$Temp_Negative_Affectivity_factor[rosie$Child_Temp_Negative_Affectivity>mean(rosie$Child_Temp_Negative_Affectivity)] = 3
+   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
+   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
    
-   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control<mean(rosie$Child_Temp_Effortful_Control)] = 1
-   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control==mean(rosie$Child_Temp_Effortful_Control)] = 2
-   rosie$Temp_Effortful_Control_factor[rosie$Child_Temp_Effortful_Control>mean(rosie$Child_Temp_Effortful_Control)] = 3
+   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control<=3] = 1
+   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control>=4] = 2
    
    # - Child_Parasocial
-   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1<mean(rosie$Child_Parasocial_1)] = 1
-   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1==mean(rosie$Child_Parasocial_1)] = 2
-   rosie$Child_Parasocial_1_factor[rosie$Child_Parasocial_1>mean(rosie$Child_Parasocial_1)] = 3
+   #anthropomorphism
+   rosie_fscores$Child_Parasocial_1_factor[rosie_fscores$Child_Parasocial_1<=2] = 1
+   rosie_fscores$Child_Parasocial_1_factor[rosie_fscores$Child_Parasocial_1>=3] = 2
    
-   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2<mean(rosie$Child_Parasocial_2)] = 1
-   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2==mean(rosie$Child_Parasocial_2)] = 2
-   rosie$Child_Parasocial_2_factor[rosie$Child_Parasocial_2>mean(rosie$Child_Parasocial_2)] = 3
+   rosie_fscores$Child_Parasocial_4_factor[rosie_fscores$Child_Parasocial_4<=2] = 1
+   rosie_fscores$Child_Parasocial_4_factor[rosie_fscores$Child_Parasocial_4>=3] = 2
    
-   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3<mean(rosie$Child_Parasocial_3)] = 1
-   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3==mean(rosie$Child_Parasocial_3)] = 2
-   rosie$Child_Parasocial_3_factor[rosie$Child_Parasocial_3>mean(rosie$Child_Parasocial_3)] = 3
+   rosie_fscores$Child_Parasocial_5_factor[rosie_fscores$Child_Parasocial_5<=2] = 1
+   rosie_fscores$Child_Parasocial_5_factor[rosie_fscores$Child_Parasocial_5>=3] = 2
    
-   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4<mean(rosie$Child_Parasocial_4)] = 1
-   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4==mean(rosie$Child_Parasocial_4)] = 2
-   rosie$Child_Parasocial_4_factor[rosie$Child_Parasocial_4>mean(rosie$Child_Parasocial_4)] = 3
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==1 & rosie_fscores$Child_Parasocial_4_factor==1 & rosie_fscores$Child_Parasocial_5_factor==1] = 1
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==2 & rosie_fscores$Child_Parasocial_4_factor==2 & rosie_fscores$Child_Parasocial_5_factor==2] = 2
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==2 & rosie_fscores$Child_Parasocial_4_factor==1 & rosie_fscores$Child_Parasocial_5_factor==2] = 3
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==2 & rosie_fscores$Child_Parasocial_4_factor==2 & rosie_fscores$Child_Parasocial_5_factor==1] = 4
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==2 & rosie_fscores$Child_Parasocial_4_factor==1 & rosie_fscores$Child_Parasocial_5_factor==1] = 5
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==1 & rosie_fscores$Child_Parasocial_4_factor==2 & rosie_fscores$Child_Parasocial_5_factor==2] = 6
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==1 & rosie_fscores$Child_Parasocial_4_factor==1 & rosie_fscores$Child_Parasocial_5_factor==2] = 7
+   rosie_fscores$Para_anthropomorphism_total_LCA_factor[rosie_fscores$Child_Parasocial_1_factor==1 & rosie_fscores$Child_Parasocial_4_factor==2 & rosie_fscores$Child_Parasocial_5_factor==1] = 8
    
-   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5<mean(rosie$Child_Parasocial_5)] = 1
-   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5==mean(rosie$Child_Parasocial_5)] = 2
-   rosie$Child_Parasocial_5_factor[rosie$Child_Parasocial_5>mean(rosie$Child_Parasocial_5)] = 3
+   View(rosie_fscores$Para_anthropomorphism_total_LCA_factor)
+   
+   #parasocial relationship
+   rosie_fscores$Child_Parasocial_2_factor[rosie_fscores$Child_Parasocial_2<=2] = 1
+   rosie_fscores$Child_Parasocial_2_factor[rosie_fscores$Child_Parasocial_2>=3] = 2
+   
+   rosie_fscores$Child_Parasocial_3_factor[rosie_fscores$Child_Parasocial_3<=2] = 1
+   rosie_fscores$Child_Parasocial_3_factor[rosie_fscores$Child_Parasocial_3>=3] = 2
+   
+   rosie_fscores$Para_parasocialrelationship_total_LCA_factor[rosie_fscores$Child_Parasocial_2_factor==1 & rosie_fscores$Child_Parasocial_3_factor==1] = 1
+   rosie_fscores$Para_parasocialrelationship_total_LCA_factor[rosie_fscores$Child_Parasocial_2_factor==2 & rosie_fscores$Child_Parasocial_3_factor==2] = 2
+   rosie_fscores$Para_parasocialrelationship_total_LCA_factor[rosie_fscores$Child_Parasocial_2_factor==1 & rosie_fscores$Child_Parasocial_3_factor==2] = 3
+   rosie_fscores$Para_parasocialrelationship_total_LCA_factor[rosie_fscores$Child_Parasocial_2_factor==2 & rosie_fscores$Child_Parasocial_3_factor==1] = 4
+   
+   View(rosie_fscores$Para_parasocialrelationship_total_LCA_factor)
+   View(rosie_fscores)
+
    
    # - Child_Age
-   rosie$Child_Age_factor[rosie$Child_Age<mean(rosie$Child_Age)] = 1
-   rosie$Child_Age_factor[rosie$Child_Age==mean(rosie$Child_Age)] = 2
-   rosie$Child_Age_factor[rosie$Child_Age>mean(rosie$Child_Age)] = 3
+   rosie_fscores$Child_Age_factor[rosie_fscores$Child_Age<=3] = 1 
+   rosie_fscores$Child_Age_factor[rosie_fscores$Child_Age>=4] = 2
    
    # - LFT
-   rosie$LFT_factor[rosie$LFT<mean(rosie$LFT)] = 1
-   rosie$LFT_factor[rosie$LFT==mean(rosie$LFT)] = 2
-   rosie$LFT_factor[rosie$LFT>mean(rosie$LFT)] = 3
+   rosie_fscores$LFT_factor[rosie_fscores$LFT<=mean(rosie$LFT)] = 1
+   rosie_fscores$LFT_factor[rosie_fscores$LFT>mean(rosie$LFT)] = 2
    
    # - PMMS
-   rosie$PMMS_1_factor[rosie$PMMS_1<mean(rosie$PMMS_1)] = 1
-   rosie$PMMS_1_factor[rosie$PMMS_1==mean(rosie$PMMS_1)] = 2
-   rosie$PMMS_1_factor[rosie$PMMS_1>mean(rosie$PMMS_1)] = 3
+   #restrMed
+   rosie_fscores$PMMS_1_factor[rosie_fscores$PMMS_1<=2] = 1
+   rosie_fscores$PMMS_1_factor[rosie_fscores$PMMS_1==3] = 2
+   rosie_fscores$PMMS_1_factor[rosie_fscores$PMMS_1==4] = 3
    
-   rosie$PMMS_2_factor[rosie$PMMS_2<mean(rosie$PMMS_2)] = 1
-   rosie$PMMS_2_factor[rosie$PMMS_2==mean(rosie$PMMS_2)] = 2
-   rosie$PMMS_2_factor[rosie$PMMS_2>mean(rosie$PMMS_2)] = 3
+   rosie_fscores$PMMS_2_factor[rosie_fscores$PMMS_2<=2] = 1
+   rosie_fscores$PMMS_2_factor[rosie_fscores$PMMS_2==3] = 2
+   rosie_fscores$PMMS_2_factor[rosie_fscores$PMMS_2==4] = 3
    
-   rosie$PMMS_3_factor[rosie$PMMS_3<mean(rosie$PMMS_3)] = 1
-   rosie$PMMS_3_factor[rosie$PMMS_3==mean(rosie$PMMS_3)] = 2
-   rosie$PMMS_3_factor[rosie$PMMS_3>mean(rosie$PMMS_3)] = 3
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==1 & rosie_fscores$PMMS_2_factor==1] = 1
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==2 & rosie_fscores$PMMS_2_factor==2] = 2
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==3 & rosie_fscores$PMMS_2_factor==3] = 3
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==1 & rosie_fscores$PMMS_2_factor==2] = 4
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==2 & rosie_fscores$PMMS_2_factor==1] = 5
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==1 & rosie_fscores$PMMS_2_factor==3] = 6
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==3 & rosie_fscores$PMMS_2_factor==1] = 7
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==2 & rosie_fscores$PMMS_2_factor==3] = 8
+   rosie_fscores$PMMS_restrMed_total_LCA_factor[rosie_fscores$PMMS_1_factor==3 & rosie_fscores$PMMS_2_factor==2] = 9
+
+   View(rosie_fscores$PMMS_restrMed_total_LCA_factor)
    
-   rosie$PMMS_4_factor[rosie$PMMS_4<mean(rosie$PMMS_4)] = 1
-   rosie$PMMS_4_factor[rosie$PMMS_4==mean(rosie$PMMS_4)] = 2
-   rosie$PMMS_4_factor[rosie$PMMS_4>mean(rosie$PMMS_4)] = 3
+   #negacMed
+   rosie_fscores$PMMS_3_factor[rosie_fscores$PMMS_3<=2] = 1
+   rosie_fscores$PMMS_3_factor[rosie_fscores$PMMS_3==3] = 2
+   rosie_fscores$PMMS_3_factor[rosie_fscores$PMMS_3==4] = 3
    
-   rosie$PMMS_5_factor[rosie$PMMS_5<mean(rosie$PMMS_5)] = 1
-   rosie$PMMS_5_factor[rosie$PMMS_5==mean(rosie$PMMS_5)] = 2
-   rosie$PMMS_5_factor[rosie$PMMS_5>mean(rosie$PMMS_5)] = 3
+   rosie_fscores$PMMS_5_factor[rosie_fscores$PMMS_5<=2] = 1
+   rosie_fscores$PMMS_5_factor[rosie_fscores$PMMS_5==3] = 2
+   rosie_fscores$PMMS_5_factor[rosie_fscores$PMMS_5==4] = 3
    
-   rosie$PMMS_6_factor[rosie$PMMS_6<mean(rosie$PMMS_6)] = 1
-   rosie$PMMS_6_factor[rosie$PMMS_6==mean(rosie$PMMS_6)] = 2
-   rosie$PMMS_6_factor[rosie$PMMS_6>mean(rosie$PMMS_6)] = 3
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==1 & rosie_fscores$PMMS_5_factor==1] = 1
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==2 & rosie_fscores$PMMS_5_factor==2] = 2
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==3 & rosie_fscores$PMMS_5_factor==3] = 3
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==1 & rosie_fscores$PMMS_5_factor==2] = 4
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==2 & rosie_fscores$PMMS_5_factor==1] = 5
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==1 & rosie_fscores$PMMS_5_factor==3] = 6
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==3 & rosie_fscores$PMMS_5_factor==1] = 7
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==2 & rosie_fscores$PMMS_5_factor==3] = 8
+   rosie_fscores$PMMS_negacMed_total_LCA_factor[rosie_fscores$PMMS_3_factor==3 & rosie_fscores$PMMS_5_factor==2] = 9
    
-   View(rosie) 
+   View(rosie_fscores$PMMS_negacMed_total_LCA_factor)
    
+   #posacMed
+   rosie_fscores$PMMS_4_factor[rosie_fscores$PMMS_4<=2] = 1
+   rosie_fscores$PMMS_4_factor[rosie_fscores$PMMS_4==3] = 2
+   rosie_fscores$PMMS_4_factor[rosie_fscores$PMMS_4==4] = 3
    
+   rosie_fscores$PMMS_6_factor[rosie_fscores$PMMS_6<=2] = 1
+   rosie_fscores$PMMS_6_factor[rosie_fscores$PMMS_6==3] = 2
+   rosie_fscores$PMMS_6_factor[rosie_fscores$PMMS_6==4] = 3
+   
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==1 & rosie_fscores$PMMS_6_factor==1] = 1
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==2 & rosie_fscores$PMMS_6_factor==2] = 2
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==3 & rosie_fscores$PMMS_6_factor==3] = 3
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==1 & rosie_fscores$PMMS_6_factor==2] = 4
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==2 & rosie_fscores$PMMS_6_factor==1] = 5
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==1 & rosie_fscores$PMMS_6_factor==3] = 6
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==3 & rosie_fscores$PMMS_6_factor==1] = 7
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==2 & rosie_fscores$PMMS_6_factor==3] = 8
+   rosie_fscores$PMMS_posacMed_total_LCA_factor[rosie_fscores$PMMS_4_factor==3 & rosie_fscores$PMMS_6_factor==2] = 9
+   
+   View(rosie_fscores$PMMS_posacMed_total_LCA_factor)
+   
+   View(rosie_fscores)
+   
+
    #LCA
-   LCAmodel <- cbind(TT_1_factor, TT_2_factor, TT_3_factor,
+   LCAmodel_v1 <- cbind(TT_total_LCA_factor,
                      Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor, 
-                     Child_Parasocial_1_factor, Child_Parasocial_2_factor, Child_Parasocial_3_factor, Child_Parasocial_4_factor, Child_Parasocial_5_factor,
+                     Para_anthropomorphism_total_LCA_factor, Para_parasocialrelationship_total_LCA_factor,
                      SOCIALEKLASSE2016,
                      Child_Age_factor, 
                      Child_Gender, 
                      LFT_factor, 
                      GSL, 
-                     PMMS_1_factor, PMMS_2_factor, PMMS_3_factor, PMMS_4_factor, PMMS_5_factor, PMMS_6_factor)~1
+                     PMMS_restrMed_total_LCA_factor, PMMS_negacMed_total_LCA_factor, PMMS_posacMed_total_LCA_factor)~1
    
-   M_2class <- poLCA(LCAmodel, data=rosie, nclass=2, graphs=TRUE, na.rm=TRUE)
+   Mv1_2class <- poLCA(LCAmodel_v1, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   # Estimated class population shares 
+   # 0.5509 0.4491 
+   # 
+   # Predicted class memberships (by modal posterior prob.) 
+   # 0.5628 0.4372 
+   # 
+   # ====================== 2-class results =================================== 
+   #   Fit for 2 latent classes: 
+   #
+   #   number of observations: 183 
+   # number of estimated parameters: 105 
+   # residual degrees of freedom: 78 
+   # maximum log-likelihood: -2710.811 
+   # 
+   # AIC(2): 5631.622
+   # BIC(2): 5968.618
+   # G^2(2): 3514.95 (Likelihood ratio/deviance statistic) 
+   # X^2(2): 78508072 (Chi-square goodness of fit) 
    
-   M_3class <- poLCA(LCAmodel, data=rosie, nclass=3, graphs=TRUE, na.rm=TRUE)
+   Mv1_3class <- poLCA(LCAmodel_v1, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   # Estimated class population shares 
+   # 0.1302 0.5681 0.3017 
+   # 
+   # Predicted class memberships (by modal posterior prob.) 
+   # 0.1311 0.5683 0.3005 
+   # 
+   # ======================== 3-class results ================================= 
+   #   Fit for 3 latent classes: 
+   #   
+   #   number of observations: 183 
+   # number of estimated parameters: 158 
+   # residual degrees of freedom: 25 
+   # maximum log-likelihood: -2644.919 
+   # 
+   # AIC(3): 5605.837
+   # BIC(3): 6112.936
+   # G^2(3): 3383.165 (Likelihood ratio/deviance statistic) 
+   # X^2(3): 34019945 (Chi-square goodness of fit) 
    
-   M_4class <- poLCA(LCAmodel, data=rosie, nclass=4, graphs=TRUE, na.rm=TRUE)
+   Mv1_4class <- poLCA(LCAmodel_v1, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) 
+   # ======================== 4-class results =================================
+   # ALERT: number of parameters estimated ( 211 ) exceeds number of observations ( 183 ) 
+   # 
+   # ALERT: negative degrees of freedom; respecify model 
+   
+   
+   # https://statistics.ohlsen-web.de/latent-class-analysis-polca/
+   #Since we do not have a solid theoretical assumption of the number of unobserved subpopulations (aka family types)
+   #we take an exploratory approach and compare multiple models (2-4 classes) against each other. 
+   #If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+   #Additionally one could compare the different solutions by BIC or AIC information criteria. 
+   #BIC is preferred over AIC in latent class models, but usually both are used. 
+   #A smaller BIC is better than a bigger BIC. 
+   #Next to AIC and BIC one also gets a Chi-Square goodness of fit, which one can compare.
+   
+   #>> 2-class model seems to have the best fit, since BIC is smaller  
+   
+   #in order to transfer the LCA-results into SEM, we need to assign each parent to the respective class, for that we...
+   #...extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
+   set.seed(123)
+   ?set.seed
+   twoclass_v1 <- poLCA(LCAmodel_v1, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   #...output predicted classes from selected model so that we can use it in subsequent analyses:
+   rosie_fscores$classv1 <- twoclass_v1$predclass
+   
+   #...declare the class variable as a factor
+   rosie_fscores$classv1 <-  as.factor(rosie_fscores$classv1)
+   is.factor(rosie_fscores$classv1)
+   
+   View(rosie_fscores)
+   
+   #...name the levels of the class factor using the response probabilities plot
+   levels(rosie_fscores$classv1)[levels(rosie_fscores$classv1)=="1"] <- "XXX"
+   levels(rosie_fscores$classv1)[levels(rosie_fscores$classv1)=="2"] <- "YYY"
+   
+   
+   #--------------------------------------------------------------------#
+   ### LATENT PROFILE/CLASS ANALYSIS VERSION 1 ##########################
+   #--------------------------------------------------------------------#
+   
+   #along preregistered DSMM using factor scores where available  
+   
+   #Which variables should go in the LCA? >> All individual characteristics! Those are:
+   
+   #Dispositional: 
+   # TT >> 3 items
+   # Child_Temp_Extraversion
+   # Child_Temp_Negative_Affectivity
+   # Child_Temp_Effortful_Control 
+   # Child_Parasocial >> 5 items
+   # SOCIALEKLASSE2016
+   
+   #Developmental: 
+   # Child_Age
+   # Child-Gender
+   # LFT
+   # GSL
+   
+   #Social: 
+   # PMMS >> 6 items
+   
+   
+   library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
+   
+   #Dispositional: 
+   # TT >> 3 items one factor >> median split method because of fairly normal distribution 
+   # Child_Temp_Extraversion >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+   # Child_Temp_Negative_Affectivity >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+   # Child_Temp_Effortful_Control >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+   # Child_Parasocial >> 5 items two factors >> anthropomorphism & parasocial_relationship >> since distributions show that answer options 1+2 as well as 3+4+5 group together: 1-2 = 1, 3-5 = 2 >> translating groups of 1-2 = 1, 3-5 = 2 into factor scores
+   # SOCIALEKLASSE2016 >> ALREADY CATEGORICAL
+   
+   #Developmental: 
+   # Child_Age >> agre group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
+   # Child-Gender >> ALREADY CATEGORICAL
+   # LFT >> mean-split
+   # GSL >> ALREADY CATEGORICAL
+   
+   #Social: 
+   # PMMS >> 6 items three factors >> restsMed & negacMed & posacMed >> since distributions show that answer options 1+2 group together: 1-2 = 1 (nooit), 3 = 2 (soms), 4 = 3 (vaak) >> translating groups of into factor scores
+   
+   #artificial categorization
+   # - TT
+   rosie_fscores$TT_f_factor[rosie_fscores$TT_f<=median(rosie_fscores$TT_f)] = 1
+   rosie_fscores$TT_f_factor[rosie_fscores$TT_f>median(rosie_fscores$TT_f)] = 2
+   
+   # - Child_Temp
+   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<=3] = 1
+   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>=4] = 2
+   
+   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
+   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
+   
+   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control<=3] = 1
+   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control>=4] = 2
+   
+   # - Child_Parasocial
+   rosie_fscores$anthropomorphism_factor[rosie_fscores$anthropomorphism<=0] = 1
+   rosie_fscores$anthropomorphism_factor[rosie_fscores$anthropomorphism>0] = 2
+   
+   rosie_fscores$parasocial_relationship_factor[rosie_fscores$parasocial_relationship<=0] = 1
+   rosie_fscores$parasocial_relationship_factor[rosie_fscores$parasocial_relationship>0] = 2
+   
+   # - Child_Age
+   rosie_fscores$Child_Age_factor[rosie_fscores$Child_Age<=3] = 1 
+   rosie_fscores$Child_Age_factor[rosie_fscores$Child_Age>=4] = 2
+   
+   # - LFT
+   rosie_fscores$LFT_factor[rosie_fscores$LFT<=mean(rosie$LFT)] = 1
+   rosie_fscores$LFT_factor[rosie_fscores$LFT>mean(rosie$LFT)] = 2
+   
+   # - PMMS
+   #restrMed
+   rosie_fscores$restrMed_factor[rosie_fscores$restrMed<(-1)] = 1
+   rosie_fscores$restrMed_factor[rosie_fscores$restrMed>=(-1) & rosie_fscores$restrMed<=0] = 2
+   rosie_fscores$restrMed_factor[rosie_fscores$restrMed>0] = 3
+   
+   View(rosie_fscores$restrMed_factor)
+   
+   #negacMed
+   rosie_fscores$negacMed_factor[rosie_fscores$negacMed<(-1)] = 1
+   rosie_fscores$negacMed_factor[rosie_fscores$negacMed>=(-1) & rosie_fscores$negacMed<=0] = 2
+   rosie_fscores$negacMed_factor[rosie_fscores$negacMed>0] = 3
+   
+   View(rosie_fscores$negacMed_factor)
+   
+   #posacMed
+   rosie_fscores$posacMed_factor[rosie_fscores$posacMed<(-1)] = 1
+   rosie_fscores$posacMed_factor[rosie_fscores$posacMed>=(-1) & rosie_fscores$posacMed<=0] = 2
+   rosie_fscores$posacMed_factor[rosie_fscores$posacMed>0] = 3
+   
+   View(rosie_fscores$posacMed_factor)
+   
+   View(rosie_fscores)
+   
+   
+   #LCA
+   LCAmodel_v2 <- cbind(TT_f_factor,
+                     Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor, 
+                     anthropomorphism_factor, parasocial_relationship_factor,
+                     SOCIALEKLASSE2016,
+                     Child_Age_factor, 
+                     Child_Gender, 
+                     LFT_factor, 
+                     GSL, 
+                     restrMed_factor, negacMed_factor, posacMed_factor)~1
+   
+   Mv2_2class <- poLCA(LCAmodel_v2, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   # Estimated class population shares 
+   # 0.3761 0.6239 
+   # 
+   # Predicted class memberships (by modal posterior prob.) 
+   # 0.3825 0.6175 
+   # 
+   # ======================= 2-class results ================================== 
+   #   Fit for 2 latent classes: 
+   # 
+   #   number of observations: 183 
+   # number of estimated parameters: 41 
+   # residual degrees of freedom: 142 
+   # maximum log-likelihood: -1856.486 
+   # 
+   # AIC(2): 3794.972
+   # BIC(2): 3926.561
+   # G^2(2): 1811.845 (Likelihood ratio/deviance statistic) 
+   # X^2(2): 158757.2 (Chi-square goodness of fit) 
+   
+   Mv2_3class <- poLCA(LCAmodel_v2, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   # Estimated class population shares 
+   # 0.3232 0.3038 0.373 
+   # 
+   # Predicted class memberships (by modal posterior prob.) 
+   # 0.3279 0.3115 0.3607 
+   # 
+   # ======================= 3-class results ================================== 
+   #   Fit for 3 latent classes: 
+   #  
+   #   number of observations: 183 
+   # number of estimated parameters: 62 
+   # residual degrees of freedom: 121 
+   # maximum log-likelihood: -1814.724 
+   # 
+   # AIC(3): 3753.448
+   # BIC(3): 3952.436
+   # G^2(3): 1728.321 (Likelihood ratio/deviance statistic) 
+   # X^2(3): 193232.4 (Chi-square goodness of fit)
+   
+   Mv2_4class <- poLCA(LCAmodel_v2, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   # Estimated class population shares 
+   # 0.2493 0.2783 0.2258 0.2466 
+   # 
+   # Predicted class memberships (by modal posterior prob.) 
+   # 0.2404 0.2678 0.2459 0.2459 
+   # 
+   # ======================== 4-class results ================================= 
+   #   Fit for 4 latent classes: 
+   #
+   #   number of observations: 183 
+   # number of estimated parameters: 83 
+   # residual degrees of freedom: 100 
+   # maximum log-likelihood: -1786.553 
+   # 
+   # AIC(4): 3739.105
+   # BIC(4): 4005.493
+   # G^2(4): 1671.979 (Likelihood ratio/deviance statistic) 
+   # X^2(4): 129425.1 (Chi-square goodness of fit) 
+   
+   # https://statistics.ohlsen-web.de/latent-class-analysis-polca/
+   #Since we do not have a solid theoretical assumption of the number of unobserved subpopulations (aka family types)
+   #we take an exploratory approach and compare multiple models (2-4 classes) against each other. 
+   #If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+   #Additionally one could compare the different solutions by BIC or AIC information criteria. 
+   #BIC is preferred over AIC in latent class models, but usually both are used. 
+   #A smaller BIC is better than a bigger BIC. 
+   #Next to AIC and BIC one also gets a Chi-Square goodness of fit, which one can compare.
+   
+   #>> 2-class model seems to have the best fit, since BIC is smaller  
+   
+   set.seed(123)
+   ?set.seed
+   twoclass_v2 <- poLCA(LCAmodel_v2, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   #...output predicted classes from selected model so that we can use it in subsequent analyses:
+   rosie_fscores$classv2 <- twoclass_v2$predclass
+   
+   #...declare the class variable as a factor
+   rosie_fscores$classv2 <-  as.factor(rosie_fscores$classv2)
+   is.factor(rosie_fscores$classv2)
+   
+   View(rosie_fscores)
+   
+   #...name the levels of the class factor using the response probabilities plot
+   levels(rosie_fscores$classv2)[levels(rosie_fscores$classv2)=="1"] <- "XXX"
+   levels(rosie_fscores$classv2)[levels(rosie_fscores$classv2)=="2"] <- "YYY"
+   
+   
+   #--------------------------------------------------------------------------------#
+   ### COMPARISON BETWEEN VERSION 1 AND VERSION 2 SOLUTION ##########################
+   #--------------------------------------------------------------------------------#
+   
+   #A correlation does not make much sense because it does not work with categorical variables; it needs continuous ones.
+   #But the whole purpose of this is to artificially categorize. 
+   
+   View(rosie_fscores)
+   
+   #for TT
+   round(cor(rosie_fscores[,c(205, 216)]),2)
+   #                      TT_f_factor TT_total_LCA_factor
+   # TT_f_factor                1.00                0.44
+   # TT_total_LCA_factor        0.44                1.00
+   
+   #for Child_Parasocail
+   round(cor(rosie_fscores[,c(211:212, 220, 223)]),2)
+   #                                              anthropomorphism_factor parasocial_relationship_factor Para_anthropomorphism_total_LCA_factor Para_parasocialrelationship_total_LCA_factor
+   # anthropomorphism_factor                                         1.00                           0.62                                   0.45                                         0.00
+   # parasocial_relationship_factor                                  0.62                           1.00                                   0.33                                        -0.21
+   # Para_anthropomorphism_total_LCA_factor                          0.45                           0.33                                   1.00                                         0.03
+   # Para_parasocialrelationship_total_LCA_factor                    0.00                          -0.21                                   0.03                                         1.00
+   
+   #for better visual overivew 
+   library(devtools)
+   devtools::install_github("laresbernardo/lares")
+   library(lares)
+   
+   corr_cross(rosie_fscores[,c(211:212, 220, 223)], # name of dataset
+              max_pvalue = 0.05, # display only significant correlations (at 5% level)
+              top = 20 # display top 10 couples of variables (by correlation coefficient)
+   )
+   
+   #for PMMS
+   round(cor(rosie_fscores[,c(202:204, 226, 229, 232)]),2)
+   # restrMed_factor negacMed_factor posacMed_factor PMMS_restrMed_total_LCA_factor PMMS_negacMed_total_LCA_factor PMMS_posacMed_total_LCA_factor
+   # restrMed_factor                           1.00            0.56            0.42                           0.50                           0.38                           0.15
+   # negacMed_factor                           0.56            1.00            0.32                           0.08                           0.40                           0.12
+   # posacMed_factor                           0.42            0.32            1.00                           0.24                           0.23                           0.50
+   # PMMS_restrMed_total_LCA_factor            0.50            0.08            0.24                           1.00                           0.00                           0.09
+   # PMMS_negacMed_total_LCA_factor            0.38            0.40            0.23                           0.00                           1.00                           0.07
+   # PMMS_posacMed_total_LCA_factor            0.15            0.12            0.50                           0.09                           0.07                           1.00
+   
+   #for better visual overivew 
+   library(devtools)
+   devtools::install_github("laresbernardo/lares")
+   library(lares)
+   
+   corr_cross(rosie_fscores[,c(202:204, 226, 229, 232)], # name of dataset
+              max_pvalue = 0.05, # display only significant correlations (at 5% level)
+              top = 20 # display top 10 couples of variables (by correlation coefficient)
+   )
+   
+   #An alternative to confirm that we can indeed just translate the grouping to the factor scores would be to standardize the values
+   #on the original scale per item (per construct) and compare each person's mean on that standardized scale with their factor score.
+   
+   rosie_fscores_standardized <- scale(rosie_fscores[,c(167:169)])
+   View(rosie_fscores_standardized)
+   is.numeric(rosie_fscores_standardized$TT_1)
+   
+   rosie_fscores_standardized$TT_mean <- sum(rosie_fscores_standardized$TT_1 + rosie_fscores_standardized$TT_2 + rosie_fscores_standardized$TT_3)/3
+   View(rosie_fscores_standardized)
+   rosie_fscores_standardized$TT_1_mean <- mean(rosie_fscores_standardized$TT_1)
+   
+   #--------------------------------------------------------------------#
+   ### LATENT PROFILE/CLASS ANALYSIS VERSION 3 ##########################
+   #--------------------------------------------------------------------#
+   
+   #along idea of including also household composition, smart-household-level, and internet literacy
+   
+   #Which variables should go in the LCA? >> All individual characteristics! Those are:
+   
+   #Dispositional: 
+   # IL >> 5 items (information + navigation)
+   # TT >> 3 items
+   # Child_Temp_Extraversion
+   # Child_Temp_Negative_Affectivity
+   # Child_Temp_Effortful_Control 
+   # Child_Parasocial >> 5 items
+   # SOCIALEKLASSE2016
+   # smart-household-level
+   
+   #Developmental: 
+   # Child_Age
+   # Child-Gender
+   # LFT
+   # GSL
+   
+   #Social: 
+   # PMMS >> 6 items
+   # household composition >> built up of Child_Nr and PERSONEN
+   
+   
+   library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
+   
+   #Dispositional: 
+   # IL >> 5 items two factors >> since answer options 1+2 as well as the rest group together (same for looking at factor score distribution). we change into: <= 0 = 1, > 0 = 2
+   # TT >> 3 items one factor >> median split method because of fairly normal distribution and conceptual understanding of 0 = Neutraal
+   # Child_Temp_Extraversion >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+   # Child_Temp_Negative_Affectivity >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+   # Child_Temp_Effortful_Control >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
+   # Child_Parasocial >> 5 items two factors >> anthropomorphism & parasocial_relationship >> since distributions show that answer options 1+2 as well as 3+4+5 group together: 1-2 = 1, 3-5 = 2 >> translating groups of 1-2 = 1, 3-5 = 2 into factor scores
+   # SOCIALEKLASSE2016 >> ALREADY CATEGORICAL
+   # smart-household-level >> convert single-item into factor
+   
+   #Developmental: 
+   # Child_Age >> agre group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
+   # Child-Gender >> ALREADY CATEGORICAL
+   # LFT >> mean-split
+   # GSL >> ALREADY CATEGORICAL
+   
+   #Social: 
+   # PMMS >> 6 items three factors >> restsMed & negacMed & posacMed >> since distributions show that answer options 1+2 group together: 1-2 = 1 (nooit), 3 = 2 (soms), 4 = 3 (vaak) >> translating groups of into factor scores
+   # household composition >> convert both items into factors
+   
+   #artificial categorization
+   # - IL
+   #navigation
+   rosie_fscores$IL_navigation_factor[rosie_fscores$navigation<=0] = 1
+   rosie_fscores$IL_navigation_factor[rosie_fscores$navigation>0] = 2
+   
+   #information
+   rosie_fscores$IL_information_factor[rosie_fscores$information<=0] = 1
+   rosie_fscores$IL_information_factor[rosie_fscores$information>0] = 2
+   
+   # - TT
+   rosie_fscores$TT_f_factor[rosie_fscores$TT_f<=median(rosie_fscores$TT_f)] = 1
+   rosie_fscores$TT_f_factor[rosie_fscores$TT_f>median(rosie_fscores$TT_f)] = 2
+   
+   # - Child_Temp
+   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<=3] = 1
+   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>=4] = 2
+   
+   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
+   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
+   
+   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control<=3] = 1
+   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control>=4] = 2
+   
+   # - Child_Parasocial
+   rosie_fscores$anthropomorphism_factor[rosie_fscores$anthropomorphism<=0] = 1
+   rosie_fscores$anthropomorphism_factor[rosie_fscores$anthropomorphism>0] = 2
+   
+   rosie_fscores$parasocial_relationship_factor[rosie_fscores$parasocial_relationship<=0] = 1
+   rosie_fscores$parasocial_relationship_factor[rosie_fscores$parasocial_relationship>0] = 2
+   
+   # - smart-household-level
+   rosie_fscores$SHL_f[rosie_fscores$SHL<=median(rosie_fscores$SHL)] = 1
+   rosie_fscores$SHL_f[rosie_fscores$SHL>median(rosie_fscores$SHL)] = 2
+   
+   # - Child_Age
+   rosie_fscores$Child_Age_factor[rosie_fscores$Child_Age<=3] = 1 
+   rosie_fscores$Child_Age_factor[rosie_fscores$Child_Age>=4] = 2
+   
+   # - LFT
+   rosie_fscores$LFT_factor[rosie_fscores$LFT<=mean(rosie$LFT)] = 1
+   rosie_fscores$LFT_factor[rosie_fscores$LFT>mean(rosie$LFT)] = 2
+   
+   # - PMMS
+   #restrMed
+   rosie_fscores$restrMed_factor[rosie_fscores$restrMed<(-1)] = 1
+   rosie_fscores$restrMed_factor[rosie_fscores$restrMed>=(-1) & rosie_fscores$restrMed<=0] = 2
+   rosie_fscores$restrMed_factor[rosie_fscores$restrMed>0] = 3
+   
+   View(rosie_fscores$restrMed_factor)
+   
+   #negacMed
+   rosie_fscores$negacMed_factor[rosie_fscores$negacMed<(-1)] = 1
+   rosie_fscores$negacMed_factor[rosie_fscores$negacMed>=(-1) & rosie_fscores$negacMed<=0] = 2
+   rosie_fscores$negacMed_factor[rosie_fscores$negacMed>0] = 3
+   
+   View(rosie_fscores$negacMed_factor)
+   
+   #posacMed
+   rosie_fscores$posacMed_factor[rosie_fscores$posacMed<(-1)] = 1
+   rosie_fscores$posacMed_factor[rosie_fscores$posacMed>=(-1) & rosie_fscores$posacMed<=0] = 2
+   rosie_fscores$posacMed_factor[rosie_fscores$posacMed>0] = 3
+   
+   View(rosie_fscores$posacMed_factor)
+   
+   # - household composition
+   rosie_fscores$Child_Nr_f <- as.factor(rosie_fscores$Child_Nr)
+   
+   rosie_fscores$PERSONEN_f <- as.factor(rosie_fscores$PERSONEN)
+   
+   
+   View(rosie_fscores) 
+   
+   
+   #LCA
+   LCAmodel_v3 <- cbind(IL_navigation_factor, IL_information_factor,
+                     TT_f_factor,
+                     Temp_Extraversion_factor, Temp_Negative_Affectivity_factor, Temp_Effortful_Control_factor, 
+                     anthropomorphism_factor, parasocial_relationship_factor,
+                     SOCIALEKLASSE2016,
+                     SHL_f,
+                     Child_Age_factor, 
+                     Child_Gender, 
+                     LFT_factor, 
+                     GSL, 
+                     restrMed_factor, negacMed_factor, posacMed_factor,
+                     Child_Nr_f, PERSONEN_f)~1
+   
+   Mv3_2class <- poLCA(LCAmodel_v3, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   Mv3_3class <- poLCA(LCAmodel_v3, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   Mv3_4class <- poLCA(LCAmodel_v3, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
    # https://statistics.ohlsen-web.de/latent-class-analysis-polca/
    #Since we do not have a solid theoretical assumption of the number of unobserved subpopulations (aka family types)
@@ -1944,40 +2602,22 @@
    #Next to AIC and BIC one also gets a Chi-Square goodness of fit, which one can compare.
    
    
-   ### OR instead: depmixS4 which also allows continuous and categorical indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
+   #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
+   set.seed(123)
+   ?set.seed
+   twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
-   library(depmixS4)
-   library(stats)
-  
-   #define model     
-   #??mix
-   #model_definition <- depmix(list(TT_1 ~ 1, TT_2 ~ 1, TT_3 ~ 1, 
-    #                            Child_Temp_Extraversion ~ 1, Child_Temp_Negative_Affectivity ~ 1, Child_Temp_Effortful_Control ~ 1,
-    #                            Child_Parasocial_1 ~ 1, Child_Parasocial_2 ~ 1, Child_Parasocial_3 ~ 1, Child_Parasocial_4 ~ 1, Child_Parasocial_5 ~ 1,
-    #                            SOCIALEKLASSE2016 ~ 1,
-    #                            Child_Age ~ 1, 
-    #                            Child_Gender ~ 1, 
-    #                            GSL ~ 1, 
-    #                            LFT ~ 1, 
-    #                            PMMS_1 ~ 1, PMMS_2 ~ 1, PMMS_3 ~ 1, PMMS_4 ~ 1, PMMS_5 ~ 1, PMMS_6 ~ 1),
-    #                       data = rosie, nstates = 2, 
-    #                       family = list(Gamma(),Gamma(),Gamma(),
-    #                                     Gamma(),Gamma(),Gamma(),
-    #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),
-    #                                     poisson(),
-    #                                     Gamma(),
-    #                                     poisson(),
-    #                                     poisson(),
-    #                                     Gamma(),
-    #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),Gamma()),
-    #                       respstart=runif(44))
+   #output predicted classes from selected model so that we can use it in subsequent analyses:
+   rosie_fscores$class=twoclass$predclass
    
-   #?depmixS4::GLMresponse
+   #declare the class variable as a factor
+   rosie_fscores$class = as.factor(rosie_fscores$class)
    
-   #fit model       
-   #fit.mod <- fit(model_definition)   # Fit the model
-          
-   #fit.mod
+   #name the levels of the class factor using the response probabilities plot
+   levels(rosie_fscores$class)[levels(rosie_fscores$class)=="1"] <- "XXX"
+   levels(rosie_fscores$class)[levels(rosie_fscores$class)=="2"] <- "YYY"
+   
+   
           
    #########  :) Script run until here #################
    
@@ -1991,6 +2631,8 @@
    ### SEM-POWER ANALYSIS ##########################
    #-----------------------------------------------#
    
+   #https://yilinandrewang.shinyapps.io/pwrSEM/ 
+     
    ??simsem
    #http://rstudio-pubs-static.s3.amazonaws.com/253855_164b16e3a9074cf9a6f3045cbe1f99ce.html 
    
@@ -2003,28 +2645,6 @@
       library(gmodels)
       CrossTable(DataSet$Variable1, DataSet$Variable2, chisq = TRUE, expected = TRUE, prop.c = FALSE, prop.r = FALSE, prop.t = FALSE, prop.chisq = FALSE, asresid = TRUE, format = "SPSS")
       
-      #CORRELATION
-      library(ltm)
-      rcor.test(dataset[,c(2, 4:6)]) #for specified columns
-      rcor.test(dataset$variable1, dataset$variable2..) #for specified variables
-      #pairwise correlations all in one scatterplot matrix
-      library(car)
-      scatterplotMatrix(~Variable1+Variable2+Variable3, data = DataSet)
-      
-      #inspecting correlations of all TAM model components using the CFA-factor scores
-      rosie_correlations <- rosie[,c(143:169, 171, 175:176)] #dataset with CFA-factor scores needs to be used here
-      round(cor(rosie_correlations), 2)
-      
-            #for better visual overivew 
-            library(devtools)
-            devtools::install_github("laresbernardo/lares")
-            library(lares)
-            
-            ??corr_cross
-            corr_cross(rosie_correlations, # name of dataset
-                       max_pvalue = 0.05, # display only significant correlations (at 5% level)
-                       top = 10 # display top 10 couples of variables (by correlation coefficient)
-            )
       
       #MULTIPLE LINEAR REGRESSION (!!! use centered predictors)
       #centering predictors
@@ -2039,17 +2659,8 @@
       
 
       install.packages("lavaan", dependencies = T)
-      install.packages("MVN", dependencies = T)
       library(lavaan)
-      library(MVN)
-      
-      #analysis preparations
-        #check multivariate normality
-        pathex_comp <- pathex[complete.cases(pathex),]
-      
-        #check univariate distributions, multivariate normality and identify multivariate outliers
-        MVpathex <- mvn(pathex_comp[, c(5,8,11:13)] mvnTest = “mardia”, multivariatePlot = “qq”, multivariateOutlierMethod = “adj”, showOutliers = T, showNewData = T)
-        #or oldschool way via plots
+ 
       
       #perform the analysis
         #https://benwhalley.github.io/just-enough-r/cfa.html
@@ -2060,31 +2671,48 @@
         #growth() #for latent growth curve modeling
         #lavaan() #for all models (without default parameters)
       
-          #specify the model
-          model <- ‘cbcIDQ ~popular + temper + sex
-          cbcIAB ~popular + temper + sex
-          cbcIAD ~popular + temper + y’
-          #fit the model
-          fit <- sem(model, data = NewpDataSet)
-          #print summary
-          summary(fit, standardized = T)
-          
-          #specify estimator and imputation strategy
-          fit <- sem(model, data = Data, estimator = “MLR”, missing = “ML”)
-          #add intercepts
-          fit <- sem(model, data = Data, meanstructure = TRUE)
-          #use bootstrapping
-          fit <- sem(model, data = Data, se = ‘bootstrap’)
-          fit <- sem(model, data = Data, test = ‘bootstrap’)
-          
-          #adjust summary
-          #adding standardized estimates and R-square(s)
-          summary(fit, standardized = TRUE, rsq = TRUE)
-          #adding GOD indices
-          summary(fit, fit.measures = TRUE)
-          #adding modification indices
-          summary(fit, modindices = TRUE)
+        ### Higher Order Model in Lavaan ###
+        
+        #specify the model
+        rosiesTAM <- '
+          #measurement model
+            IL  =~ 1*information + navigation      
+            PE =~ PE
+            E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+            IMG =~ TAM_IMG
+            SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
+            PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+            PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+            ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3
+        
+          #regressions
+            PEoU ~ IL + PE ?+ FAM? + SHL + Child_nr
+            PU ~ FAM + PEoU + SHL + Child_nr
+            ICU ~ PEoU + PU + E + IMG + SN +SHL + Child_nr
+        
+          #add (residual) variances ????
+            x1~~x1
+            x2~~x2
+            x3~~x3
+            x4~~x4
+            x5~~x5
+            x6~~x6
+            x7~~x7
+            x8~~x8
+            x9~~x9
+            EE~~EE
+            CY~~CY
+            RPA~~RPA
+            burnout~~burnout'
+        
+        #fit the model
+        rosiesTAM_fit <- lavaan(rosiesTAM, data = rosie_fscores)
+        
+        #print summary  
+        summary(rosiesTAM_fit, standardized = T, fit.measures = T)
       
+        #compare models
+        anova(rosiesTAM_fit, fit2?)
 ###----------------------------------------------------------------------------------------------------------------###
           
 #------------------------------------------------#
@@ -2184,3 +2812,67 @@
       summary(ho_f_model_lavaan_fit, standardized = T, fit.measures = T)
       
       
+      ### SEM FUNCTION ###
+      
+      
+      #specify the model
+      model <- ‘cbcIDQ ~popular + temper + sex
+      cbcIAB ~popular + temper + sex
+      cbcIAD ~popular + temper + y’
+      #fit the model
+      fit <- sem(model, data = NewpDataSet)
+      #print summary
+      summary(fit, standardized = T)
+      
+      #specify estimator and imputation strategy
+      fit <- sem(model, data = Data, estimator = “MLR”, missing = “ML”)
+      #add intercepts
+      fit <- sem(model, data = Data, meanstructure = TRUE)
+      #use bootstrapping
+      fit <- sem(model, data = Data, se = ‘bootstrap’)
+      fit <- sem(model, data = Data, test = ‘bootstrap’)
+      
+      #adjust summary
+      #adding standardized estimates and R-square(s)
+      summary(fit, standardized = TRUE, rsq = TRUE)
+      #adding GOD indices
+      summary(fit, fit.measures = TRUE)
+      #adding modification indices
+      summary(fit, modindices = TRUE)
+      ### OR instead: depmixS4 which also allows continuous and categorical indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
+      
+      
+      ### LPA ###
+      
+      library(depmixS4)
+      library(stats)
+      
+      #define model     
+      #??mix
+      #model_definition <- depmix(list(TT_1 ~ 1, TT_2 ~ 1, TT_3 ~ 1, 
+      #                            Child_Temp_Extraversion ~ 1, Child_Temp_Negative_Affectivity ~ 1, Child_Temp_Effortful_Control ~ 1,
+      #                            Child_Parasocial_1 ~ 1, Child_Parasocial_2 ~ 1, Child_Parasocial_3 ~ 1, Child_Parasocial_4 ~ 1, Child_Parasocial_5 ~ 1,
+      #                            SOCIALEKLASSE2016 ~ 1,
+      #                            Child_Age ~ 1, 
+      #                            Child_Gender ~ 1, 
+      #                            GSL ~ 1, 
+      #                            LFT ~ 1, 
+      #                            PMMS_1 ~ 1, PMMS_2 ~ 1, PMMS_3 ~ 1, PMMS_4 ~ 1, PMMS_5 ~ 1, PMMS_6 ~ 1),
+      #                       data = rosie, nstates = 2, 
+      #                       family = list(Gamma(),Gamma(),Gamma(),
+      #                                     Gamma(),Gamma(),Gamma(),
+      #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),
+      #                                     poisson(),
+      #                                     Gamma(),
+      #                                     poisson(),
+      #                                     poisson(),
+      #                                     Gamma(),
+      #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),Gamma()),
+      #                       respstart=runif(44))
+      
+      #?depmixS4::GLMresponse
+      
+      #fit model       
+      #fit.mod <- fit(model_definition)   # Fit the model
+      
+      #fit.mod
