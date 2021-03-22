@@ -101,7 +101,7 @@
       #LFT (for parent age)
  
   #removing variables that we do not need for Rosie analyses (other researchers' variables of interest)
-   rosie_dataset <- data[,-c(2:16, 108:120, 190, 199:291, 294:309, 313:325)]
+   rosie_dataset <- data[,-c(2:16, 41:54, 56:67, 69:80, 108:120, 139:149, 157:168, 190, 199:291, 294:309, 313:325)]
    View(rosie_dataset)
    
    #getting variable names and index numbers of reduced dataset
@@ -288,7 +288,7 @@
     #SOCIALEKLASSE2016 (for SES) --> outdated???
     #STATUS (complete or screened-out)
     #GSL (parent gender)
-   rosie_dataset_renamed_families_complete[, 2:26] <- sapply(rosie_dataset_renamed_families_complete[, 2:26], as.factor)
+   rosie_dataset_renamed_families_complete[, 2:26] <- sapply(rosie_dataset_renamed_families_complete[, 2:26], as.numeric)
    rosie_dataset_renamed_families_complete[, 95] <- sapply(rosie_dataset_renamed_families_complete[, 95], as.factor)
    rosie_dataset_renamed_families_complete[, 127] <- sapply(rosie_dataset_renamed_families_complete[, 127], as.factor)
    rosie_dataset_renamed_families_complete[, 141] <- sapply(rosie_dataset_renamed_families_complete[, 141], as.factor)
@@ -297,16 +297,32 @@
    
   #recoding values of variables
   
-  #Previous experience - PE (Q5 GA_Freq) --> relevant for smart speakers are items: GA_Freq_8-11
+  #Frequency of personal use - FoPersU (Q5 GA_Freq) --> relevant for smart speakers are items: GA_Freq_8-11
   #Here, we computed the mean for each participant on their answers to the frequency of smart speaker usage to get an indicator for their previous experience (the higher this value the higher the PE)
   library(fame)
-  rosie_dataset_renamed_families_complete$PE <- rowMeans(rosie_dataset_renamed_families_complete[, 73:76], na.rm = T)
-  is.numeric(rosie_dataset_renamed_families_complete$PE)
+  rosie_dataset_renamed_families_complete$FoPersU <- rowMeans(rosie_dataset_renamed_families_complete[, 73:76], na.rm = T)
+  is.numeric(rosie_dataset_renamed_families_complete$FoPersU)
   View(rosie_dataset_renamed_families_complete)
 
-  #Smart-Household-Level - SHL (Q6 GA_IoT_Freq) 
-  #Here, we computed the mean for each participant on their answers to the frequency of GA_IoT usage to get an indicator for their smart-household-level (the higher this value the higher the SHL)
-  rosie_dataset_renamed_families_complete$SHL <- rowMeans(rosie_dataset_renamed_families_complete[, 77:92], na.rm = T)
+  #Smart-Household-Level - SHL (Q6 IoT_Usage_9 - 24) 
+  #Here, we counted the number of smart-devices each family owns, so the number of selected items (the higher the number the higher the SHL)
+  is.numeric(rosie_dataset_renamed_families_complete[, 10:25])
+  rosie_dataset_renamed_families_complete$SHL <- rosie_dataset_renamed_families_complete$IoT_Usage_9+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_10+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_11+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_12+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_13+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_14+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_15+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_16+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_17+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_18+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_19+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_20+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_21+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_22+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_23+
+                                                 rosie_dataset_renamed_families_complete$IoT_Usage_24
   is.numeric(rosie_dataset_renamed_families_complete$SHL)
   rosie_dataset_renamed_families_complete$SHL
   View(rosie_dataset_renamed_families_complete)
@@ -1909,22 +1925,25 @@
    
    #Which variables should go in the LCA? >> All individual characteristics! Those are:
    
-         #Dispositional: 
-         # TT >> 3 items
-         # Child_Temp_Extraversion
-         # Child_Temp_Negative_Affectivity
-         # Child_Temp_Effortful_Control 
-         # Child_Parasocial >> 5 items
-         # SOCIALEKLASSE2016
-         
-         #Developmental: 
-         # Child_Age
-         # Child-Gender
-         # LFT
-         # GSL
-         
-         #Social: 
-         # PMMS >> 6 items
+       #Dispositional: 
+       # IL >> 5 items (information + navigation)
+       # TT >> 3 items
+       # Child_Temp_Extraversion
+       # Child_Temp_Negative_Affectivity
+       # Child_Temp_Effortful_Control 
+       # Child_Parasocial >> 5 items
+       # SOCIALEKLASSE2016
+       # smart-household-level
+       
+       #Developmental: 
+       # Child_Age
+       # Child-Gender
+       # LFT
+       # GSL
+       
+       #Social: 
+       # PMMS >> 6 items
+       # household composition >> built up of Child_Nr and PERSONEN
   
 
    library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
@@ -2191,22 +2210,25 @@
    
    #Which variables should go in the LCA? >> All individual characteristics! Those are:
    
-   #Dispositional: 
-   # TT >> 3 items
-   # Child_Temp_Extraversion
-   # Child_Temp_Negative_Affectivity
-   # Child_Temp_Effortful_Control 
-   # Child_Parasocial >> 5 items
-   # SOCIALEKLASSE2016
-   
-   #Developmental: 
-   # Child_Age
-   # Child-Gender
-   # LFT
-   # GSL
-   
-   #Social: 
-   # PMMS >> 6 items
+       #Dispositional: 
+       # IL >> 5 items (information + navigation)
+       # TT >> 3 items
+       # Child_Temp_Extraversion
+       # Child_Temp_Negative_Affectivity
+       # Child_Temp_Effortful_Control 
+       # Child_Parasocial >> 5 items
+       # SOCIALEKLASSE2016
+       # smart-household-level
+       
+       #Developmental: 
+       # Child_Age
+       # Child-Gender
+       # LFT
+       # GSL
+       
+       #Social: 
+       # PMMS >> 6 items
+       # household composition >> built up of Child_Nr and PERSONEN
    
    
    library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
@@ -2455,79 +2477,154 @@
    
    #Which variables should go in the LCA? >> All individual characteristics! Those are:
    
-   #Dispositional: 
-   # IL >> 5 items (information + navigation)
-   # TT >> 3 items
-   # Child_Temp_Extraversion
-   # Child_Temp_Negative_Affectivity
-   # Child_Temp_Effortful_Control 
-   # Child_Parasocial >> 5 items
-   # SOCIALEKLASSE2016
-   # smart-household-level
-   
-   #Developmental: 
-   # Child_Age
-   # Child-Gender
-   # LFT
-   # GSL
-   
-   #Social: 
-   # PMMS >> 6 items
-   # household composition >> built up of Child_Nr and PERSONEN
+       #Dispositional: 
+       # IL >> 5 items (information + navigation)
+       # TT >> 3 items
+       # Child_Temp_Extraversion
+       # Child_Temp_Negative_Affectivity
+       # Child_Temp_Effortful_Control 
+       # Child_Parasocial >> 5 items
+       # SOCIALEKLASSE2016
+       # smart-household-level
+       
+       #Developmental: 
+       # Child_Age
+       # Child-Gender
+       # LFT
+       # GSL
+       
+       #Social: 
+       # PMMS >> 6 items
+       # household composition >> built up of Child_Nr and PERSONEN
    
    
    library(poLCA) # >> only allows categorical indicators, so we convert all continuous variables into categorical ones
    
-   #Dispositional: 
-   # IL >> 5 items two factors >> since answer options 1+2 as well as the rest group together (same for looking at factor score distribution). we change into: <= 0 = 1, > 0 = 2
-   # TT >> 3 items one factor >> median split method because of fairly normal distribution and conceptual understanding of 0 = Neutraal
-   # Child_Temp_Extraversion >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
-   # Child_Temp_Negative_Affectivity >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
-   # Child_Temp_Effortful_Control >> since conceptually everything < 0 is a more or less clear "no", change into:-3 - -1 = no and 0- 3 = yes, which means 1-3 = 1 and 4-7 = 2
-   # Child_Parasocial >> 5 items two factors >> anthropomorphism & parasocial_relationship >> since distributions show that answer options 1+2 as well as 3+4+5 group together: 1-2 = 1, 3-5 = 2 >> translating groups of 1-2 = 1, 3-5 = 2 into factor scores
-   # SOCIALEKLASSE2016 >> ALREADY CATEGORICAL
-   # smart-household-level >> convert single-item into factor
+   #How to meaningfully categorize continuous variables?
    
-   #Developmental: 
-   # Child_Age >> agre group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
-   # Child-Gender >> ALREADY CATEGORICAL
-   # LFT >> mean-split
-   # GSL >> ALREADY CATEGORICAL
-   
-   #Social: 
-   # PMMS >> 6 items three factors >> restsMed & negacMed & posacMed >> since distributions show that answer options 1+2 group together: 1-2 = 1 (nooit), 3 = 2 (soms), 4 = 3 (vaak) >> translating groups of into factor scores
-   # household composition >> convert both items into factors
+       #Dispositional: 
+       # IL >> 5 items two factors >> since answer options 1+2 as well as the rest seem to group together, we artificially categorize this way for the original scale: <= 2 = 1, > 2 = 2 and this way for the factor score scale: <= 0 = 1, > 0 = 2
+       # TT >> 3 items one factor >> median split method because of fairly normal distribution and conceptual understanding of 0 = Neutraal, using median for original and factor score scale
+       # Child_Temp_Extraversion >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
+       # Child_Temp_Negative_Affectivity >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
+       # Child_Temp_Effortful_Control >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
+       # Child_Parasocial >> 5 items two factors >> anthropomorphism & parasocial_relationship >> since distributions show that answer options 1+2 as well as 3+4+5 group together we artificially categorize this way for the original scale:  ≤ -0.5 = 1, > -0.5 = 2 and this way for the factor scale: ≤ 2 = 1, > 2 = 2
+       # SOCIALEKLASSE2016 >> ALREADY CATEGORICAL
+       # smart-household-level >> convert single-item into factor
+       
+       #Developmental: 
+       # Child_Age >> agre group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
+       # Child-Gender >> ALREADY CATEGORICAL
+       # LFT >> mean-split
+       # GSL >> ALREADY CATEGORICAL
+       
+       #Social: 
+       # PMMS >> 6 items three factors >> restsMed & negacMed & posacMed >> since distributions show that answer options 1+2 group together: 1-2 = 1 (nooit), 3 = 2 (soms), 4 = 3 (vaak) >> translating groups of into factor scores
+       # household composition >> convert both items into factors
    
    #artificial categorization
    # - IL
-   #navigation
-   rosie_fscores$IL_navigation_factor[rosie_fscores$navigation<=0] = 1
-   rosie_fscores$IL_navigation_factor[rosie_fscores$navigation>0] = 2
-   
-   #information
-   rosie_fscores$IL_information_factor[rosie_fscores$information<=0] = 1
-   rosie_fscores$IL_information_factor[rosie_fscores$information>0] = 2
+       #original scale using average sum scores
+           #navigation (items 2 + 4 + 5)
+           library(fame)
+           rosie_fscores$IL_navigation_avgsum <- rowMeans(rosie_fscores[, c(163, 165:166)], na.rm = T)
+           is.numeric(rosie_fscores$IL_navigation_avgsum)
+           View(rosie_fscores$IL_navigation_avgsum)
+           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=2] = 1
+           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum>2] = 2
+           
+           #information (items 1 + 3)
+           rosie_fscores$IL_information_avgsum <- rowMeans(rosie_fscores[, c(162, 164)], na.rm = T)
+           is.numeric(rosie_fscores$IL_information_avgsum)
+           View(rosie_fscores$IL_information_avgsum)
+           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=2] = 1
+           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum>2] = 2
+       
+       #factor score scale
+           #navigation
+           rosie_fscores$IL_navigation_LCAcategory_factorscore[rosie_fscores$navigation<=0] = 1
+           rosie_fscores$IL_navigation_LCAcategory_factorscore[rosie_fscores$navigation>0] = 2
+           
+           #information
+           rosie_fscores$IL_information_LCAcategory_factorscore[rosie_fscores$information<=0] = 1
+           rosie_fscores$IL_information_LCAcategory_factorscore[rosie_fscores$information>0] = 2
+           
+        View(rosie_fscores)
+        
+        #comparing IL-factors based on original scale vs. factor scores
+           IL_navigation_crosstabs <- xtabs(~IL_navigation_LCAcategory_orig+IL_navigation_LCAcategory_factorscore, data=rosie_fscores)
+           ftable(IL_navigation_crosstabs) 
+           # >> out of the 183, 20 observations were coded differently 
+                                                 
+           IL_information_crosstabs <- xtabs(~IL_information_LCAcategory_orig+IL_information_LCAcategory_factorscore, data=rosie_fscores)
+           ftable(IL_information_crosstabs) 
+           # >> out of the 183, 11 observations were coded differently
    
    # - TT
-   rosie_fscores$TT_f_factor[rosie_fscores$TT_f<=median(rosie_fscores$TT_f)] = 1
-   rosie_fscores$TT_f_factor[rosie_fscores$TT_f>median(rosie_fscores$TT_f)] = 2
+       #original scale using average sum scores
+           library(fame)
+           rosie_fscores$TT_avgsum <- rowMeans(rosie_fscores[, c(167:169)], na.rm = T)
+           is.numeric(rosie_fscores$TT_avgsum)
+           View(rosie_fscores$TT_avgsum)
+           rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum<=median(rosie_fscores$TT_avgsum)] = 1
+           rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum>median(rosie_fscores$TT_avgsum)] = 2
+          
+        #factor score scale
+           rosie_fscores$TT_LCAcategory_factorscore[rosie_fscores$TT_f<=median(rosie_fscores$TT_f)] = 1
+           rosie_fscores$TT_LCAcategory_factorscore[rosie_fscores$TT_f>median(rosie_fscores$TT_f)] = 2
+           
+        View(rosie_fscores)
+        
+        #comparing TT-factors based on original scale vs. factor scores
+           TT_crosstabs <- xtabs(~TT_LCAcategory_orig+TT_LCAcategory_factorscore, data=rosie_fscores)
+           ftable(TT_crosstabs) 
+           # >> out of the 183, 8 observation were coded differently 
    
    # - Child_Temp
-   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion<=3] = 1
-   rosie_fscores$Temp_Extraversion_factor[rosie$Child_Temp_Extraversion>=4] = 2
+   rosie_fscores$Temp_Extraversion_LCAcategory_orig[rosie$Child_Temp_Extraversion<=3] = 1
+   rosie_fscores$Temp_Extraversion_LCAcategory_orig[rosie$Child_Temp_Extraversion>=4] = 2
    
-   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
-   rosie_fscores$Temp_Negative_Affectivity_factor[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
+   rosie_fscores$Temp_Negative_Affectivity_LCAcategory_orig[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
+   rosie_fscores$Temp_Negative_Affectivity_LCAcategory_orig[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
    
-   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control<=3] = 1
-   rosie_fscores$Temp_Effortful_Control_factor[rosie_fscores$Child_Temp_Effortful_Control>=4] = 2
+   rosie_fscores$Temp_Effortful_Control_LCAcategory_orig[rosie_fscores$Child_Temp_Effortful_Control<=3] = 1
+   rosie_fscores$Temp_Effortful_Control_LCAcategory_orig[rosie_fscores$Child_Temp_Effortful_Control>=4] = 2
    
    # - Child_Parasocial
-   rosie_fscores$anthropomorphism_factor[rosie_fscores$anthropomorphism<=0] = 1
-   rosie_fscores$anthropomorphism_factor[rosie_fscores$anthropomorphism>0] = 2
-   
-   rosie_fscores$parasocial_relationship_factor[rosie_fscores$parasocial_relationship<=0] = 1
-   rosie_fscores$parasocial_relationship_factor[rosie_fscores$parasocial_relationship>0] = 2
+       #original scale using average sum scores
+          #anthropomorphism (items 1 + 4 + 5)
+           library(fame)
+           rosie_fscores$Child_Parasocial_anthropomorphism_avgsum <- rowMeans(rosie_fscores[, c(122, 125:126)], na.rm = T)
+           is.numeric(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
+           View(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
+           rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum<=2] = 1
+           rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum>2] = 2
+           
+           #parasocial relationship (items 2 + 3)
+           rosie_fscores$Child_Parasocial_pararela_avgsum <- rowMeans(rosie_fscores[, c(123:124)], na.rm = T)
+           is.numeric(rosie_fscores$Child_Parasocial_pararela_avgsum)
+           View(rosie_fscores$Child_Parasocial_pararela_avgsum)
+           rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum<=2] = 1
+           rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum>2] = 2
+       
+       #factor score scale
+           rosie_fscores$anthropomorphism_LCAcategory_factorscore[rosie_fscores$anthropomorphism<=(-0.5)] = 1
+           rosie_fscores$anthropomorphism_LCAcategory_factorscore[rosie_fscores$anthropomorphism>(-0.5)] = 2
+           
+           rosie_fscores$parasocial_relationship_LCAcategory_factorscore[rosie_fscores$parasocial_relationship<=(-0.5)] = 1
+           rosie_fscores$parasocial_relationship_LCAcategory_factorscore[rosie_fscores$parasocial_relationship>(-0.5)] = 2
+       
+           
+       View(rosie_fscores)
+       
+       #comparing Child_parasocial-factors based on original scale vs. factor scores
+           Child_parasocial_anthopomorphism_crosstabs <- xtabs(~Child_Parasocial_anthropomorphism_LCAcategory_orig+anthropomorphism_LCAcategory_factorscore, data=rosie_fscores)
+           ftable(Child_parasocial_anthopomorphism_crosstabs) 
+           # >> out of the 183, 35 observations were coded differently 
+           
+           Child_parasocial_pararela_crosstabs <- xtabs(~Child_Parasocial_pararela_LCAcategory_orig+parasocial_relationship_LCAcategory_factorscore, data=rosie_fscores)
+           ftable(Child_parasocial_pararela_crosstabs) 
+           # >> out of the 183, 37 observations were coded differently 
    
    # - smart-household-level
    rosie_fscores$SHL_f[rosie_fscores$SHL<=median(rosie_fscores$SHL)] = 1
