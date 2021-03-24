@@ -112,7 +112,7 @@
    
    
 #-----------------------------------------------#
-### ROSIE TARGET GROUP ##########################
+### RENAMING VARIABLES ##########################
 #-----------------------------------------------#
    
    #renaming variables
@@ -244,6 +244,11 @@
    # [106] "TT_1"               "TT_2"               "TT_3"               "STATUS"             "PERSONEN"           "SOCIALEKLASSE2016"  "GSL"               
    # [113] "LFT" 
    
+
+#-----------------------------------------------#
+### ROSIE TARGET GROUP ##########################
+#-----------------------------------------------#
+   
    #filtering responses for Rosie target group (in total: 224 responses, completes: 183)
    ?dplyr::filter
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Gender != 0 & STATUS == 1)
@@ -321,11 +326,12 @@
         
         #Based on this information we can also calculate how many parents have used the virtual assistant only by themselves and 
         #neither together with their child nor having let their child use it independently
-        rosie_dataset_renamed_families_complete$ICU_parentonly <- ifelse(rosie_dataset_renamed_families_complete$ICU_togetherwithchild == 1 &
-                                                                           rosie_dataset_renamed_families_complete$ICU_childindividually == 1, 1, 0)
+        rosie_dataset_renamed_families_complete$current_usage <- ifelse(rosie_dataset_renamed_families_complete$ICU_togetherwithchild == 1 &
+                                                                           rosie_dataset_renamed_families_complete$ICU_childindividually == 1, 1, 2)
+        #1 = parent only
+        #2 = with child
           
         View(rosie_dataset_renamed_families_complete)
-        # >> later in the analyses we can use ICU_togetherwithchild, ICU_childindividually, and ICU_parentonly as controls
         
         summary(rosie_dataset_renamed_families_complete[,c(116:118)]) #there seems to be one NA in ICU_childindividually, this is row 74 (in R) = pp 888
         
@@ -1703,22 +1709,16 @@
 ### DESCRIPTIVES ##########################
 #-----------------------------------------#
                 
-   #taking a first numerical look
-   summary(rosie)
-   str(rosie)
-                
-   library(pastecs)
-   stat.desc(rosie)
-                
+   #taking a numerical look
+            
    library(psych)
    describe(rosie_fscores)
-   describe(rosie_fscores[c(93:144)]) 
                 
    library(psych)
-   psych::describeBy(rosie_fscores[c(93:144)], group = "GSL")
+   psych::describeBy(rosie_fscores, group = "GSL")
    # 1 = male, 2 = female
                 
-   #more descriptives on the different DV-levels
+   #specific descriptives on the different DV-levels
    hist(rosie$ICU_togetherwithchild)
    mean(rosie$ICU_togetherwithchild) # 3.34153
    describe(rosie$ICU_togetherwithchild)
@@ -1730,12 +1730,17 @@
    describe(rosie$ICU_childindividually, na.rm=T)
    #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
    #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
-                
+  
+   
+   #taking a visual look
+   
    hist(rosie$TT_1) 
    hist(rosie$TT_2)
    hist(rosie$TT_3)
    hist(rosie_fscores$TT_f) #fairly normally distributed
                 
+   hist(rosie$FoPersU)
+   
    hist(rosie$Child_Temp_Extraversion)
    hist(rosie$Child_Temp_Negative_Affectivity)
    hist(rosie$Child_Temp_Effortful_Control)
@@ -1770,19 +1775,18 @@
    hist(rosie_fscores$information)
    
    hist(rosie$SHL)
-
   
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(138:142, 116:118)]),2)
+   round(cor(rosie_fscores[,c(137:141, 116:118)]),2)
    #                       TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f ICU_togetherwithchild ICU_childindividually ICU_parentonly
-   # TAM_PEoU_f                  1.00     0.44    0.63    -0.13      0.09                  0.16                    NA          -0.22
-   # TAM_PU_f                    0.44     1.00    0.58    -0.43      0.11                  0.26                    NA          -0.18
-   # TAM_E_f                     0.63     0.58    1.00    -0.24      0.02                  0.23                    NA          -0.22
-   # TAM_SN_f                   -0.13    -0.43   -0.24     1.00     -0.07                 -0.07                    NA           0.03
-   # TAM_ICU_f                   0.09     0.11    0.02    -0.07      1.00                  0.13                    NA          -0.07
-   # ICU_togetherwithchild       0.16     0.26    0.23    -0.07      0.13                  1.00                    NA          -0.64
+   # TAM_PEoU_f                  1.00     0.44    0.63     0.15      0.09                  0.16                    NA          -0.22
+   # TAM_PU_f                    0.44     1.00    0.58     0.40      0.11                  0.26                    NA          -0.18
+   # TAM_E_f                     0.63     0.58    1.00     0.25      0.02                  0.23                    NA          -0.22
+   # TAM_SN_f                    0.15     0.40    0.25     1.00      0.07                  0.08                    NA          -0.04
+   # TAM_ICU_f                   0.09     0.11    0.02     0.07      1.00                  0.13                    NA          -0.07
+   # ICU_togetherwithchild       0.16     0.26    0.23     0.08      0.13                  1.00                    NA          -0.64
    # ICU_childindividually         NA       NA      NA       NA        NA                    NA                     1             NA
-   # ICU_parentonly             -0.22    -0.18   -0.22     0.03     -0.07                 -0.64                    NA           1.00
+   # ICU_parentonly             -0.22    -0.18   -0.22    -0.04     -0.07                 -0.64                    NA           1.00
    
          #pairwise correlations all in one scatterplot matrix
          library(car)
@@ -1797,31 +1801,12 @@
                     max_pvalue = 0.05, # display only significant correlations (at 5% level)
                     top = 20 # display top 10 couples of variables (by correlation coefficient)
          )
-         
-   #descriptives
-   summary(rosie_fscores)
-   describe(rosie_fscores[,c(93:144)])
-   #                               vars   n    mean      sd  median trimmed     mad    min     max   range  skew kurtosis     se
-   # TT_f                            40 183  0.00  1.04   0.07    0.03  0.96  -3.09  2.03   5.12 -0.26    -0.35 0.08
-   # anthropomorphism                41 183  0.00  0.96  -0.52   -0.15  0.44  -0.81  3.21   4.02  1.14     0.56 0.07
-   # parasocial_relationship         42 183  0.00  0.91  -0.18   -0.08  1.02  -1.03  2.62   3.65  0.60    -0.73 0.07
-   # restrMed                        43 183  0.00  0.89   0.06    0.08  0.86  -2.59  1.29   3.88 -0.82     0.41 0.07
-   # negacMed                        44 183  0.00  0.89   0.15    0.07  0.69  -2.38  1.42   3.80 -0.70     0.17 0.07
-   # posacMed                        45 183  0.00  0.88  -0.08    0.07  0.90  -2.92  1.28   4.20 -0.80     1.15 0.06
-   # TAM_PEoU_f                      46 183  0.00  0.96   0.18    0.11  0.69  -3.28  1.43   4.71 -1.16     1.35 0.07
-   # TAM_PU_f                        47 183  0.00  0.97   0.05    0.06  1.02  -2.19  1.87   4.05 -0.42    -0.43 0.07
-   # TAM_E_f                         48 183  0.00  0.97  -0.06    0.10  1.05  -3.15  1.47   4.62 -1.16     1.71 0.07
-   # TAM_SN_f                        49 183  0.00  0.71   0.09    0.06  0.98  -1.68  0.83   2.52 -0.40    -0.97 0.05
-   # TAM_ICU_f                       50 183  0.00 26.88   9.03    2.92 18.51 -84.04 51.19 135.22 -1.01     0.67 1.99
-   # navigation                      51 183  0.00  0.93  -0.21   -0.12  0.93  -0.98  3.64   4.62  1.12     0.91 0.07
-   # information                     52 183  0.00  0.94  -0.19   -0.14  0.87  -0.96  3.67   4.63  1.18     0.97 0.07
-   
    
 ###----------------------------------------------------------------------------------------------------------------###
     
-#----------------------------------------------#
-### KNOWING YOUR DATA ##########################
-#----------------------------------------------#
+#---------------------------------------------------#
+### MULTIVARIATE NORMALITY ##########################
+#---------------------------------------------------#
 
           
 #--------------------------------------------------------------------------------#   
@@ -1848,10 +1833,10 @@
    #therefore, I alternatively run a multivariate normality test using the package QuantPsyc's multi.norm function:
    library(QuantPsyc)
    #for rosie dataset including extracted factor scores of SEM variables
-   mult.norm(rosie_fscores[c(116:118, 138:142)])$mult.test 
-   # Beta-hat      kappa             p-val
-   # Skewness 15.61964 473.795715 0.000000000000000
-   # Kurtosis 91.42490   6.092534 0.000000001111371
+   mult.norm(rosie_fscores[c(116:118, 137:141)])$mult.test 
+   # Beta-hat      kappa               p-val
+   # Skewness 15.80218 479.332865 0.00000000000000000
+   # Kurtosis 92.23586   6.524997 0.00000000006800271
 
    # >> Since both p-values are waaaay less than .05, we reject the null hypothesis of the test. 
    #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
@@ -2044,6 +2029,8 @@
            rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum>2 & rosie_fscores$PMMS_restrMed_avgsum<4] = 2
            rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum==4] = 3
            
+           hist(rosie_fscores$PMMS_restrMed_avgsum)
+           
            #negacMed (items 3+5)
            rosie_fscores$PMMS_negacMed_avgsum <- rowMeans(rosie_fscores[, c(64, 66)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_negacMed_avgsum)
@@ -2210,10 +2197,10 @@
        twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
        
        #output predicted classes from selected model so that we can use it in subsequent analyses:
-       rosie_fscores$class=twoclass$predclass
+       rosie_fscores$fam_class=twoclass$predclass
        
        #declare the class variable as a factor
-       rosie_fscores$class = as.factor(rosie_fscores$class)
+       rosie_fscores$fam_class = as.factor(rosie_fscores$class)
        
        View(rosie_fscores)
        
@@ -2246,8 +2233,8 @@
        
        
        #name the levels of the class factor using the response probabilities plot
-       levels(rosie_fscores$class)[levels(rosie_fscores$class)=="1"] <- "XXX"
-       levels(rosie_fscores$class)[levels(rosie_fscores$class)=="2"] <- "YYY"
+       levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="1"] <- "XXX"
+       levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="2"] <- "YYY"
    
    
           
@@ -2308,34 +2295,24 @@
         #specify the model
         rosiesTAM <- '
           #measurement model
-            IL  =~ 1*information + navigation      
-            PE =~ PE
             E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-            IMG =~ TAM_IMG
             SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
             PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
             PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
             ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3
         
           #regressions
-            PEoU ~ IL + PE ?+ FAM? + SHL + Child_nr
-            PU ~ FAM + PEoU + SHL + Child_nr
-            ICU ~ PEoU + PU + E + IMG + SN +SHL + Child_nr
+            PEoU ~ fam_class 
+            PU ~ fam_class + PEoU 
+            E ~ fam_class
+            IMG ~ fam_class
+            SN ~ fam_class
+            ICU ~ PEoU + PU + E + IMG + SN 
         
           #add (residual) variances ????
-            x1~~x1
-            x2~~x2
-            x3~~x3
-            x4~~x4
-            x5~~x5
-            x6~~x6
-            x7~~x7
-            x8~~x8
-            x9~~x9
-            EE~~EE
-            CY~~CY
-            RPA~~RPA
-            burnout~~burnout'
+            
+        '
+      
         
         #fit the model
         rosiesTAM_fit <- lavaan(rosiesTAM, data = rosie_fscores)
