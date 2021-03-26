@@ -124,7 +124,7 @@ In what follows, you can find the analysis steps and respective R code that was 
   library(lavaan)
   
 ```
-  ## 1) Confirmatory Factor Analysis for all model variables built up of two or more items
+  #### 1) Confirmatory Factor Analysis for all model variables built up of two or more items
   ```R
   
     #TAM_IMG and TAM_ICU only consist of one item and were therefore excluded here
@@ -828,7 +828,7 @@ In what follows, you can find the analysis steps and respective R code that was 
          
   ```    
       
-  ## 2) Extract factor scores
+  #### 2) Extract factor scores
   
   ```R
   
@@ -863,7 +863,7 @@ In what follows, you can find the analysis steps and respective R code that was 
  ```
         
     
-  ## 3) Cronbach's Alpha
+  #### 3) Cronbach's Alpha
   
   ```R
          #Dispositional: 
