@@ -906,6 +906,7 @@ In what follows, you can find the analysis steps and respective R code that was 
              TAM_ICU <- rosie[, c(98:100)]
              psych::alpha(TAM_ICU) ### --> 0.43
  
+ ```
  
 ### Descriptives
 ```R
