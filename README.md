@@ -117,7 +117,7 @@ In what follows, you can find the analysis steps and respective R code that was 
         # >> for some reason this participant has NAs for SS_childusage ***Most likely due to a survey system error***
   ```
 
-### Measurement Validity and Descriptives
+### Measurement Validity
 ```R
 
 #packages for descriptives
@@ -132,20 +132,6 @@ In what follows, you can find the analysis steps and respective R code that was 
     #Dispositional: 
       #TT >> 3 items
             #checking for univariate outliers (+/- 3 SDs from the mean) 
-                #visually
-                library(lattice)
-                boxplot(rosie$TT_1)
-                boxplot(rosie$TT_2)
-                boxplot(rosie$TT_3)
-                hist(rosie$TT_1)  
-                hist(rosie$TT_2)
-                hist(rosie$TT_3)
-                densityplot(rosie$TT_1)
-                densityplot(rosie$TT_2)
-                densityplot(rosie$TT_3)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_TT <- scale(rosie[,c(106:108)]) 
                 outliers_TT <- colSums(abs(standardized_TT)>=3, na.rm = T) 
                 outliers_TT
@@ -190,26 +176,6 @@ In what follows, you can find the analysis steps and respective R code that was 
     
        #IL >> 5 items
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$IL_1)
-                boxplot(rosie$IL_2) 
-                boxplot(rosie$IL_3)
-                boxplot(rosie$IL_4) 
-                boxplot(rosie$IL_5) 
-                hist(rosie$IL_1) #so not normal
-                hist(rosie$IL_2) #so not normal
-                hist(rosie$IL_3) #so not normal
-                hist(rosie$IL_4) #so not normal
-                hist(rosie$IL_5) #so not normal
-                densityplot(rosie$IL_1)
-                densityplot(rosie$IL_2)
-                densityplot(rosie$IL_3)
-                densityplot(rosie$IL_4)
-                densityplot(rosie$IL_5)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_IL <- scale(rosie[,c(101:105)]) 
                 outliers_IL <- colSums(abs(standardized_IL)>=3, na.rm = T) 
                 outliers_IL
@@ -350,20 +316,6 @@ In what follows, you can find the analysis steps and respective R code that was 
                 
          #Child_Temp >> 3 items
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$Child_Temp_1)
-                boxplot(rosie$Child_Temp_2)
-                boxplot(rosie$Child_Temp_3)
-                hist(rosie$Child_Temp_1)  
-                hist(rosie$Child_Temp_2)
-                hist(rosie$Child_Temp_3)
-                densityplot(rosie$Child_Temp_1)
-                densityplot(rosie$Child_Temp_2)
-                densityplot(rosie$Child_Temp_3)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_Child_Temp <- scale(rosie[,c(59:61)]) 
                 outliers_Child_Temp <- colSums(abs(standardized_Child_Temp)>=3, na.rm = T) 
                 outliers_Child_Temp
@@ -400,26 +352,6 @@ In what follows, you can find the analysis steps and respective R code that was 
           
          #Child_Parasocial >> 5 items
               #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$Child_Parasocial_1)
-                boxplot(rosie$Child_Parasocial_2) #outlier (not confirmed numerically)
-                boxplot(rosie$Child_Parasocial_3)
-                boxplot(rosie$Child_Parasocial_4) #outlier (confirmed numerically)
-                boxplot(rosie$Child_Parasocial_5) #outlier (confirmed numerically)
-                hist(rosie$Child_Parasocial_1) #so not normal
-                hist(rosie$Child_Parasocial_2)
-                hist(rosie$Child_Parasocial_3) #so not normal
-                hist(rosie$Child_Parasocial_4) #so not normal
-                hist(rosie$Child_Parasocial_5) #so not normal
-                densityplot(rosie$Child_Parasocial_1)
-                densityplot(rosie$Child_Parasocial_2)
-                densityplot(rosie$Child_Parasocial_3)
-                densityplot(rosie$Child_Parasocial_4)
-                densityplot(rosie$Child_Parasocial_5)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_Child_Parasocial <- scale(rosie[,c(73:77)]) 
                 outliers_Child_Parasocial <- colSums(abs(standardized_Child_Parasocial)>=3, na.rm = T) 
                 outliers_Child_Parasocial
@@ -548,29 +480,6 @@ In what follows, you can find the analysis steps and respective R code that was 
     #Social: 
       #PMMS >> 6 items
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$PMMS_1) 
-                boxplot(rosie$PMMS_2) 
-                boxplot(rosie$PMMS_3) 
-                boxplot(rosie$PMMS_4) 
-                boxplot(rosie$PMMS_5) 
-                boxplot(rosie$PMMS_6) 
-                hist(rosie$PMMS_1) 
-                hist(rosie$PMMS_2) 
-                hist(rosie$PMMS_3) 
-                hist(rosie$PMMS_4) 
-                hist(rosie$PMMS_5) 
-                hist(rosie$PMMS_6)
-                densityplot(rosie$PMMS_1)
-                densityplot(rosie$PMMS_2)
-                densityplot(rosie$PMMS_3)
-                densityplot(rosie$PMMS_4)
-                densityplot(rosie$PMMS_5)
-                densityplot(rosie$PMMS_6)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_PMMS <- scale(rosie[,c(62:67)]) 
                 outliers_PMMS <- colSums(abs(standardized_PMMS)>=3, na.rm = T) 
                 outliers_PMMS
@@ -631,23 +540,6 @@ In what follows, you can find the analysis steps and respective R code that was 
     #TAM: 
       #TAM_PEoU >> 4 items
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$TAM_PEoU_1)
-                boxplot(rosie$TAM_PEoU_2) 
-                boxplot(rosie$TAM_PEoU_3)
-                boxplot(rosie$TAM_PEoU_4) 
-                hist(rosie$TAM_PEoU_1) 
-                hist(rosie$TAM_PEoU_2)
-                hist(rosie$TAM_PEoU_3) 
-                hist(rosie$TAM_PEoU_4) 
-                densityplot(rosie$TAM_PEoU_1)
-                densityplot(rosie$TAM_PEoU_2)
-                densityplot(rosie$TAM_PEoU_3)
-                densityplot(rosie$TAM_PEoU_4)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_TAM_PEoU <- scale(rosie[,c(82:85)]) 
                 outliers_TAM_PEoU <- colSums(abs(standardized_TAM_PEoU)>=3, na.rm = T) 
                 outliers_TAM_PEoU
@@ -712,24 +604,6 @@ In what follows, you can find the analysis steps and respective R code that was 
           
       #TAM_PU >> 4 items
                #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$TAM_PU_1)
-                boxplot(rosie$TAM_PU_2) 
-                boxplot(rosie$TAM_PU_3)
-                boxplot(rosie$TAM_PU_4) 
-                hist(rosie$TAM_PU_1) 
-                hist(rosie$TAM_PU_2)
-                hist(rosie$TAM_PU_3) 
-                hist(rosie$TAM_PU_4) 
-                densityplot(rosie$TAM_PU_1)
-                densityplot(rosie$TAM_PU_2)
-                densityplot(rosie$TAM_PU_3)
-                densityplot(rosie$TAM_PU_4)
-                # >> very normally distributed
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_TAM_PU <- scale(rosie[,c(86:89)]) 
                 outliers_TAM_PU <- colSums(abs(standardized_TAM_PU)>=3, na.rm = T) 
                 outliers_TAM_PU
@@ -759,23 +633,6 @@ In what follows, you can find the analysis steps and respective R code that was 
           
       #TAM_E >> 4 items
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$TAM_E_1)
-                boxplot(rosie$TAM_E_2) #outliers?
-                boxplot(rosie$TAM_E_3) #outliers?
-                boxplot(rosie$TAM_E_4) 
-                hist(rosie$TAM_E_1) 
-                hist(rosie$TAM_E_2)
-                hist(rosie$TAM_E_3) 
-                hist(rosie$TAM_E_4) 
-                densityplot(rosie$TAM_E_1)
-                densityplot(rosie$TAM_E_2)
-                densityplot(rosie$TAM_E_3)
-                densityplot(rosie$TAM_E_4)
-                  
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_TAM_E <- scale(rosie[,c(90:93)]) 
                 outliers_TAM_E <- colSums(abs(standardized_TAM_E)>=3, na.rm = T) 
                 outliers_TAM_E
@@ -840,20 +697,6 @@ In what follows, you can find the analysis steps and respective R code that was 
           
       #TAM_SN >> 3 items
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$TAM_SN_1)
-                boxplot(rosie$TAM_SN_2) 
-                boxplot(rosie$TAM_SN_3)
-                hist(rosie$TAM_SN_1) #so not normal
-                hist(rosie$TAM_SN_2) #so not normal
-                hist(rosie$TAM_SN_3) #so not normal
-                densityplot(rosie$TAM_SN_1)
-                densityplot(rosie$TAM_SN_2)
-                densityplot(rosie$TAM_SN_3)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
                 standardized_TAM_SN <- scale(rosie[,c(95:97)]) 
                 outliers_TAM_SN <- colSums(abs(standardized_TAM_SN)>=3, na.rm = T) 
                 outliers_TAM_SN
@@ -892,20 +735,6 @@ In what follows, you can find the analysis steps and respective R code that was 
           
       (#TAM_ICU >> 3 items)
            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-              #visually
-              library(lattice)
-              boxplot(rosie$TAM_ICU_1)
-              boxplot(rosie$TAM_ICU_2) 
-              boxplot(rosie$TAM_ICU_3)
-              hist(rosie$TAM_ICU_1) 
-              hist(rosie$TAM_ICU_2)
-              hist(rosie$TAM_ICU_3) 
-              densityplot(rosie$TAM_ICU_1)
-              densityplot(rosie$TAM_ICU_2)
-              densityplot(rosie$TAM_ICU_3)
-              
-              #numerically 
-              #standardize a variable and count the number of cases with values greater or less than 3
               standardized_TAM_ICU <- scale(rosie[,c(98:100)]) 
               outliers_TAM_ICU <- colSums(abs(standardized_TAM_ICU)>=3, na.rm = T) 
               outliers_TAM_ICU
@@ -1078,9 +907,8 @@ In what follows, you can find the analysis steps and respective R code that was 
              psych::alpha(TAM_ICU) ### --> 0.43
  
  
-#---------------------------------------------------------------------------------#
-### MORE DESCRIPTIVES ON DATASET INCLUDING FACTOR SCORES ##########################
-#---------------------------------------------------------------------------------#
+### Descriptives
+```R
 
    library(psych)
    describe(rosie_fscores)
