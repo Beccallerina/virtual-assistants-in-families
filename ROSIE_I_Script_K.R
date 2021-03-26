@@ -427,7 +427,7 @@
   
         #inspecting this row
         rosie[74,] 
-        # >> for some reason this participant has NAs for SS_childusage ***I really do not understand why there is a mssing value in the first place***
+        # >> for some reason this participant has NAs for SS_childusage ***Most likely due to a survey system error***
   
 
 #----------------------------------------------------------------------------------------------------------------#
@@ -579,7 +579,193 @@
           summary(onefac3items_TT, fit.measures=TRUE, standardized=TRUE) # >> Seems like a "just" identified model. Wait and see for testing whole measurement model in SEM.
           # >> fit index criteria: Chi-Square = / because 0 df just identified, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10
     
-  
+          
+          
+          ### IL >> 5 items #########################      
+          
+          #Prep: Check for normality and outliers
+          ### Criterion for judgement on skewness:
+          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
+          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
+          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
+          
+          ### Criterion for judgment on kurtosis:
+          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
+          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
+          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
+          
+          #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+                #visually
+                library(lattice)
+                boxplot(rosie$IL_1)
+                boxplot(rosie$IL_2) 
+                boxplot(rosie$IL_3)
+                boxplot(rosie$IL_4) 
+                boxplot(rosie$IL_5) 
+                hist(rosie$IL_1) #so not normal
+                hist(rosie$IL_2) #so not normal
+                hist(rosie$IL_3) #so not normal
+                hist(rosie$IL_4) #so not normal
+                hist(rosie$IL_5) #so not normal
+                densityplot(rosie$IL_1)
+                densityplot(rosie$IL_2)
+                densityplot(rosie$IL_3)
+                densityplot(rosie$IL_4)
+                densityplot(rosie$IL_5)
+                
+                #numerically 
+                #standardize a variable and count the number of cases with values greater or less than 3
+                standardized_IL <- scale(rosie[,c(101:105)]) 
+                outliers_IL <- colSums(abs(standardized_IL)>=3, na.rm = T) 
+                outliers_IL
+                #IL_1 IL_2 IL_3 IL_4 IL_5 
+                #3    2    2    0    0
+                #For IL_1: Where are those outliers exactly? In what rows?
+                ??scores
+                library(outliers)
+                outlier_scores_IL_1  <- scores(rosie$IL_1 )
+                is_outlier_IL_1  <- outlier_scores_IL_1  > 3 | outlier_scores_IL_1  < -3
+                #add a column with info whether the refund_value is an outlier
+                rosie$is_outlier_IL_1  <- is_outlier_IL_1 
+                #look at plot
+                library(ggplot2)
+                ggplot(rosie, aes(IL_1 )) +
+                  geom_boxplot() +
+                  coord_flip() +
+                  facet_wrap(~is_outlier_IL_1 )
+                #create a dataframe with only outliers
+                outlier_IL_1_df <- rosie[outlier_scores_IL_1  > 3| outlier_scores_IL_1  < -3, ]
+                #take a peek
+                head(outlier_IL_1_df) # >> outliers lay in observations 50, 74, 92
+                
+                #For IL_2: Where are those outliers exactly? In what rows?
+                ??scores
+                library(outliers)
+                outlier_scores_IL_2 <- scores(rosie$IL_2)
+                is_outlier_IL_2 <- outlier_scores_IL_2 > 3 | outlier_scores_IL_2 < -3
+                #add a column with info whether the refund_value is an outlier
+                rosie$is_outlier_IL_2 <- is_outlier_IL_2
+                #look at plot
+                library(ggplot2)
+                ggplot(rosie, aes(IL_2)) +
+                  geom_boxplot() +
+                  coord_flip() +
+                  facet_wrap(~is_outlier_IL_2)
+                #create a dataframe with only outliers
+                outlier_IL_2_df <- rosie[outlier_scores_IL_2 > 3| outlier_scores_IL_2 < -3, ]
+                #take a peek
+                head(outlier_IL_2_df) # >> outliers lay in observations 7, 74
+                
+                #For IL_3: Where are those outliers exactly? In what rows?
+                ??scores
+                library(outliers)
+                outlier_scores_IL_3 <- scores(rosie$IL_3)
+                is_outlier_IL_3 <- outlier_scores_IL_3 > 3 | outlier_scores_IL_3 < -3
+                #add a column with info whether the refund_value is an outlier
+                rosie$is_outlier_IL_3 <- is_outlier_IL_3
+                #look at plot
+                library(ggplot2)
+                ggplot(rosie, aes(IL_3)) +
+                  geom_boxplot() +
+                  coord_flip() +
+                  facet_wrap(~is_outlier_IL_3)
+                #create a dataframe with only outliers
+                outlier_IL_3_df <- rosie[outlier_scores_IL_3 > 3| outlier_scores_IL_3 < -3, ]
+                #take a peek
+                head(outlier_IL_3_df) # >> outliers lay in observations 7, 74
+          
+          # >> IL_1 = highly positively skewed, fewer returns in its tail than normal (kurtosis), 3 outliers in row 50, 74, 92
+          # >> IL_2 = highly positively skewed, fewer returns in its tail than normal (kurtosis), 2 outliers in row 7, 74
+          # >> IL_3 = highly positively skewed, fewer returns in its tail than normal (kurtosis), 2 outliers in row 7, 74
+          # >> IL_4 = highly positively skewed, fewer returns in its tail than normal (kurtosis), no outliers
+          # >> IL_5 = moderately positively skewed, fewer returns in its tail than normal (kurtosis), no outliers
+          
+          #Step 1: correlations
+          #The function cor specifies the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
+          round(cor(rosie[,101:105]),2) 
+          #     IL_1 IL_2 IL_3 IL_4 IL_5
+          #IL_1 1.00 0.56 0.69 0.53 0.44
+          #IL_2 0.56 1.00 0.66 0.66 0.53
+          #IL_3 0.69 0.66 1.00 0.56 0.50
+          #IL_4 0.53 0.66 0.56 1.00 0.57
+          #IL_5 0.44 0.53 0.50 0.57 1.00
+          
+          #Step 2: variance-covariance matrix
+          round(cov(rosie[,101:105]),2) 
+          #     IL_1 IL_2 IL_3 IL_4 IL_5
+          #IL_1 1.93 1.02 1.33 1.30 1.00
+          #IL_2 1.02 1.69 1.19 1.51 1.11
+          #IL_3 1.33 1.19 1.90 1.37 1.11
+          #IL_4 1.30 1.51 1.37 3.10 1.61
+          #IL_5 1.00 1.11 1.11 1.61 2.60
+          
+          #Step 3: one-factor CFA
+          #one factor three items, default marker method
+          m1i  <- ' f  =~ IL_1 + IL_2 + IL_3 + IL_4 + IL_5'
+          onefac5items_IL <- cfa(m1i, data=rosie,std.lv=TRUE) 
+          summary(onefac5items_IL,fit.measures=TRUE, standardized=TRUE)
+          # >> fit index criteria: Chi-Square = .000 NOT > .05, CFI = .957 > 0.95, TLI = .914 > 0.90 and RMSEA = .142 NOT < 0.10 >> NOT SO CONVINCING
+          
+          modindices(onefac5items_IL, sort=T) #IL_1 ~~ IL_3 >> 19.963
+          
+          #to check whether there is actually a different underlying factor structure in this scale, we run an EFA
+          
+          library(psych)
+          library(GPArotation)
+          
+          #creating a subset with the variables relevant for this EFA
+          IL <- c("IL_1", "IL_2", "IL_3", "IL_4", "IL_5")
+          IL
+          IL_EFA_df <- rosie[IL]
+          View(IL_EFA_df)
+          
+          #parallel analysis to get number of factors
+          parallel2 <- fa.parallel(IL_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, but since the previous model fit and modindices give reason to believe that a one-factor structure is not optimal, 
+          #we compare it to a two-factor model
+          
+          #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
+          IL_2factors <- fa(IL_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #and indeed, factors seem to correlate with each other, so oblique rotation is better here
+          IL_2factors
+          print(IL_2factors)
+          
+          #determine cut-off value of loadings .3
+          print(IL_2factors$loadings,cutoff = 0.3)
+          #Loadings:
+          #  MR2    MR1   
+          #IL_1         0.530   #Items 1 and 3 seem to load together, which is in accordance with the modindices above
+          #IL_2  0.589       
+          #IL_3         0.983
+          #IL_4  0.906       
+          #IL_5  0.601       
+          
+          #                 MR2   MR1
+          #SS loadings    1.594 1.330
+          #Proportion Var 0.319 0.266
+          #Cumulative Var 0.319 0.585
+          
+          #look at it visually
+          fa.diagram(IL_2factors)
+          
+          # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
+          # >> The root mean square error of approximation (RMSEA) is 0. This shows good model fit as it is below 0.05. 
+          # >> The Tucker-Lewis Index (TLI) is 1.024. This is an acceptable value considering it’s over 0.9.
+          
+          #naming factors
+          # >> Factor 1 holding items 2, 4, and 5 => navigation
+          # >> Factor 2 holding items 1 and 3 => information
+          
+          #now that we identified 2 factors, we confirm this through a 2-factor CFA again
+          
+          #Step 3 revised: two-factor CFA
+          #two factors with one time 3 and one time 2 items, default marker method
+          m2i  <- ' navigation  =~ IL_2 + IL_4 + IL_5 
+                                information =~ IL_1 + IL_3' 
+          twofac5items_IL <- cfa(m2i, data=rosie, std.lv=TRUE) 
+          summary(twofac5items_IL, fit.measures=TRUE, standardized=TRUE) 
+          # >> fit index criteria: Chi-Square = .228 > .05, CFI = .996 > 0.95, TLI = .991 > 0.90 and RMSEA = .047 < 0.10 #VERY NICE
+          
+          
+          
           ### Child_Temp >> 3 items ##########################
   
           #Prep: Check for normality and outliers
@@ -1068,7 +1254,6 @@
                 outliers_TAM_PU
                 #TAM_PU_1 TAM_PU_2 TAM_PU_3 TAM_PU_4 
                 #0        0        0        0 
-                
           
           # >> TAM_PU_1 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
           # >> TAM_PU_2 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
@@ -1396,213 +1581,29 @@
                       # >> Factor 2 holding items 2 and 3 => child (co)usage
                       
                       #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified
-                      #but this supports the correlation results for the ICU levels and controls
+                      #but this supports the correlation results for the ICU levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
                       
-              
-       
-          ### IL >> 5 items #########################      
-          
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-                #visually
-                library(lattice)
-                boxplot(rosie$IL_1)
-                boxplot(rosie$IL_2) 
-                boxplot(rosie$IL_3)
-                boxplot(rosie$IL_4) 
-                boxplot(rosie$IL_5) 
-                hist(rosie$IL_1) #so not normal
-                hist(rosie$IL_2) #so not normal
-                hist(rosie$IL_3) #so not normal
-                hist(rosie$IL_4) #so not normal
-                hist(rosie$IL_5) #so not normal
-                densityplot(rosie$IL_1)
-                densityplot(rosie$IL_2)
-                densityplot(rosie$IL_3)
-                densityplot(rosie$IL_4)
-                densityplot(rosie$IL_5)
-                
-                #numerically 
-                #standardize a variable and count the number of cases with values greater or less than 3
-                standardized_IL <- scale(rosie[,c(101:105)]) 
-                outliers_IL <- colSums(abs(standardized_IL)>=3, na.rm = T) 
-                outliers_IL
-                #IL_1 IL_2 IL_3 IL_4 IL_5 
-                  #3    2    2    0    0
-                  #For IL_1: Where are those outliers exactly? In what rows?
-                  ??scores
-                  library(outliers)
-                  outlier_scores_IL_1  <- scores(rosie$IL_1 )
-                  is_outlier_IL_1  <- outlier_scores_IL_1  > 3 | outlier_scores_IL_1  < -3
-                  #add a column with info whether the refund_value is an outlier
-                  rosie$is_outlier_IL_1  <- is_outlier_IL_1 
-                  #look at plot
-                  library(ggplot2)
-                  ggplot(rosie, aes(IL_1 )) +
-                    geom_boxplot() +
-                    coord_flip() +
-                    facet_wrap(~is_outlier_IL_1 )
-                  #create a dataframe with only outliers
-                  outlier_IL_1_df <- rosie[outlier_scores_IL_1  > 3| outlier_scores_IL_1  < -3, ]
-                  #take a peek
-                  head(outlier_IL_1_df) # >> outliers lay in observations 50, 74, 92
-                  
-                  #For IL_2: Where are those outliers exactly? In what rows?
-                  ??scores
-                  library(outliers)
-                  outlier_scores_IL_2 <- scores(rosie$IL_2)
-                  is_outlier_IL_2 <- outlier_scores_IL_2 > 3 | outlier_scores_IL_2 < -3
-                  #add a column with info whether the refund_value is an outlier
-                  rosie$is_outlier_IL_2 <- is_outlier_IL_2
-                  #look at plot
-                  library(ggplot2)
-                  ggplot(rosie, aes(IL_2)) +
-                    geom_boxplot() +
-                    coord_flip() +
-                    facet_wrap(~is_outlier_IL_2)
-                  #create a dataframe with only outliers
-                  outlier_IL_2_df <- rosie[outlier_scores_IL_2 > 3| outlier_scores_IL_2 < -3, ]
-                  #take a peek
-                  head(outlier_IL_2_df) # >> outliers lay in observations 7, 74
-                  
-                  #For IL_3: Where are those outliers exactly? In what rows?
-                  ??scores
-                  library(outliers)
-                  outlier_scores_IL_3 <- scores(rosie$IL_3)
-                  is_outlier_IL_3 <- outlier_scores_IL_3 > 3 | outlier_scores_IL_3 < -3
-                  #add a column with info whether the refund_value is an outlier
-                  rosie$is_outlier_IL_3 <- is_outlier_IL_3
-                  #look at plot
-                  library(ggplot2)
-                  ggplot(rosie, aes(IL_3)) +
-                    geom_boxplot() +
-                    coord_flip() +
-                    facet_wrap(~is_outlier_IL_3)
-                  #create a dataframe with only outliers
-                  outlier_IL_3_df <- rosie[outlier_scores_IL_3 > 3| outlier_scores_IL_3 < -3, ]
-                  #take a peek
-                  head(outlier_IL_3_df) # >> outliers lay in observations 7, 74
-          
-          # >> IL_1 = highly positively skewed, fewer returns in its tail than normal (kurtosis), 3 outliers in row 50, 74, 92
-          # >> IL_2 = highly positively skewed, fewer returns in its tail than normal (kurtosis), 2 outliers in row 7, 74
-          # >> IL_3 = highly positively skewed, fewer returns in its tail than normal (kurtosis), 2 outliers in row 7, 74
-          # >> IL_4 = highly positively skewed, fewer returns in its tail than normal (kurtosis), no outliers
-          # >> IL_5 = moderately positively skewed, fewer returns in its tail than normal (kurtosis), no outliers
-          
-          #Step 1: correlations
-          #The function cor specifies the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
-          round(cor(rosie[,101:105]),2) 
-          #     IL_1 IL_2 IL_3 IL_4 IL_5
-          #IL_1 1.00 0.56 0.69 0.53 0.44
-          #IL_2 0.56 1.00 0.66 0.66 0.53
-          #IL_3 0.69 0.66 1.00 0.56 0.50
-          #IL_4 0.53 0.66 0.56 1.00 0.57
-          #IL_5 0.44 0.53 0.50 0.57 1.00
-          
-          #Step 2: variance-covariance matrix
-          round(cov(rosie[,101:105]),2) 
-          #     IL_1 IL_2 IL_3 IL_4 IL_5
-          #IL_1 1.93 1.02 1.33 1.30 1.00
-          #IL_2 1.02 1.69 1.19 1.51 1.11
-          #IL_3 1.33 1.19 1.90 1.37 1.11
-          #IL_4 1.30 1.51 1.37 3.10 1.61
-          #IL_5 1.00 1.11 1.11 1.61 2.60
-
-          #Step 3: one-factor CFA
-          #one factor three items, default marker method
-          m1i  <- ' f  =~ IL_1 + IL_2 + IL_3 + IL_4 + IL_5'
-          onefac5items_IL <- cfa(m1i, data=rosie,std.lv=TRUE) 
-          summary(onefac5items_IL,fit.measures=TRUE, standardized=TRUE)
-          # >> fit index criteria: Chi-Square = .000 NOT > .05, CFI = .957 > 0.95, TLI = .914 > 0.90 and RMSEA = .142 NOT < 0.10 >> NOT SO CONVINCING
-        
-          modindices(onefac5items_IL, sort=T) #IL_1 ~~ IL_3 >> 19.963
-          
-            #to check whether there is actually a different underlying factor structure in this scale, we run an EFA
-                
-            library(psych)
-            library(GPArotation)
-                
-            #creating a subset with the variables relevant for this EFA
-            IL <- c("IL_1", "IL_2", "IL_3", "IL_4", "IL_5")
-            IL
-            IL_EFA_df <- rosie[IL]
-            View(IL_EFA_df)
-                
-            #parallel analysis to get number of factors
-            parallel2 <- fa.parallel(IL_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, but since the previous model fit and modindices give reason to believe that a one-factor structure is not optimal, 
-            #we compare it to a two-factor model
-                
-            #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
-            IL_2factors <- fa(IL_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #and indeed, factors seem to correlate with each other, so oblique rotation is better here
-            IL_2factors
-            print(IL_2factors)
-                
-                #determine cut-off value of loadings .3
-                print(IL_2factors$loadings,cutoff = 0.3)
-                #Loadings:
-                #  MR2    MR1   
-                #IL_1         0.530   #Items 1 and 3 seem to load together, which is in accordance with the modindices above
-                #IL_2  0.589       
-                #IL_3         0.983
-                #IL_4  0.906       
-                #IL_5  0.601       
-                
-                #                 MR2   MR1
-                #SS loadings    1.594 1.330
-                #Proportion Var 0.319 0.266
-                #Cumulative Var 0.319 0.585
-                
-                #look at it visually
-                fa.diagram(IL_2factors)
-                
-                # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
-                # >> The root mean square error of approximation (RMSEA) is 0. This shows good model fit as it is below 0.05. 
-                # >> The Tucker-Lewis Index (TLI) is 1.024. This is an acceptable value considering it’s over 0.9.
-                
-                #naming factors
-                # >> Factor 1 holding items 2, 4, and 5 => navigation
-                # >> Factor 2 holding items 1 and 3 => information
-                
-                #now that we identified 2 factors, we confirm this through a 2-factor CFA again
-                
-                #Step 3 revised: two-factor CFA
-                #two factors with one time 3 and one time 2 items, default marker method
-                m2i  <- ' navigation  =~ IL_2 + IL_4 + IL_5 
-                                information =~ IL_1 + IL_3' 
-                twofac5items_IL <- cfa(m2i, data=rosie, std.lv=TRUE) 
-                summary(twofac5items_IL, fit.measures=TRUE, standardized=TRUE) 
-                # >> fit index criteria: Chi-Square = .228 > .05, CFI = .996 > 0.95, TLI = .991 > 0.90 and RMSEA = .047 < 0.10 #VERY NICE
-                
-        
+      
           #-------------------------------------------#
           ####---- 2) Extracting factors scores----####
           #-------------------------------------------#
                 
-            #Journal of Computer sin human Behaviour usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
+            #Journal of Computers in human Behaviour usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
                 
                 #summary of all CFA models 
                     # onefac3items_TT
+                    # twofac5items_IL
                     # twofac5items_Child_Parasocial
                     # threefac2items_PMMS
                     # onefac4items_TAM_PeoU
                     # onefac4items_TAM_PU
                     # onefac4items_TAM_E
                     # onefac3items_TAM_SN
-                    (# onefac3items_TAM_ICU)
-                    # twofac5items_IL
+                    #(onefac3items_TAM_ICU)
                 
                 #predicting factor scores of all CFA models
                 onefac3items_TTfitPredict <- as.data.frame(predict(onefac3items_TT))
+                twofac5items_ILfitPredict <- as.data.frame(predict(twofac5items_IL))
                 twofac5items_Child_ParasocialfitPredict <- as.data.frame(predict(twofac5items_Child_Parasocial))
                 threefac2items_PMMSfitPredict <- as.data.frame(predict(threefac2items_PMMS)) 
                 onefac4items_TAM_PeoUfitPredict <- as.data.frame(predict(onefac4items_TAM_PEoU))
@@ -1610,12 +1611,12 @@
                 onefac4items_TAM_EfitPredict <- as.data.frame(predict(onefac4items_TAM_E))
                 onefac3items_TAM_SNfitPredict <- as.data.frame(predict(onefac3items_TAM_SN))
                 onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU))
-                twofac5items_ILfitPredict <- as.data.frame(predict(twofac5items_IL))
+
                 
                 #adding to rosie-dataset
-                rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_Child_ParasocialfitPredict,
+                rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_ILfitPredict, twofac5items_Child_ParasocialfitPredict,
                                        threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
-                                       onefac3items_TAM_SNfitPredict, onefac3items_TAM_ICUfitPredict, twofac5items_ILfitPredict)
+                                       onefac3items_TAM_SNfitPredict, onefac3items_TAM_ICUfitPredict)
                 View(rosie_fscores)
                 
         
@@ -1631,6 +1632,17 @@
           #Q26 TT >> 3 items
           TT <- rosie[, c(106:108)]
           psych::alpha(TT) ### --> 0.77
+          
+          #Q25 IL >> 5 items
+          IL <- rosie[, c(101:105)]
+          psych::alpha(IL) ### --> 0.86
+          
+          #for each factor separately
+          Information <- rosie[, c(101, 103)]
+          psych::alpha(Information) ### --> 0.82
+          
+          Navigation <- rosie[, c(102, 104:105)]
+          psych::alpha(Navigation) ### --> 0.8
           
           #Q32 Child_Parasocial >> 5 items
           Child_Parasocial <- rosie[, c(73:77)]
@@ -1691,23 +1703,12 @@
                 parent_only_usage <- rosie[, c(98)]
                 psych::alpha(parent_only_usage) ### --> error because only 1 item in this factor
           
-          #Q25 IL >> 5 items
-          IL <- rosie[, c(101:105)]
-          psych::alpha(IL) ### --> 0.86
-          
-                #for each factor separately
-                Information <- rosie[, c(101, 103)]
-                psych::alpha(Information) ### --> 0.82
-                
-                Navigation <- rosie[, c(102, 104:105)]
-                psych::alpha(Navigation) ### --> 0.8
 
-
-###----------------------------------------------------------------------------------------------------------------###   
+###----------------------------------------------------------------------------------------------------------------###  
                 
-#-----------------------------------------#
-### DESCRIPTIVES ##########################
-#-----------------------------------------#
+#---------------------------------------------------------------------------------#
+### MORE DESCRIPTIVES ON DATASET INCLUDING FACTOR SCORES ##########################
+#---------------------------------------------------------------------------------#
                 
    #taking a numerical look
             
@@ -1777,70 +1778,29 @@
    hist(rosie$SHL)
   
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(137:141, 116:118)]),2)
-   #                       TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f ICU_togetherwithchild ICU_childindividually ICU_parentonly
-   # TAM_PEoU_f                  1.00     0.44    0.63     0.15      0.09                  0.16                    NA          -0.22
-   # TAM_PU_f                    0.44     1.00    0.58     0.40      0.11                  0.26                    NA          -0.18
-   # TAM_E_f                     0.63     0.58    1.00     0.25      0.02                  0.23                    NA          -0.22
-   # TAM_SN_f                    0.15     0.40    0.25     1.00      0.07                  0.08                    NA          -0.04
-   # TAM_ICU_f                   0.09     0.11    0.02     0.07      1.00                  0.13                    NA          -0.07
-   # ICU_togetherwithchild       0.16     0.26    0.23     0.08      0.13                  1.00                    NA          -0.64
-   # ICU_childindividually         NA       NA      NA       NA        NA                    NA                     1             NA
-   # ICU_parentonly             -0.22    -0.18   -0.22    -0.04     -0.07                 -0.64                    NA           1.00
+   round(cor(rosie_fscores[,c(139:143)]),2)
+   # TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f
+   # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09
+   # TAM_PU_f         0.44     1.00    0.58     0.40      0.11
+   # TAM_E_f          0.63     0.58    1.00     0.25      0.02
+   # TAM_SN_f         0.15     0.40    0.25     1.00      0.07
+   # TAM_ICU_f        0.09     0.11    0.02     0.07      1.00
+   
    
          #pairwise correlations all in one scatterplot matrix
          library(car)
-         scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SN_f+TAM_IMG+TAM_ICU_f+ICU_togetherwithchild+ICU_childindividually+ICU_parentonly, data = rosie_fscores)
+         scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SN_f+TAM_IMG+TAM_ICU_f, data = rosie_fscores)
          
-         #for better visual overivew 
+         #for better visual overview 
          library(devtools)
          devtools::install_github("laresbernardo/lares")
          library(lares)
 
-         corr_cross(rosie_fscores[,c(138:142, 116:118)], # name of dataset
+         corr_cross(rosie_fscores[,c(139:143)], # name of dataset
                     max_pvalue = 0.05, # display only significant correlations (at 5% level)
                     top = 20 # display top 10 couples of variables (by correlation coefficient)
          )
-   
-###----------------------------------------------------------------------------------------------------------------###
-    
-#---------------------------------------------------#
-### MULTIVARIATE NORMALITY ##########################
-#---------------------------------------------------#
-
-          
-#--------------------------------------------------------------------------------#   
-  #Check multivariate assumptions prior to analysis
-   #multivariate normality
-   #multivariate ouliers
-#--------------------------------------------------------------------------------# 
-          
-  #check multivariate normality
-  ??pathex
-  pathex_multinorm <- pathex[complete.cases(pathex),]
-          
-  #check univariate distributions, multivariate normality and identify multivariate outliers
-  #MVpathex <- mvn(pathex_comp[, c(5,8,11:13)] mvnTest = “mardia”, multivariatePlot = “qq”, multivariateOutlierMethod = “adj”, showOutliers = T, showNewData = T)
-  #library(gdtools)
-  #library(MVN)
-  #mvn(rosie, subset = c(96:104, 122:126, 143:169, 175:176), mvnTest = c("mardia"), covariance = TRUE, tol = 1e-25, alpha = 0.5,
-  #            scale = FALSE, desc = TRUE, transform = "none", R = 1000,
-  #            univariateTest = c("SW"),
-  #            univariatePlot = "qq", multivariatePlot = "qq",
-  #            multivariateOutlierMethod = "adj", showOutliers = FALSE, showNewData = FALSE)
-  #this syntax takes super long and crashes all the time without giving me an error, so I do not know if I did something wrong here
-          
-   #therefore, I alternatively run a multivariate normality test using the package QuantPsyc's multi.norm function:
-   library(QuantPsyc)
-   #for rosie dataset including extracted factor scores of SEM variables
-   mult.norm(rosie_fscores[c(116:118, 137:141)])$mult.test 
-   # Beta-hat      kappa               p-val
-   # Skewness 15.80218 479.332865 0.00000000000000000
-   # Kurtosis 92.23586   6.524997 0.00000000006800271
-
-   # >> Since both p-values are waaaay less than .05, we reject the null hypothesis of the test. 
-   #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
-   # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
+  
    
 ###----------------------------------------------------------------------------------------------------------------###   
    
@@ -2255,6 +2215,32 @@
    ??simsem
    #http://rstudio-pubs-static.s3.amazonaws.com/253855_164b16e3a9074cf9a6f3045cbe1f99ce.html 
    
+       
+###----------------------------------------------------------------------------------------------------------------###
+       
+   #---------------------------------------------------#
+   ### MULTIVARIATE NORMALITY ##########################
+   #---------------------------------------------------#
+       
+       
+   #--------------------------------------------------------------------------------#   
+   #Check multivariate assumptions prior to analysis
+   #multivariate normality
+   #multivariate outliers
+   #--------------------------------------------------------------------------------# 
+       
+       #check multivariate normality
+       library(QuantPsyc)
+       #for rosie dataset including extracted factor scores of SEM variables
+       mult.norm(rosie_fscores[c(139:143)])$mult.test 
+       # Beta-hat      kappa                  p-val
+       # Skewness  6.251141 190.659812 0.00000000000000000000
+       # Kurtosis 44.432569   7.625644 0.00000000000002420286
+       
+       # >> Since both p-values are waaaay less than .05, we reject the null hypothesis of the test. 
+       #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
+       # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
+       
    #--------------------------------#
    ### SEM ##########################
    #--------------------------------#
