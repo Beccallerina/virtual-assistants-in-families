@@ -120,13 +120,13 @@ In what follows, you can find the analysis steps and respective R code that was 
 ### Measurement Validity
 ```R
 
-#packages for descriptives
-  library(pastecs)
-  library(psych)
-  #for CFA
+ #package for CFA
   library(lavaan)
   
-  #1) Confirmatory Factor Analysis for all model variables built up of two or more items
+```
+  ## 1) Confirmatory Factor Analysis for all model variables built up of two or more items
+  ```R
+  
     #TAM_IMG and TAM_ICU only consist of one item and were therefore excluded here
   
     #Dispositional: 
@@ -826,9 +826,11 @@ In what follows, you can find the analysis steps and respective R code that was 
                       #but this supports the correlation results for the ICU levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
                       
          
+  ```    
       
-      
-  #2) Extract factor scores
+  ## 2) Extract factor scores
+  
+  ```R
   
          #summary of all CFA models 
                     # onefac3items_TT
@@ -857,11 +859,13 @@ In what follows, you can find the analysis steps and respective R code that was 
                 rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_ILfitPredict, twofac5items_Child_ParasocialfitPredict,
                                        threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
                                        onefac3items_TAM_SNfitPredict, onefac3items_TAM_ICUfitPredict)
+                                       
+ ```
         
-        
-        
-  #3) Cronbach's Alpha
+    
+  ## 3) Cronbach's Alpha
   
+  ```R
          #Dispositional: 
           
              #Q26 TT >> 3 items
@@ -909,9 +913,13 @@ In what follows, you can find the analysis steps and respective R code that was 
  ```
  
 ### Descriptives
+
 ```R
 
-   library(psych)
+#packages for descriptives
+  library(pastecs)
+  library(psych)
+
    describe(rosie_fscores)
    psych::describeBy(rosie_fscores, group = "GSL")
    # 1 = male, 2 = female
