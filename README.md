@@ -1077,6 +1077,39 @@ In what follows, you can find the analysis steps and respective R code that was 
              TAM_ICU <- rosie[, c(98:100)]
              psych::alpha(TAM_ICU) ### --> 0.43
  
+ 
+#---------------------------------------------------------------------------------#
+### MORE DESCRIPTIVES ON DATASET INCLUDING FACTOR SCORES ##########################
+#---------------------------------------------------------------------------------#
+
+   library(psych)
+   describe(rosie_fscores)
+   psych::describeBy(rosie_fscores, group = "GSL")
+   # 1 = male, 2 = female
+
+   #getting correlations matrix for TAM-variables
+   round(cor(rosie_fscores[,c(139:143)]),2)
+   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f
+   # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09
+   # TAM_PU_f         0.44     1.00    0.58     0.40      0.11
+   # TAM_E_f          0.63     0.58    1.00     0.25      0.02
+   # TAM_SN_f         0.15     0.40    0.25     1.00      0.07
+   # TAM_ICU_f        0.09     0.11    0.02     0.07      1.00
+   
+   
+   #pairwise correlations all in one scatterplot matrix
+   library(car)
+   scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SN_f+TAM_IMG+TAM_ICU_f, data = rosie_fscores)
+         
+   #for better visual overview 
+   library(devtools)
+   devtools::install_github("laresbernardo/lares")
+   library(lares)
+
+         corr_cross(rosie_fscores[,c(139:143)], # name of dataset
+                    max_pvalue = 0.05, # display only significant correlations (at 5% level)
+                    top = 20 # display top 10 couples of variables (by correlation coefficient)
+         )
  ```
 
 ### Preregistered Analyses
