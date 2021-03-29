@@ -824,7 +824,7 @@ In what follows, you can find the analysis steps and respective R code that was 
                       # >> Factor 1 holding item 1 => parent only usage
                       # >> Factor 2 holding items 2 and 3 => child (co)usage
                       
-                      #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified
+                      #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified; also this scale does not represent an existing multiple-item scale
                       #but this supports the correlation results for the ICU levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
                       
          
@@ -854,7 +854,7 @@ In what follows, you can find the analysis steps and respective R code that was 
                 onefac4items_TAM_PUfitPredict <- as.data.frame(predict(onefac4items_TAM_PU))
                 onefac4items_TAM_EfitPredict <- as.data.frame(predict(onefac4items_TAM_E))
                 onefac3items_TAM_SNfitPredict <- as.data.frame(predict(onefac3items_TAM_SN))
-                onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU))
+                onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU)) #R warns about some negative variances, this corresponds to the CFA results above!
 
                 
           #adding to rosie-dataset
@@ -954,6 +954,69 @@ In what follows, you can find the analysis steps and respective R code that was 
 ### Preregistered Analyses
 
 #### Latent Class Analysis: Individual differencs (DSMM)
+
+#####The following variables go in the LCA: 
+   
+######Dispositional: 
+       * GSL
+       * SOCIALEKLASSE2016
+       * TT >> 3 items
+       * IL >> 5 items (information + navigation)
+       * FoPersU 
+       * Child_Gender
+       * Child Temperament
+           * Child_Temp_Extraversion
+           * Child_Temp_Negative_Affectivity
+           * Child_Temp_Effortful_Control 
+       * Child_Parasocial >> 5 items
+           * anthopomorphism
+           * parasocial relationship
+                  
+######Developmental:
+       * LFT
+       * Child_Age
+
+######Social: 
+       * PMMS >> 6 items
+           * restr
+           * negac
+           * posac
+       * current_usage
+       * household composition 
+           * Child_Nr 
+           * PERSONEN
+       * smart-household-level
+
+Since LCA using poLCA package only allows categorical indicators, we convert all continuous variables into categorical ones. This way we also facilitate interpretation of classes.
+   
+#####How to meaningfully categorize?
+   
+######Dispositional: 
+       * GSL >> already categorical
+       * SOCIALEKLASSE2016 >> already categorical
+       * TT >> 3 items >> median split method because of conceptual understanding of the scale
+       * IL >> 5 items (information + navigation) >> median split method because conceptual understanding of the scale
+       * FoPersU >> convert into irregular vs. regular (based on weekly answer option as the cut-off)
+       * Child_Gender > already categorical
+       * Child_Temp (Extraversion, Negative_Affectivity, Effortful_Control) >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
+       * Child_Parasocial >> 5 items two factors (anthropomorphism & parasocial_relationship) >> median split method because conceptual understanding of the scale
+       
+######Developmental:
+       * LFT >> mean-split
+       * Child_Age >> age group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
+       
+######Social: 
+       * PMMS >> 6 items (restsMed & negacMed & posacMed) >> modal split method because of conceptual understanding of the scale
+       * household composition >> built up of Child_Nr and PERSONEN >> convert both items into factors
+       * smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
+
+ENTER CODE FOR CATEGORIZATION
+
+#####Running the LCA
+
+ENTER LCA SYNTAX
+
+#####Evaluating and interpreting LCA
 
 #### Structural Equation Modelling: Technology acceptance (TAM + U&G)
 
