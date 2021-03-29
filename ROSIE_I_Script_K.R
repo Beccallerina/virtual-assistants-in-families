@@ -280,6 +280,7 @@
     rosie_dataset_renamed_families_complete$FoPersU <- rowMeans(rosie_dataset_renamed_families_complete[, 36:39], na.rm = T)
     is.numeric(rosie_dataset_renamed_families_complete$FoPersU)
     View(rosie_dataset_renamed_families_complete)
+    
   
     #Smart-Household-Level - SHL (Q6 IoT_Usage_9 - 24) 
     #Here, we counted the number of smart-devices each family owns, so the number of selected items 
@@ -1456,6 +1457,8 @@
               #parallel analysis to get number of factors
               parallel4 <- fa.parallel(SN_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, so we'll stick with CFA
           
+              
+              
           ### TAM_ICU >> 3 items #########################
           
           #Prep: Check for normality and outliers
@@ -1580,7 +1583,7 @@
                       # >> Factor 1 holding item 1 => parent only usage
                       # >> Factor 2 holding items 2 and 3 => child (co)usage
                       
-                      #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified
+                      #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified; also this scale does not represent an existing multiple-item scale
                       #but this supports the correlation results for the ICU levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
                       
       
@@ -1610,7 +1613,7 @@
                 onefac4items_TAM_PUfitPredict <- as.data.frame(predict(onefac4items_TAM_PU))
                 onefac4items_TAM_EfitPredict <- as.data.frame(predict(onefac4items_TAM_E))
                 onefac3items_TAM_SNfitPredict <- as.data.frame(predict(onefac3items_TAM_SN))
-                onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU))
+                onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU)) #R warns about some negative variances, this corresponds to the CFA results above
 
                 
                 #adding to rosie-dataset
@@ -1793,7 +1796,7 @@
          
          #for better visual overview 
          library(devtools)
-         devtools::install_github("laresbernardo/lares")
+         #devtools::install_github("laresbernardo/lares")
          library(lares)
 
          corr_cross(rosie_fscores[,c(139:143)], # name of dataset
@@ -1817,10 +1820,13 @@
        # IL >> 5 items (information + navigation)
        # FoPersU 
        # Child_Gender
-       # Child_Temp_Extraversion
-       # Child_Temp_Negative_Affectivity
-       # Child_Temp_Effortful_Control 
+       # Child Temperament
+           # Child_Temp_Extraversion
+           # Child_Temp_Negative_Affectivity
+           # Child_Temp_Effortful_Control 
        # Child_Parasocial >> 5 items
+           # anthopomorphism
+           # parasocial relationship
 
        
        #Developmental:
@@ -1829,7 +1835,13 @@
 
        #Social: 
        # PMMS >> 6 items
-       # household composition >> built up of Child_Nr and PERSONEN
+           # restr
+           # negac
+           # posac
+       # current_usage
+       # household composition 
+           # Child_Nr 
+           # PERSONEN
        # smart-household-level
    
    
@@ -1840,23 +1852,22 @@
        #Dispositional: 
        # GSL >> already categorical
        # SOCIALEKLASSE2016 >> already categorical
-       # TT >> 3 items >> median split method because of fairly normal distribution and conceptual understanding of 0 = Neutraal, using median for original and factor score scale
-       # IL >> 5 items (information + navigation) >> since answer options 1+2 as well as the rest seem to group together, we artificially categorize this way for the original scale: <= 2 = 1, > 2 = 2 and this way for the factor score scale: <= 0 = 1, > 0 = 2
-       # FoPersU >> >> convert single-item into factor
+       # TT >> 3 items >> median split method because of conceptual understanding of the scale
+       # IL >> 5 items (information + navigation) >> median split method because conceptual understanding of the scale
+       # FoPersU >> convert into irregular vs. regular (based on weekly answer option as the cut-off)
        # Child_Gender > already categorical
-       # Child_Temp_Extraversion >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
-       # Child_Temp_Negative_Affectivity >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
-       # Child_Temp_Effortful_Control >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
-       # Child_Parasocial >> 5 items two factors >> anthropomorphism & parasocial_relationship >> since distributions show that answer options 1+2 as well as 3+4+5 group together we artificially categorize this way for the original scale:  ≤ 2 = 1, > 2 = 2 and this way for the factor scale: ≤ -0.5 = 1, > -0.5 = 2
+       # Child_Temp (Extraversion, Negative_Affectivity, Effortful_Control) >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
+       # Child_Parasocial >> 5 items two factors (anthropomorphism & parasocial_relationship) >> median split method because conceptual understanding of the scale
        
        #Developmental:
        # LFT >> mean-split
        # Child_Age >> age group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
        
        #Social: 
-       # PMMS >> 6 items three factors >> restsMed & negacMed & posacMed >> since distributions show that answer options 1+2 group together, we artificially categorize this way for the original scale: ≤ 2 = 1 (nooit), > 2 & < 4 = 2 (soms), == 4 = 3 (vaak) and this way for the factor score scale: ≤ (-1) = 1, >=(-1) & <= 0 = 2, > 0 = 3
+       # PMMS >> 6 items (restsMed & negacMed & posacMed) >> modal split method because of conceptual understanding of the scale
+       # current usage >> already categorical (from data cleaning)
        # household composition >> built up of Child_Nr and PERSONEN >> convert both items into factors
-       # smart-household-level >> since distribution is strongly positively skewed, convert into 0-2 = 1, 2-4 = 2, more than 4 devices = 3
+       # smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
    
    #------------------------------------------------------#
    ### artificial categorization ##########################
@@ -1868,19 +1879,11 @@
        rosie_fscores$TT_avgsum <- rowMeans(rosie_fscores[, c(106:108)], na.rm = T)
        is.numeric(rosie_fscores$TT_avgsum)
        View(rosie_fscores$TT_avgsum)
+       
+       #median split method
        rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum<=median(rosie_fscores$TT_avgsum)] = 1
        rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum>median(rosie_fscores$TT_avgsum)] = 2
        
-       #factor score scale
-       rosie_fscores$TT_LCAcategory_factorscore[rosie_fscores$TT_f<=median(rosie_fscores$TT_f)] = 1
-       rosie_fscores$TT_LCAcategory_factorscore[rosie_fscores$TT_f>median(rosie_fscores$TT_f)] = 2
-       
-       View(rosie_fscores)
-       
-       #comparing TT-factors based on original scale vs. factor scores
-       TT_crosstabs <- xtabs(~TT_LCAcategory_orig+TT_LCAcategory_factorscore, data=rosie_fscores)
-       ftable(TT_crosstabs) 
-       # >> out of the 183, 8 observation were coded differently 
    
    # - IL
        #original scale using average sum scores
@@ -1889,40 +1892,26 @@
            rosie_fscores$IL_navigation_avgsum <- rowMeans(rosie_fscores[, c(102, 104:105)], na.rm = T)
            is.numeric(rosie_fscores$IL_navigation_avgsum)
            View(rosie_fscores$IL_navigation_avgsum)
-           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=2] = 1
-           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum>2] = 2
+           
+           #median split method
+           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=median(rosie_fscores$IL_navigation_avgsum)] = 1
+           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum>median(rosie_fscores$IL_navigation_avgsum)] = 2
            
            #information (items 1 + 3)
            rosie_fscores$IL_information_avgsum <- rowMeans(rosie_fscores[, c(101, 103)], na.rm = T)
            is.numeric(rosie_fscores$IL_information_avgsum)
            View(rosie_fscores$IL_information_avgsum)
-           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=2] = 1
-           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum>2] = 2
+           
+           #median split method
+           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=median(rosie_fscores$IL_information_avgsum)] = 1
+           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum>median(rosie_fscores$IL_information_avgsum)] = 2
        
-       #factor score scale
-           #navigation
-           rosie_fscores$IL_navigation_LCAcategory_factorscore[rosie_fscores$navigation<=0] = 1
-           rosie_fscores$IL_navigation_LCAcategory_factorscore[rosie_fscores$navigation>0] = 2
-           
-           #information
-           rosie_fscores$IL_information_LCAcategory_factorscore[rosie_fscores$information<=0] = 1
-           rosie_fscores$IL_information_LCAcategory_factorscore[rosie_fscores$information>0] = 2
-           
-        View(rosie_fscores)
-        
-        #comparing IL-factors based on original scale vs. factor scores
-           IL_navigation_crosstabs <- xtabs(~IL_navigation_LCAcategory_orig+IL_navigation_LCAcategory_factorscore, data=rosie_fscores)
-           ftable(IL_navigation_crosstabs) 
-           # >> out of the 183, 20 observations were coded differently 
-                                                 
-           IL_information_crosstabs <- xtabs(~IL_information_LCAcategory_orig+IL_information_LCAcategory_factorscore, data=rosie_fscores)
-           ftable(IL_information_crosstabs) 
-           # >> out of the 183, 11 observations were coded differently
-           
            
    # - FoPersU
-   rosie_fscores$FoPersU_f <-  as.factor(rosie_fscores$FoPersU)
-   is.factor(rosie_fscores$FoPersU_f)
+   rosie_fscores$FoPersU_f_LCA[rosie_fscores$FoPersU<=2] = 1
+   rosie_fscores$FoPersU_f_LCA[rosie_fscores$FoPersU>2] = 2
+   rosie_fscores$FoPersU_f_LCA <-  as.factor(rosie_fscores$FoPersU_f_LCA)
+   is.factor(rosie_fscores$FoPersU_f_LCA)
            
    # - Child_Temp
    rosie_fscores$Temp_Extraversion_f[rosie$Child_Temp_Extraversion<=3] = 1
@@ -1941,34 +1930,20 @@
            rosie_fscores$Child_Parasocial_anthropomorphism_avgsum <- rowMeans(rosie_fscores[, c(73, 76:77)], na.rm = T)
            is.numeric(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
            View(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
-           rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum<=2] = 1
-           rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum>2] = 2
+           
+           #median split method
+           rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum<=median(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)] = 1
+           rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum>median(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)] = 2
            
            #parasocial relationship (items 2 + 3)
            rosie_fscores$Child_Parasocial_pararela_avgsum <- rowMeans(rosie_fscores[, c(74:75)], na.rm = T)
            is.numeric(rosie_fscores$Child_Parasocial_pararela_avgsum)
            View(rosie_fscores$Child_Parasocial_pararela_avgsum)
-           rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum<=2] = 1
-           rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum>2] = 2
-       
-       #factor score scale
-           rosie_fscores$anthropomorphism_LCAcategory_factorscore[rosie_fscores$anthropomorphism<=(-0.5)] = 1
-           rosie_fscores$anthropomorphism_LCAcategory_factorscore[rosie_fscores$anthropomorphism>(-0.5)] = 2
            
-           rosie_fscores$parasocial_relationship_LCAcategory_factorscore[rosie_fscores$parasocial_relationship<=(-0.5)] = 1
-           rosie_fscores$parasocial_relationship_LCAcategory_factorscore[rosie_fscores$parasocial_relationship>(-0.5)] = 2
+           #median split method
+           rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum<=median(rosie_fscores$Child_Parasocial_pararela_avgsum)] = 1
+           rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum>median(rosie_fscores$Child_Parasocial_pararela_avgsum)] = 2
        
-           
-       View(rosie_fscores)
-       
-       #comparing Child_parasocial-factors based on original scale vs. factor scores
-           Child_parasocial_anthopomorphism_crosstabs <- xtabs(~Child_Parasocial_anthropomorphism_LCAcategory_orig+anthropomorphism_LCAcategory_factorscore, data=rosie_fscores)
-           ftable(Child_parasocial_anthopomorphism_crosstabs) 
-           # >> out of the 183, 35 observations were coded differently 
-           
-           Child_parasocial_pararela_crosstabs <- xtabs(~Child_Parasocial_pararela_LCAcategory_orig+parasocial_relationship_LCAcategory_factorscore, data=rosie_fscores)
-           ftable(Child_parasocial_pararela_crosstabs) 
-           # >> out of the 183, 37 observations were coded differently 
    
    # - LFT
    rosie_fscores$LFT_f[rosie_fscores$LFT<=mean(rosie$LFT)] = 1
@@ -1979,69 +1954,47 @@
    rosie_fscores$Child_Age_f[rosie_fscores$Child_Age>=4] = 2
    
    # - PMMS
+       #creating mode function
+           getmode <- function(v) {
+             uniqv <- unique(v)
+             uniqv[which.max(tabulate(match(v, uniqv)))]
+           }
+           
+           #create the vector with numbers
+           v <- rosie_fscores
+           
        #original scale using average sum scores ≤ 2 = 1 (nooit), > 2 & < 4 = 2 (soms), == 4 = 3 (vaak)
            #restrMed (items 1+2)
            library(fame)
            rosie_fscores$PMMS_restrMed_avgsum <- rowMeans(rosie_fscores[, c(62:63)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_restrMed_avgsum)
            View(rosie_fscores$PMMS_restrMed_avgsum)
-           rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum<=2] = 1
-           rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum>2 & rosie_fscores$PMMS_restrMed_avgsum<4] = 2
-           rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum==4] = 3
            
-           hist(rosie_fscores$PMMS_restrMed_avgsum)
+           #modal split method
+           rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum<=getmode(rosie_fscores$PMMS_restrMed_avgsum)] = 1
+           rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum>getmode(rosie_fscores$PMMS_restrMed_avgsum)] = 2
+           
            
            #negacMed (items 3+5)
            rosie_fscores$PMMS_negacMed_avgsum <- rowMeans(rosie_fscores[, c(64, 66)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_negacMed_avgsum)
            View(rosie_fscores$PMMS_negacMed_avgsum)
-           rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum<=2] = 1
-           rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum>2 & rosie_fscores$PMMS_negacMed_avgsum<4] = 2
-           rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum==4] = 3
+           
+           #modal split method
+           rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum<=getmode(rosie_fscores$PMMS_negacMed_avgsum)] = 1
+           rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum>getmode(rosie_fscores$PMMS_negacMed_avgsum)] = 2
+           
            
            #posacMed (items 4+6)
            rosie_fscores$PMMS_posacMed_avgsum <- rowMeans(rosie_fscores[, c(65, 67)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_posacMed_avgsum)
            View(rosie_fscores$PMMS_posacMed_avgsum)
-           rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum<=2] = 1
-           rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum>2 & rosie_fscores$PMMS_posacMed_avgsum<4] = 2
-           rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum==4] = 3
-       
-       #factor score scale
-           #restrMed
-           rosie_fscores$restrMed_LCA_factorscore[rosie_fscores$restrMed<(-1)] = 1
-           rosie_fscores$restrMed_LCA_factorscore[rosie_fscores$restrMed>=(-1) & rosie_fscores$restrMed<=0] = 2
-           rosie_fscores$restrMed_LCA_factorscore[rosie_fscores$restrMed>0] = 3
            
-           View(rosie_fscores$restrMed_factorscore)
+           #modal split method
+           rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum<=getmode(rosie_fscores$PMMS_posacMed_avgsum)] = 1
+           rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum>getmode(rosie_fscores$PMMS_posacMed_avgsum)] = 2
            
-           #negacMed
-           rosie_fscores$negacMed_LCA_factorscore[rosie_fscores$negacMed<(-1)] = 1
-           rosie_fscores$negacMed_LCA_factorscore[rosie_fscores$negacMed>=(-1) & rosie_fscores$negacMed<=0] = 2
-           rosie_fscores$negacMed_LCA_factorscore[rosie_fscores$negacMed>0] = 3
-           
-           View(rosie_fscores$negacMed_factorscore)
-           
-           #posacMed
-           rosie_fscores$posacMed_LCA_factorscore[rosie_fscores$posacMed<(-1)] = 1
-           rosie_fscores$posacMed_LCA_factorscore[rosie_fscores$posacMed>=(-1) & rosie_fscores$posacMed<=0] = 2
-           rosie_fscores$posacMed_LCA_factorscore[rosie_fscores$posacMed>0] = 3
-           
-           View(rosie_fscores$posacMed_factorscore)
-   
-   #comparing PMMS-factors based on original scale vs. factor scores
-   PMMS_restrMed_crosstabs <- xtabs(~PMMS_restrMed_LCAcategory_orig+restrMed_LCA_factorscore, data=rosie_fscores)
-   ftable(PMMS_restrMed_crosstabs) 
-   # >> out of the 183, 71 observations were coded differently 
-   
-   PMMS_negacMed_crosstabs <- xtabs(~PMMS_negacMed_LCAcategory_orig+negacMed_LCA_factorscore, data=rosie_fscores)
-   ftable(PMMS_negacMed_crosstabs) 
-   # >> out of the 183, 98 observations were coded differently 
-  
-   PMMS_posacMed_crosstabs <- xtabs(~PMMS_posacMed_LCAcategory_orig+posacMed_LCA_factorscore, data=rosie_fscores)
-   ftable(PMMS_posacMed_crosstabs) 
-   # >> out of the 183, 42 observations were coded differently 
-   
+                
    # - household composition
    rosie_fscores$Child_Nr_f <- as.factor(rosie_fscores$Child_Nr)
    
@@ -2050,24 +2003,41 @@
    
    View(rosie_fscores) 
    
+   
    # - smart-household-level
-   rosie_fscores$SHL_f[rosie_fscores$SHL<=2] = 1
-   rosie_fscores$SHL_f[rosie_fscores$SHL>2 & rosie_fscores$SHL<= 4] = 2
-   rosie_fscores$SHL_f[rosie_fscores$SHL>4] = 3
+   rosie_fscores$SHL_f[rosie_fscores$SHL<=median(rosie_fscores$SHL)] = 1
+   rosie_fscores$SHL_f[rosie_fscores$SHL>median(rosie_fscores$SHL)] = 2
+   
    
    #check if all new factors are included in the dataset
    View(rosie_fscores)
-   
+   names(rosie_fscores)
+   # "TT_avgsum"                                         
+   # [145] "TT_LCAcategory_orig"                                "IL_navigation_avgsum"                              
+   # [147] "IL_navigation_LCAcategory_orig"                     "IL_information_avgsum"                             
+   # [149] "IL_information_LCAcategory_orig"                    "FoPersU_f"                                         
+   # [151] "Temp_Extraversion_f"                                "Temp_Negative_Affectivity_f"                       
+   # [153] "Temp_Effortful_Control_f"                           "Child_Parasocial_anthropomorphism_avgsum"          
+   # [155] "Child_Parasocial_anthropomorphism_LCAcategory_orig" "Child_Parasocial_pararela_avgsum"                  
+   # [157] "Child_Parasocial_pararela_LCAcategory_orig"         "LFT_f"                                             
+   # [159] "Child_Age_f"                                        "PMMS_restrMed_avgsum"                              
+   # [161] "PMMS_restrMed_LCAcategory_orig"                     "PMMS_negacMed_avgsum"                              
+   # [163] "PMMS_negacMed_LCAcategory_orig"                     "PMMS_posacMed_avgsum"                              
+   # [165] "PMMS_posacMed_LCAcategory_orig"                     "Child_Nr_f"                                        
+   # [167] "PERSONEN_f"                                         "SHL_f" 
    
    #--------------------------------------------#
    ### running the LCA ##########################
    #--------------------------------------------#
    
    library(poLCA) 
-   LCAmodel <- cbind(TT_LCAcategory_orig,
+   LCAmodel <- cbind(GSL,
+                        SOCIALEKLASSE2016,
+                        TT_LCAcategory_orig,
                         IL_navigation_LCAcategory_orig,
                         IL_information_LCAcategory_orig,
-                        FoPersU_f,
+                        FoPersU_f_LCA,
+                        Child_Gender,
                         Temp_Extraversion_f,
                         Temp_Negative_Affectivity_f,
                         Temp_Effortful_Control_f,
@@ -2078,70 +2048,74 @@
                         PMMS_restrMed_LCAcategory_orig,
                         PMMS_negacMed_LCAcategory_orig,
                         PMMS_posacMed_LCAcategory_orig,
+                        current_usage,
                         Child_Nr_f,
                         PERSONEN_f,
                         SHL_f)~1
+
    
    M_2class <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    # ======================= 2-class results ==================================
    # Estimated class population shares 
-   # 0.389 0.611 
+   # 0.3715 0.6285 
    # 
    # Predicted class memberships (by modal posterior prob.) 
-   # 0.4098 0.5902 
+   # 0.388 0.612 
    # 
-   #   number of observations: 183 
-   # number of estimated parameters: 81 
-   # residual degrees of freedom: 102 
-   # maximum log-likelihood: -2469.761 
+   # number of observations: 183 
+   # number of estimated parameters: 61 
+   # residual degrees of freedom: 122 
+   # maximum log-likelihood: -2582.208 
    # 
-   # AIC(2): 5101.522
-   # BIC(2): 5361.49
-   # G^2(2): 3032.85 (Likelihood ratio/deviance statistic) 
-   # X^2(2): 142386504 (Chi-square goodness of fit) 
+   # AIC(2): 5286.416
+   # BIC(2): 5482.195
+   # G^2(2): 3257.744 (Likelihood ratio/deviance statistic) 
+   # X^2(2): 322139886 (Chi-square goodness of fit)  
    
    M_3class <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    # ======================= 3-class results ==================================
    # Estimated class population shares 
-   # 0.2895 0.3708 0.3397 
+   # 0.442 0.1831 0.3749 
    # 
    # Predicted class memberships (by modal posterior prob.) 
-   # 0.2951 0.3497 0.3552 
+   # 0.4426 0.1803 0.377 
    # 
-   #   number of observations: 183 
-   # number of estimated parameters: 122 
-   # residual degrees of freedom: 61 
-   # maximum log-likelihood: -2425.903 
+   # number of observations: 183 
+   # number of estimated parameters: 92 
+   # residual degrees of freedom: 91 
+   # maximum log-likelihood: -2539.064 
    # 
-   # AIC(3): 5095.806
-   # BIC(3): 5487.363
-   # G^2(3): 2945.134 (Likelihood ratio/deviance statistic) 
-   # X^2(3): 125204350 (Chi-square goodness of fit) 
+   # AIC(3): 5262.127
+   # BIC(3): 5557.4
+   # G^2(3): 3171.456 (Likelihood ratio/deviance statistic) 
+   # X^2(3): 73151666 (Chi-square goodness of fit)
    
    M_4class <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    # ======================= 4-class results ==================================
    # Estimated class population shares 
-   # 0.346 0.3921 0.0953 0.1666 
+   # 0.2979 0.1863 0.2626 0.2532 
    # 
    # Predicted class memberships (by modal posterior prob.) 
-   # 0.3388 0.3934 0.0929 0.1749 
+   # 0.2951 0.1858 0.2623 0.2568 
    # 
-   #   number of observations: 183 
-   # number of estimated parameters: 163 
-   # residual degrees of freedom: 20 
-   # maximum log-likelihood: -2392.816 
+   # number of observations: 183 
+   # number of estimated parameters: 123 
+   # residual degrees of freedom: 60 
+   # maximum log-likelihood: -2505.672 
    # 
-   # AIC(4): 5111.632
-   # BIC(4): 5634.779
-   # G^2(4): 2878.96 (Likelihood ratio/deviance statistic) 
-   # X^2(4): 66900579 (Chi-square goodness of fit) 
+   # AIC(4): 5257.343
+   # BIC(4): 5652.11
+   # G^2(4): 3104.671 (Likelihood ratio/deviance statistic) 
+   # X^2(4): 48405078 (Chi-square goodness of fit) 
+   
+   #########  :) Script run until here #################
    
    #-------------------------------------------#
    ### evaluating LCA ##########################
    #-------------------------------------------#
    
    # https://statistics.ohlsen-web.de/latent-class-analysis-polca/
-   #Since we do not have a solid theoretical assumption of the number of unobserved subpopulations (aka family types)
+   #Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
    #we take an exploratory approach and compare multiple models (2-4 classes) against each other. 
    #If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
    #Additionally one could compare the different solutions by BIC or AIC information criteria. 
@@ -2151,54 +2125,23 @@
    
    # >> 2-class model has lowest BIC
    
-       #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
+       #extract X-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
-       ?set.seed
-       twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=?, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
        
        #output predicted classes from selected model so that we can use it in subsequent analyses:
        rosie_fscores$fam_class=twoclass$predclass
        
        #declare the class variable as a factor
-       rosie_fscores$fam_class = as.factor(rosie_fscores$class)
+       rosie_fscores$fam_class = as.factor(rosie_fscores$fam_class)
        
        View(rosie_fscores)
-       
-       #describe the two classes
-            # >> Class 1: 65% 1 for TT, 
-                          #68% 2 for IL navigation, relatively even for IL information, ***
-                          #balanced for FoPErsU, 
-                          #86% 2 for Temp_Extra, 52% 2 for Temp_Neg, 84% 2 for Temp_Eff, 
-                          #64% 1 for Para anthropo, 67% 2 for Para pararela, 
-                          #relatively even for LFT, ***
-                          #relatively even for Child_age, 
-                          #62% 2 (out of 3) for PMMS restrMed, 71% 2 (out of 3) for PMMS negacMed, 69% 2 (out of 3) for posacMed, 
-                          #74% 2 (1 child) for Child_nr
-                          #45% 4 for PERSONEN
-                          #57% 1 (out of 3) for SHL
-       
-       
-            # >> Class 2: 59% 2 for TT, 
-                          #93% 1 for IL navigation, completely 1 for IL information, ***
-                          #balanced for FoPErsU, 
-                          #83% 2 for TEmp_Extra, 65% 1 for Temp_Neg, 74% 2 for Temp_Eff, 
-                          #77% 1 for Para anthropo, 60% 2 for Para pararela, 
-                          #86% 1 for LFT, ***
-                          #relatively even for Child_age, 
-                          #70% 2 (out of 3) for PMMS restrMed, 62% 2 (out of 3) for PMMS negacMed, 71% 2 (out of 3) for posacMed, 
-                          #56% 2 (1 child) for Child_nr
-                          #66% 4 for PERSONEN
-                          #54% 1 (out of 3) for SHL
-       
-       
        
        #name the levels of the class factor using the response probabilities plot
        levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="1"] <- "XXX"
        levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="2"] <- "YYY"
-   
-   
-          
-   #########  :) Script run until here #################
+       levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="3"] <- "ZZZ"
+  
    
 ###----------------------------------------------------------------------------------------------------------------###      
       
