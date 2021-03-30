@@ -1893,18 +1893,18 @@
            is.numeric(rosie_fscores$IL_navigation_avgsum)
            View(rosie_fscores$IL_navigation_avgsum)
            
-           #median split method
-           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=median(rosie_fscores$IL_navigation_avgsum)] = 1
-           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum>median(rosie_fscores$IL_navigation_avgsum)] = 2
+           #median split method !!! Note: Since items were formulated negatively, lower scores indicate higher literacy, so numbers for categories are switched
+           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=median(rosie_fscores$IL_navigation_avgsum)] = 2
+           rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum>median(rosie_fscores$IL_navigation_avgsum)] = 1
            
            #information (items 1 + 3)
            rosie_fscores$IL_information_avgsum <- rowMeans(rosie_fscores[, c(101, 103)], na.rm = T)
            is.numeric(rosie_fscores$IL_information_avgsum)
            View(rosie_fscores$IL_information_avgsum)
            
-           #median split method
-           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=median(rosie_fscores$IL_information_avgsum)] = 1
-           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum>median(rosie_fscores$IL_information_avgsum)] = 2
+           #median split method !!! Note: Since items were formulated negatively, lower scores indicate higher literacy, so numbers for categories are switched
+           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=median(rosie_fscores$IL_information_avgsum)] = 2
+           rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum>median(rosie_fscores$IL_information_avgsum)] = 1
        
            
    # - FoPersU
@@ -2125,22 +2125,34 @@
    
    # >> 2-class model has lowest BIC
    
-       #extract X-class solution and save in twoclass object (https://osf.io/vec6s/)
+     #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
-       twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=?, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
        
        #output predicted classes from selected model so that we can use it in subsequent analyses:
-       rosie_fscores$fam_class=twoclass$predclass
+       rosie_fscores$fam_class2=twoclass$predclass
        
-       #declare the class variable as a factor
-       rosie_fscores$fam_class = as.factor(rosie_fscores$fam_class)
        
        View(rosie_fscores)
        
        #name the levels of the class factor using the response probabilities plot
-       levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="1"] <- "XXX"
-       levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="2"] <- "YYY"
-       levels(rosie_fscores$fam_class)[levels(rosie_fscores$fam_class)=="3"] <- "ZZZ"
+       # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="1"] <- "XXX"
+       # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="2"] <- "YYY"
+       
+    #extract 3-class solution and save in twoclass object (https://osf.io/vec6s/)
+       set.seed(123)
+       threeclass=poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       
+       #output predicted classes from selected model so that we can use it in subsequent analyses:
+       rosie_fscores$fam_class3=threeclass$predclass
+       
+       
+       View(rosie_fscores)
+       
+       #name the levels of the class factor using the response probabilities plot
+       # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="1"] <- "XXX"
+       # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="2"] <- "YYY"
+       # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="3"] <- "ZZZ"
   
    
 ###----------------------------------------------------------------------------------------------------------------###      
@@ -2175,12 +2187,12 @@
        #check multivariate normality
        library(QuantPsyc)
        #for rosie dataset including extracted factor scores of SEM variables
-       mult.norm(rosie_fscores[c(139:143)])$mult.test 
-       # Beta-hat      kappa                  p-val
-       # Skewness  6.251141 190.659812 0.00000000000000000000
-       # Kurtosis 44.432569   7.625644 0.00000000000002420286
+       mult.norm(rosie_fscores[c(82:100)])$mult.test #all TAM core variables
+       # Beta-hat      kappa p-val
+       # Skewness  90.82382 2770.12639     0
+       # Kurtosis 475.90618   18.41431     0
        
-       # >> Since both p-values are waaaay less than .05, we reject the null hypothesis of the test. 
+       # >> Since both p-values are less than .05, we reject the null hypothesis of the test. 
        #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
        # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
        
@@ -2206,7 +2218,7 @@
       dataSet$NameOfVariableThatShowsStandardizedResiduals <- rstandard(NameOfModel)
       
 
-      install.packages("lavaan", dependencies = T)
+      #install.packages("lavaan", dependencies = T)
       library(lavaan)
  
       
@@ -2221,27 +2233,50 @@
       
         ### Higher Order Model in Lavaan ###
         
-        #specify the model
+        #specify the model (with 2 family classes)
         rosiesTAM <- '
-          #measurement model
-            E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-            SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
-            PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
-            PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
-            ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3
         
-          #regressions
-            PEoU ~ fam_class 
-            PU ~ fam_class + PEoU 
-            E ~ fam_class
-            IMG ~ fam_class
-            SN ~ fam_class
-            ICU ~ PEoU + PU + E + IMG + SN 
+        #measurement model
+          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
+          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
+          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
+          SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
+          ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3 
+        #regressions  
+          PEoU ~ fam_class2  
+          PU ~ fam_class2 + PEoU  
+          E ~ fam_class2 
+          TAM_IMG ~ fam_class2 
+          SN ~ fam_class2 
+          ICU ~ PEoU + PU + E + TAM_IMG + SN 
+        #residual variances 
+          TAM_PEoU_1 ~~ TAM_PEoU_1
+          TAM_PEoU_2 ~~ TAM_PEoU_2
+          TAM_PEoU_3 ~~ TAM_PEoU_3
+          TAM_PEoU_4 ~~ TAM_PEoU_4
+          TAM_PU_1 ~~ TAM_PU_1
+          TAM_PU_2 ~~ TAM_PU_2
+          TAM_PU_3 ~~ TAM_PU_3
+          TAM_PU_4 ~~ TAM_PU_4
+          TAM_E_1 ~~ TAM_E_1
+          TAM_E_2 ~~ TAM_E_2
+          TAM_E_3 ~~ TAM_E_3
+          TAM_E_4 ~~ TAM_E_4
+          TAM_SN_1 ~~ TAM_SN_1
+          TAM_SN_2 ~~ TAM_SN_2
+          TAM_SN_3 ~~ TAM_SN_3
+          TAM_ICU_1 ~~ TAM_ICU_1
+          TAM_ICU_2 ~~ TAM_ICU_2
+          TAM_ICU_3 ~~ TAM_ICU_3
+          TAM_IMG ~~ TAM_IMG
+          PEoU ~~ PEoU
+          PU ~~ PU
+          E ~~ E
+          SN ~~ SN
+          ICU ~~ ICU
+          fam_class2 ~~ fam_class2
         
-          #add (residual) variances ????
-            
         '
-      
         
         #fit the model
         rosiesTAM_fit <- lavaan(rosiesTAM, data = rosie_fscores)
@@ -2249,6 +2284,84 @@
         #print summary  
         summary(rosiesTAM_fit, standardized = T, fit.measures = T)
       
+        #bootstrap model
+        rosiesTAM_fit_boostrapped_se <- sem(rosiesTAM, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+        summary(rosiesTAM_fit_boostrapped_se, fit.measures = TRUE) 
+        parameterEstimates(rosiesTAM_fit_boostrapped_se, 
+                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                           standardized = FALSE, 
+                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                           cov.std = TRUE, fmi.options = list(), 
+                           rsquare = FALSE, 
+                           remove.system.eq = TRUE, remove.eq = TRUE, 
+                           remove.ineq = TRUE, remove.def = FALSE, 
+                           remove.nonfree = FALSE, 
+                           add.attributes = FALSE, 
+                           output = "data.frame", header = FALSE)
+        
+        #          PEoU  ~ fam_class2 -0.135  0.187 -0.722  0.470   -0.484    0.250
+        # 20         PU  ~ fam_class2 -0.105  0.190 -0.556  0.578   -0.479    0.265
+        # 21         PU  ~       PEoU  0.601  0.109  5.500  0.000    0.398    0.826
+        # 22          E  ~ fam_class2 -0.322  0.207 -1.554  0.120   -0.716    0.097
+        # 23    TAM_IMG  ~ fam_class2 -0.106  0.286 -0.371  0.710   -0.651    0.471
+        # 24         SN  ~ fam_class2 -0.781  0.225 -3.469  0.001   -1.239   -0.356
+        # 25        ICU  ~       PEoU  0.001  0.023  0.037  0.971   -0.047    0.042
+        # 26        ICU  ~         PU  0.005  0.028  0.183  0.854   -0.071    0.037
+        # 27        ICU  ~          E  0.011  0.050  0.217  0.828   -0.132    0.064
+        # 28        ICU  ~    TAM_IMG  0.001  0.011  0.090  0.928   -0.026    0.017
+        # 29        ICU  ~         SN  0.001  0.014  0.042  0.966   -0.029    0.025
+        
+        # #specify the model (with 3 family classes) #this reveals many convergence warning and model did not end normally!
+        # rosiesTAM_2 <- '
+        # 
+        # #measurement model
+        #   PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
+        #   PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
+        #   E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
+        #   SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
+        #   ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3 
+        # #regressions  
+        #   PEoU ~ fam_class3  
+        #   PU ~ fam_class3 + PEoU  
+        #   E ~ fam_class3 
+        #   TAM_IMG ~ fam_class3 
+        #   SN ~ fam_class3 
+        #   ICU ~ PEoU + PU + E + TAM_IMG + SN 
+        # #residual variances 
+        #   TAM_PEoU_1 ~~ TAM_PEoU_1
+        #   TAM_PEoU_2 ~~ TAM_PEoU_2
+        #   TAM_PEoU_3 ~~ TAM_PEoU_3
+        #   TAM_PEoU_4 ~~ TAM_PEoU_4
+        #   TAM_PU_1 ~~ TAM_PU_1
+        #   TAM_PU_2 ~~ TAM_PU_2
+        #   TAM_PU_3 ~~ TAM_PU_3
+        #   TAM_PU_4 ~~ TAM_PU_4
+        #   TAM_E_1 ~~ TAM_E_1
+        #   TAM_E_2 ~~ TAM_E_2
+        #   TAM_E_3 ~~ TAM_E_3
+        #   TAM_E_4 ~~ TAM_E_4
+        #   TAM_SN_1 ~~ TAM_SN_1
+        #   TAM_SN_2 ~~ TAM_SN_2
+        #   TAM_SN_3 ~~ TAM_SN_3
+        #   TAM_ICU_1 ~~ TAM_ICU_1
+        #   TAM_ICU_2 ~~ TAM_ICU_2
+        #   TAM_ICU_3 ~~ TAM_ICU_3
+        #   TAM_IMG ~~ TAM_IMG
+        #   PEoU ~~ PEoU
+        #   PU ~~ PU
+        #   E ~~ E
+        #   SN ~~ SN
+        #   ICU ~~ ICU
+        #   fam_class3 ~~ fam_class3
+        # 
+        # '
+        # 
+        # #fit the model
+        # rosiesTAM_2_fit <- lavaan(rosiesTAM_2, data = rosie_fscores)
+        # 
+        # #print summary  
+        # summary(rosiesTAM_2_fit, standardized = T, fit.measures = T)
+        
         #compare models
         anova(rosiesTAM_fit, fit2?)
 ###----------------------------------------------------------------------------------------------------------------###
