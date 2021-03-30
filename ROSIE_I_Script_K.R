@@ -2055,58 +2055,11 @@
 
    
    M_2class <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
-   # ======================= 2-class results ==================================
-   # Estimated class population shares 
-   # 0.3715 0.6285 
-   # 
-   # Predicted class memberships (by modal posterior prob.) 
-   # 0.388 0.612 
-   # 
-   # number of observations: 183 
-   # number of estimated parameters: 61 
-   # residual degrees of freedom: 122 
-   # maximum log-likelihood: -2582.208 
-   # 
-   # AIC(2): 5286.416
-   # BIC(2): 5482.195
-   # G^2(2): 3257.744 (Likelihood ratio/deviance statistic) 
-   # X^2(2): 322139886 (Chi-square goodness of fit)  
    
    M_3class <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
-   # ======================= 3-class results ==================================
-   # Estimated class population shares 
-   # 0.442 0.1831 0.3749 
-   # 
-   # Predicted class memberships (by modal posterior prob.) 
-   # 0.4426 0.1803 0.377 
-   # 
-   # number of observations: 183 
-   # number of estimated parameters: 92 
-   # residual degrees of freedom: 91 
-   # maximum log-likelihood: -2539.064 
-   # 
-   # AIC(3): 5262.127
-   # BIC(3): 5557.4
-   # G^2(3): 3171.456 (Likelihood ratio/deviance statistic) 
-   # X^2(3): 73151666 (Chi-square goodness of fit)
-   
+  
    M_4class <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
-   # ======================= 4-class results ==================================
-   # Estimated class population shares 
-   # 0.2979 0.1863 0.2626 0.2532 
-   # 
-   # Predicted class memberships (by modal posterior prob.) 
-   # 0.2951 0.1858 0.2623 0.2568 
-   # 
-   # number of observations: 183 
-   # number of estimated parameters: 123 
-   # residual degrees of freedom: 60 
-   # maximum log-likelihood: -2505.672 
-   # 
-   # AIC(4): 5257.343
-   # BIC(4): 5652.11
-   # G^2(4): 3104.671 (Likelihood ratio/deviance statistic) 
-   # X^2(4): 48405078 (Chi-square goodness of fit) 
+  
    
    #########  :) Script run until here #################
    
