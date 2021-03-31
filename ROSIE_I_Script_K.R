@@ -101,7 +101,7 @@
       #LFT (for parent age)
  
   #removing variables that we do not need for Rosie analyses (other researchers' variables of interest)
-   rosie_dataset <- data[,-c(2:16, 42:54, 56:67, 69:80, 108:120, 138:149, 157:168, 190, 199:291, 294:309, 313:325)]
+   rosie_dataset <- data[,-c(2:16, 42:54, 56:67, 69:80, 108:120, 138:149, 157:168, 190, 199:291, 294:305, 307:309, 313:325)]
    View(rosie_dataset)
    
    #getting variable names and index numbers of reduced dataset
@@ -1735,6 +1735,20 @@
    #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
    #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
   
+   #check for ceiling effect on DV-levels
+   describe(rosie_fscores$TAM_ICU_1)
+   hist(rosie_fscores$TAM_ICU_1)
+   
+   describe(rosie_fscores$TAM_ICU_2)
+   hist(rosie_fscores$TAM_ICU_2)
+   densityplot(rosie_fscores$TAM_ICU_2)
+   
+   describe(rosie_fscores$TAM_ICU_3)
+   hist(rosie_fscores$TAM_ICU_3)
+   densityplot(rosie_fscores$TAM_ICU_3)
+   
+   describe(rosie_fscores$TAM_ICU_f)
+   hist(rosie_fscores$TAM_ICU_f)
    
    #taking a visual look
    
@@ -1781,13 +1795,16 @@
    hist(rosie$SHL)
   
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(139:143)]),2)
-   # TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f
-   # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09
-   # TAM_PU_f         0.44     1.00    0.58     0.40      0.11
-   # TAM_E_f          0.63     0.58    1.00     0.25      0.02
-   # TAM_SN_f         0.15     0.40    0.25     1.00      0.07
-   # TAM_ICU_f        0.09     0.11    0.02     0.07      1.00
+   round(cor(rosie_fscores[,c(139:143, 98:100)]),2)
+   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f TAM_ICU_1 TAM_ICU_2 TAM_ICU_3
+   # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09      0.06      0.36      0.29
+   # TAM_PU_f         0.44     1.00    0.58     0.40      0.11      0.13      0.45      0.36
+   # TAM_E_f          0.63     0.58    1.00     0.25      0.02      0.11      0.53      0.33
+   # TAM_SN_f         0.15     0.40    0.25     1.00      0.07      0.22      0.20      0.20
+   # TAM_ICU_f        0.09     0.11    0.02     0.07      1.00      0.00      0.00      0.81
+   # TAM_ICU_1        0.06     0.13    0.11     0.22      0.00      1.00     -0.02      0.07
+   # TAM_ICU_2        0.36     0.45    0.53     0.20      0.00     -0.02      1.00      0.58
+   # TAM_ICU_3        0.29     0.36    0.33     0.20      0.81      0.07      0.58      1.00
    
    
          #pairwise correlations all in one scatterplot matrix
@@ -1914,8 +1931,8 @@
    is.factor(rosie_fscores$FoPersU_f_LCA)
            
    # - Child_Temp
-   rosie_fscores$Temp_Extraversion_f[rosie$Child_Temp_Extraversion<=3] = 1
-   rosie_fscores$Temp_Extraversion_f[rosie$Child_Temp_Extraversion>=4] = 2
+   rosie_fscores$Temp_Extraversion_f[rosie_fscores$Child_Temp_Extraversion<=3] = 1
+   rosie_fscores$Temp_Extraversion_f[rosie_fscores$Child_Temp_Extraversion>=4] = 2
    
    rosie_fscores$Temp_Negative_Affectivity_f[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
    rosie_fscores$Temp_Negative_Affectivity_f[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
@@ -2059,10 +2076,13 @@
    M_3class <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
   
    M_4class <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   M_5class <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   M_6class <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+ 
+   
   
-   
-   #########  :) Script run until here #################
-   
    #-------------------------------------------#
    ### evaluating LCA ##########################
    #-------------------------------------------#
@@ -2078,6 +2098,10 @@
    
    # >> 2-class model has lowest BIC
    
+   #visualize model fit via a screeplot
+   
+   
+   
      #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
        twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
@@ -2091,6 +2115,18 @@
        #name the levels of the class factor using the response probabilities plot
        # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="1"] <- "XXX"
        # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="2"] <- "YYY"
+       
+           #load function for crosstabs to see whether classes relate to the urban/rural areas
+           source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+           crosstab(rosie_fscores, row.vars = "GEMGROOTTE", col.vars = "fam_class2", type = "f")
+           #             fam_class2   1   2 Sum
+           # GEMGROOTTE                       
+           # 4                      22  42  64
+           # 1                       4   9  13
+           # 2                      27  32  59
+           # 3                      17  25  42
+           # 5                       1   4   5
+           # Sum                    71 112 183
        
     #extract 3-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
@@ -2115,7 +2151,7 @@
 #----------------------------------------------------------#
       
    #-----------------------------------------------#
-   ### SEM-POWER ANALYSIS ##########################
+   ### SEM-power analysis ##########################
    #-----------------------------------------------#
    
    #https://yilinandrewang.shinyapps.io/pwrSEM/ 
@@ -2127,7 +2163,7 @@
 ###----------------------------------------------------------------------------------------------------------------###
        
    #---------------------------------------------------#
-   ### MULTIVARIATE NORMALITY ##########################
+   ### multivariate normality ##########################
    #---------------------------------------------------#
        
        
@@ -2153,23 +2189,6 @@
    ### SEM ##########################
    #--------------------------------#
    
-      #CHI-SQUARE
-      install.packages("gmodels")
-      library(gmodels)
-      CrossTable(DataSet$Variable1, DataSet$Variable2, chisq = TRUE, expected = TRUE, prop.c = FALSE, prop.r = FALSE, prop.t = FALSE, prop.chisq = FALSE, asresid = TRUE, format = "SPSS")
-      
-      
-      #MULTIPLE LINEAR REGRESSION (!!! use centered predictors)
-      #centering predictors
-      DataSet$Variable1_c <- DataSet$Variable1 - mean(DataSat$Variable1)
-      #OR
-      scale(variable, center=TRUE/FALSE, scale = TRUE/FALSE)
-      #perform the lm
-      NameOfRegressionModel <- lm(DataSet$Variable1 ~ DataSet$Variable2 + DataSet$Variable3)
-      summary(NameOfRegressionModel)
-      #add standardized residuals to the data frame
-      dataSet$NameOfVariableThatShowsStandardizedResiduals <- rstandard(NameOfModel)
-      
 
       #install.packages("lavaan", dependencies = T)
       library(lavaan)
@@ -2185,84 +2204,179 @@
         #lavaan() #for all models (without default parameters)
       
         ### Higher Order Model in Lavaan ###
+       
+      ### model with 1DV ########################## 
+              rosiesTAM_1DV <- '
+              
+              #measurement model
+                PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
+                PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
+                E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
+                SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
+                ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3 
+              #regressions  
+                PEoU ~ fam_class2  
+                PU ~ fam_class2 + PEoU  
+                E ~ fam_class2 
+                TAM_IMG ~ fam_class2 
+                SN ~ fam_class2 
+                ICU ~ PEoU + PU + E + TAM_IMG + SN 
+              #residual variances 
+                TAM_PEoU_1 ~~ TAM_PEoU_1
+                TAM_PEoU_2 ~~ TAM_PEoU_2
+                TAM_PEoU_3 ~~ TAM_PEoU_3
+                TAM_PEoU_4 ~~ TAM_PEoU_4
+                TAM_PU_1 ~~ TAM_PU_1
+                TAM_PU_2 ~~ TAM_PU_2
+                TAM_PU_3 ~~ TAM_PU_3
+                TAM_PU_4 ~~ TAM_PU_4
+                TAM_E_1 ~~ TAM_E_1
+                TAM_E_2 ~~ TAM_E_2
+                TAM_E_3 ~~ TAM_E_3
+                TAM_E_4 ~~ TAM_E_4
+                TAM_SN_1 ~~ TAM_SN_1
+                TAM_SN_2 ~~ TAM_SN_2
+                TAM_SN_3 ~~ TAM_SN_3
+                TAM_ICU_1 ~~ TAM_ICU_1
+                TAM_ICU_2 ~~ TAM_ICU_2
+                TAM_ICU_3 ~~ TAM_ICU_3
+                TAM_IMG ~~ TAM_IMG
+                PEoU ~~ PEoU
+                PU ~~ PU
+                E ~~ E
+                SN ~~ SN
+                ICU ~~ ICU
+                fam_class2 ~~ fam_class2
+              
+              '
+              
+              #fit the model
+              rosiesTAM_1DV_fit <- lavaan(rosiesTAM_1DV, data = rosie_fscores)
+              
+              #print summary  
+              summary(rosiesTAM_1DV_fit, standardized = T, fit.measures = T)
+            
+              #bootstrap model
+              rosiesTAM_1DV_fit_boostrapped_se <- sem(rosiesTAM_1DV, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+              summary(rosiesTAM_1DV_fit_boostrapped_se, fit.measures = TRUE) 
+              parameterEstimates(rosiesTAM_1DV_fit_boostrapped_se, 
+                                 se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                                 standardized = FALSE, 
+                                 fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                                 cov.std = TRUE, fmi.options = list(), 
+                                 rsquare = FALSE, 
+                                 remove.system.eq = TRUE, remove.eq = TRUE, 
+                                 remove.ineq = TRUE, remove.def = FALSE, 
+                                 remove.nonfree = FALSE, 
+                                 add.attributes = FALSE, 
+                                 output = "data.frame", header = FALSE)
+              #           lhs op        rhs    est     se      z pvalue ci.lower ci.upper
+              #          PEoU  ~ fam_class2 -0.135  0.187 -0.722  0.470   -0.484    0.250
+              # 20         PU  ~ fam_class2 -0.105  0.190 -0.556  0.578   -0.479    0.265
+              # 21         PU  ~       PEoU  0.601  0.109  5.500  0.000    0.398    0.826
+              # 22          E  ~ fam_class2 -0.322  0.207 -1.554  0.120   -0.716    0.097
+              # 23    TAM_IMG  ~ fam_class2 -0.106  0.286 -0.371  0.710   -0.651    0.471
+              # 24         SN  ~ fam_class2 -0.781  0.225 -3.469  0.001   -1.239   -0.356
+              # 25        ICU  ~       PEoU  0.001  0.023  0.037  0.971   -0.047    0.042
+              # 26        ICU  ~         PU  0.005  0.028  0.183  0.854   -0.071    0.037
+              # 27        ICU  ~          E  0.011  0.050  0.217  0.828   -0.132    0.064
+              # 28        ICU  ~    TAM_IMG  0.001  0.011  0.090  0.928   -0.026    0.017
+              # 29        ICU  ~         SN  0.001  0.014  0.042  0.966   -0.029    0.025
         
-        #specify the model (with 2 family classes)
-        rosiesTAM <- '
-        
-        #measurement model
-          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
-          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
-          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
-          SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
-          ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3 
-        #regressions  
-          PEoU ~ fam_class2  
-          PU ~ fam_class2 + PEoU  
-          E ~ fam_class2 
-          TAM_IMG ~ fam_class2 
-          SN ~ fam_class2 
-          ICU ~ PEoU + PU + E + TAM_IMG + SN 
-        #residual variances 
-          TAM_PEoU_1 ~~ TAM_PEoU_1
-          TAM_PEoU_2 ~~ TAM_PEoU_2
-          TAM_PEoU_3 ~~ TAM_PEoU_3
-          TAM_PEoU_4 ~~ TAM_PEoU_4
-          TAM_PU_1 ~~ TAM_PU_1
-          TAM_PU_2 ~~ TAM_PU_2
-          TAM_PU_3 ~~ TAM_PU_3
-          TAM_PU_4 ~~ TAM_PU_4
-          TAM_E_1 ~~ TAM_E_1
-          TAM_E_2 ~~ TAM_E_2
-          TAM_E_3 ~~ TAM_E_3
-          TAM_E_4 ~~ TAM_E_4
-          TAM_SN_1 ~~ TAM_SN_1
-          TAM_SN_2 ~~ TAM_SN_2
-          TAM_SN_3 ~~ TAM_SN_3
-          TAM_ICU_1 ~~ TAM_ICU_1
-          TAM_ICU_2 ~~ TAM_ICU_2
-          TAM_ICU_3 ~~ TAM_ICU_3
-          TAM_IMG ~~ TAM_IMG
-          PEoU ~~ PEoU
-          PU ~~ PU
-          E ~~ E
-          SN ~~ SN
-          ICU ~~ ICU
-          fam_class2 ~~ fam_class2
-        
-        '
-        
-        #fit the model
-        rosiesTAM_fit <- lavaan(rosiesTAM, data = rosie_fscores)
-        
-        #print summary  
-        summary(rosiesTAM_fit, standardized = T, fit.measures = T)
-      
-        #bootstrap model
-        rosiesTAM_fit_boostrapped_se <- sem(rosiesTAM, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
-        summary(rosiesTAM_fit_boostrapped_se, fit.measures = TRUE) 
-        parameterEstimates(rosiesTAM_fit_boostrapped_se, 
-                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
-                           standardized = FALSE, 
-                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
-                           cov.std = TRUE, fmi.options = list(), 
-                           rsquare = FALSE, 
-                           remove.system.eq = TRUE, remove.eq = TRUE, 
-                           remove.ineq = TRUE, remove.def = FALSE, 
-                           remove.nonfree = FALSE, 
-                           add.attributes = FALSE, 
-                           output = "data.frame", header = FALSE)
-        
-        #          PEoU  ~ fam_class2 -0.135  0.187 -0.722  0.470   -0.484    0.250
-        # 20         PU  ~ fam_class2 -0.105  0.190 -0.556  0.578   -0.479    0.265
-        # 21         PU  ~       PEoU  0.601  0.109  5.500  0.000    0.398    0.826
-        # 22          E  ~ fam_class2 -0.322  0.207 -1.554  0.120   -0.716    0.097
-        # 23    TAM_IMG  ~ fam_class2 -0.106  0.286 -0.371  0.710   -0.651    0.471
-        # 24         SN  ~ fam_class2 -0.781  0.225 -3.469  0.001   -1.239   -0.356
-        # 25        ICU  ~       PEoU  0.001  0.023  0.037  0.971   -0.047    0.042
-        # 26        ICU  ~         PU  0.005  0.028  0.183  0.854   -0.071    0.037
-        # 27        ICU  ~          E  0.011  0.050  0.217  0.828   -0.132    0.064
-        # 28        ICU  ~    TAM_IMG  0.001  0.011  0.090  0.928   -0.026    0.017
-        # 29        ICU  ~         SN  0.001  0.014  0.042  0.966   -0.029    0.025
+              
+              
+      ### model with 3DVs ########################## 
+              rosiesTAM_3DVs <- '
+              
+              #measurement model
+                PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
+                PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
+                E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
+                SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
+              #regressions  
+                PEoU ~ fam_class2  
+                PU ~ fam_class2 + PEoU  
+                E ~ fam_class2 
+                TAM_IMG ~ fam_class2 
+                SN ~ fam_class2 
+                TAM_ICU_1 ~ PEoU + PU + E + TAM_IMG + SN 
+                TAM_ICU_2 ~ PEoU + PU + E + TAM_IMG + SN 
+                TAM_ICU_3 ~ PEoU + PU + E + TAM_IMG + SN 
+              #residual variances 
+                TAM_PEoU_1 ~~ TAM_PEoU_1
+                TAM_PEoU_2 ~~ TAM_PEoU_2
+                TAM_PEoU_3 ~~ TAM_PEoU_3
+                TAM_PEoU_4 ~~ TAM_PEoU_4
+                TAM_PU_1 ~~ TAM_PU_1
+                TAM_PU_2 ~~ TAM_PU_2
+                TAM_PU_3 ~~ TAM_PU_3
+                TAM_PU_4 ~~ TAM_PU_4
+                TAM_E_1 ~~ TAM_E_1
+                TAM_E_2 ~~ TAM_E_2
+                TAM_E_3 ~~ TAM_E_3
+                TAM_E_4 ~~ TAM_E_4
+                TAM_SN_1 ~~ TAM_SN_1
+                TAM_SN_2 ~~ TAM_SN_2
+                TAM_SN_3 ~~ TAM_SN_3
+                TAM_ICU_1 ~~ TAM_ICU_1
+                TAM_ICU_2 ~~ TAM_ICU_2
+                TAM_ICU_3 ~~ TAM_ICU_3
+                TAM_IMG ~~ TAM_IMG
+                PEoU ~~ PEoU
+                PU ~~ PU
+                E ~~ E
+                SN ~~ SN
+                TAM_ICU_1 ~~ TAM_ICU_2
+                TAM_ICU_1 ~~ TAM_ICU_3
+                TAM_ICU_2 ~~ TAM_ICU_3
+                fam_class2 ~~ fam_class2
+              
+              '
+              
+              #fit the model
+              rosiesTAM_3DVs_fit <- lavaan(rosiesTAM_3DVs, data = rosie_fscores)
+              
+              #print summary  
+              summary(rosiesTAM_3DVs_fit, standardized = T, fit.measures = T)
+              
+              #bootstrap model
+              rosiesTAM_3DVs_fit_boostrapped_se <- sem(rosiesTAM_3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+              summary(rosiesTAM_3DVs_fit_boostrapped_se, fit.measures = TRUE) 
+              parameterEstimates(rosiesTAM_3DVs_fit_boostrapped_se, 
+                                 se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                                 standardized = FALSE, 
+                                 fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                                 cov.std = TRUE, fmi.options = list(), 
+                                 rsquare = FALSE, 
+                                 remove.system.eq = TRUE, remove.eq = TRUE, 
+                                 remove.ineq = TRUE, remove.def = FALSE, 
+                                 remove.nonfree = FALSE, 
+                                 add.attributes = FALSE, 
+                                 output = "data.frame", header = FALSE)
+              
+              #           lhs op        rhs    est    se      z pvalue ci.lower ci.upper
+              # 16       PEoU  ~ fam_class2  0.136 0.180  0.752  0.452   -0.223    0.484
+              # 17         PU  ~ fam_class2  0.106 0.184  0.572  0.567   -0.270    0.453
+              # 18         PU  ~       PEoU  0.600 0.110  5.451  0.000    0.389    0.821
+              # 19          E  ~ fam_class2  0.321 0.196  1.634  0.102   -0.071    0.698
+              # 20    TAM_IMG  ~ fam_class2  0.106 0.295  0.360  0.719   -0.465    0.692
+              # 21         SN  ~ fam_class2  0.778 0.235  3.317  0.001    0.334    1.253
+              # 22  TAM_ICU_1  ~       PEoU  0.028 0.139  0.203  0.839   -0.251    0.292
+              # 23  TAM_ICU_1  ~         PU -0.033 0.139 -0.235  0.814   -0.306    0.239
+              # 24  TAM_ICU_1  ~          E  0.085 0.153  0.555  0.579   -0.209    0.391
+              # 25  TAM_ICU_1  ~    TAM_IMG  0.185 0.069  2.704  0.007    0.051    0.319
+              # 26  TAM_ICU_1  ~         SN  0.185 0.100  1.841  0.066   -0.015    0.378
+              # 27  TAM_ICU_2  ~       PEoU  0.012 0.142  0.082  0.934   -0.258    0.298
+              # 28  TAM_ICU_2  ~         PU  0.186 0.115  1.614  0.106   -0.042    0.410
+              # 29  TAM_ICU_2  ~          E  0.456 0.129  3.546  0.000    0.197    0.701
+              # 30  TAM_ICU_2  ~    TAM_IMG  0.041 0.058  0.708  0.479   -0.070    0.157
+              # 31  TAM_ICU_2  ~         SN  0.014 0.081  0.169  0.866   -0.136    0.180
+              # 32  TAM_ICU_3  ~       PEoU  0.158 0.172  0.920  0.358   -0.184    0.490
+              # 33  TAM_ICU_3  ~         PU  0.266 0.168  1.585  0.113   -0.071    0.587
+              # 34  TAM_ICU_3  ~          E  0.191 0.167  1.141  0.254   -0.128    0.527
+              # 35  TAM_ICU_3  ~    TAM_IMG  0.020 0.071  0.278  0.781   -0.115    0.163
+              # 36  TAM_ICU_3  ~         SN  0.074 0.096  0.763  0.446   -0.107    0.271
+            
         
         # #specify the model (with 3 family classes) #this reveals many convergence warning and model did not end normally!
         # rosiesTAM_2 <- '
@@ -2315,21 +2429,41 @@
         # #print summary  
         # summary(rosiesTAM_2_fit, standardized = T, fit.measures = T)
         
+        
+        
+        #?????????
         #compare models
         anova(rosiesTAM_fit, fit2?)
 ###----------------------------------------------------------------------------------------------------------------###
           
 #------------------------------------------------#
-### MODEL VISUALIZATION ##########################
+### Model visualization ##########################
 #------------------------------------------------#
           
 ### SemPaths Model Visualization ###
-          
-    semPaths(fit_final, what = "col", "std", layout = "tree", rotation = 2, 
+       
+    library(semPlot)
+    semPaths(rosiesTAM_1DV_fit, what = "col", "std", layout = "tree", rotation = 2, 
                    intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
                    edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
+    
+    semPaths(rosiesTAM_3DVs_fit, what = "col", "std", layout = "tree", rotation = 2, 
+             intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
+             edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
+    
+    
+#########  :) Script run until here #################
+    
 ###----------------------------------------------------------------------------------------------------------------###
 
+    
+    
+    
+    
+    
+    
+    
+    
 #----------------------------------------------------------#
 ### OTHER POTENTIALLY USEFUL CODE ##########################
 #----------------------------------------------------------#
