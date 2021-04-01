@@ -19,7 +19,7 @@
  #reading data file
  library(foreign)
  data <- read.spss('244408473_clientfile.sav', to.data.frame=TRUE, use.value.labels = FALSE)
- View(data)
+ # View(data)
   
  #list of available packages in this R-version
  av <- available.packages(filters=list())
@@ -102,7 +102,7 @@
  
   #removing variables that we do not need for Rosie analyses (other researchers' variables of interest)
    rosie_dataset <- data[,-c(2:16, 42:54, 56:67, 69:80, 108:120, 138:149, 157:168, 190, 199:291, 294:305, 307:309, 313:325)]
-   View(rosie_dataset)
+   # View(rosie_dataset)
    
    #getting variable names and index numbers of reduced dataset
    names(rosie_dataset)
@@ -224,7 +224,7 @@
                                                            'TT_3' = 'Q26_3'))
    
    #to check
-   View(rosie_dataset_renamed)
+   # View(rosie_dataset_renamed)
    names(rosie_dataset_renamed)
    # [1] "INTNR"              "IoT_Usage_1"        "IoT_Usage_2"        "IoT_Usage_3"        "IoT_Usage_4"        "IoT_Usage_5"        "IoT_Usage_6"       
    # [8] "IoT_Usage_7"        "IoT_Usage_8"        "IoT_Usage_9"        "IoT_Usage_10"       "IoT_Usage_11"       "IoT_Usage_12"       "IoT_Usage_13"      
@@ -244,7 +244,7 @@
    # [106] "TT_1"               "TT_2"               "TT_3"               "STATUS"             "PERSONEN"           "SOCIALEKLASSE2016"  "GSL"               
    # [113] "LFT" 
    
-
+   
 #-----------------------------------------------#
 ### ROSIE TARGET GROUP ##########################
 #-----------------------------------------------#
@@ -252,7 +252,18 @@
    #filtering responses for Rosie target group (in total: 224 responses, completes: 183)
    ?dplyr::filter
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Gender != 0 & STATUS == 1)
-   View(rosie_dataset_renamed_families_complete)
+   # View(rosie_dataset_renamed_families_complete)
+   
+   
+   hist(rosie_dataset_renamed$IoT_Usage_8)
+   hist(rosie_dataset_renamed$IoT_Usage_9)
+   crosstab(rosie_dataset_renamed$IoT_Usage_8)
+   sum(rosie_dataset_renamed$IoT_Usage_8==1)
+   library(psych)
+   describe(rosie_dataset_renamed_families_complete$IoT_Usage_8)
+   source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+   crosstab(rosie_dataset_renamed_families_complete, row.vars = "IoT_Usage_8", type = "f")
+   crosstab(rosie_dataset_renamed_families_complete, row.vars = "IoT_Usage_9", type = "f")
    
 #----------------------------------------------------------------------#
 #       CONTINUE WITH FILTERED DATASET
@@ -279,7 +290,7 @@
     library(fame)
     rosie_dataset_renamed_families_complete$FoPersU <- rowMeans(rosie_dataset_renamed_families_complete[, 36:39], na.rm = T)
     is.numeric(rosie_dataset_renamed_families_complete$FoPersU)
-    View(rosie_dataset_renamed_families_complete)
+    # View(rosie_dataset_renamed_families_complete)
     
   
     #Smart-Household-Level - SHL (Q6 IoT_Usage_9 - 24) 
@@ -303,7 +314,7 @@
                                                    rosie_dataset_renamed_families_complete$IoT_Usage_23+
                                                    rosie_dataset_renamed_families_complete$IoT_Usage_24
     is.numeric(rosie_dataset_renamed_families_complete$SHL)
-    View(rosie_dataset_renamed_families_complete)
+    # View(rosie_dataset_renamed_families_complete)
   
   #ICU
       #We asked as our DV how the families assume their usage to look like in the near future (TAM_ICU_1 myself, TAM_ICU_2 with my child, TAM_ICU_3 child individually)
@@ -317,13 +328,13 @@
         rosie_dataset_renamed_families_complete$ICU_togetherwithchild <- rowMeans(rosie_dataset_renamed_families_complete[, 68:69], na.rm = T)
         is.numeric(rosie_dataset_renamed_families_complete$ICU_togetherwithchild)
         rosie_dataset_renamed_families_complete$ICU_togetherwithchild
-        View(rosie_dataset_renamed_families_complete)
+        # View(rosie_dataset_renamed_families_complete)
         
         #SS_childusage_1 & 2
         rosie_dataset_renamed_families_complete$ICU_childindividually <- rowMeans(rosie_dataset_renamed_families_complete[, 70:71], na.rm = T)
         is.numeric(rosie_dataset_renamed_families_complete$ICU_childindividually)
         rosie_dataset_renamed_families_complete$ICU_childindividually
-        View(rosie_dataset_renamed_families_complete)
+        # View(rosie_dataset_renamed_families_complete)
         
         #Based on this information we can also calculate how many parents have used the virtual assistant only by themselves and 
         #neither together with their child nor having let their child use it independently
@@ -332,18 +343,18 @@
         #1 = parent only
         #2 = with child
           
-        View(rosie_dataset_renamed_families_complete)
+        # View(rosie_dataset_renamed_families_complete)
         
         summary(rosie_dataset_renamed_families_complete[,c(116:118)]) #there seems to be one NA in ICU_childindividually, this is row 74 (in R) = pp 888
         
           #inspecting this 1 NA further  
           #create new subset df 
           rosie_ICU <- rosie_dataset_renamed_families_complete[,c(116:118, 98:100)]
-          View(rosie_ICU)
+          # View(rosie_ICU)
           
           #and now remove missing values
           rosie_ICU_noNA <- na.omit(rosie_ICU)
-          View(rosie_ICU_noNA)
+          # View(rosie_ICU_noNA)
         
           #correlating the control variables ICU_togetherwithchild & ICU_childindividually with the DVs TAM_ICU_1 myself, TAM_ICU_2 with my child, TAM_ICU_3 child individually
             round(cor(rosie_ICU_noNA), 2)
@@ -367,7 +378,7 @@
 #----------------------------------------------------------------------#
 #       CONTINUE WITH CLEANED DATASET
   
-  View(rosie_dataset_renamed_families_complete)
+  # View(rosie_dataset_renamed_families_complete)
   
   #restarting dataset naming
   rosie <- rosie_dataset_renamed_families_complete
@@ -408,7 +419,7 @@
   #plotting the missing values for variables relevant for LCA 
   names(rosie)
   rosie_LCArelevant <- rosie[,-c(2:55, 68:72, 78:100, 109, 116:118)] 
-  View(rosie_LCArelevant)
+  # View(rosie_LCArelevant)
   library(VIM)
   aggr(rosie_LCArelevant)
   missingness_LCA <- aggr(rosie_LCArelevant)
@@ -418,7 +429,7 @@
   
   #plotting the missing values for variables relevant for SEM later to identify their pattern
   rosie_SEMrelevant <- rosie[,-c(2:81, 101:115)]
-  View(rosie_SEMrelevant)
+  # View(rosie_SEMrelevant)
   library(VIM)
   aggr(rosie_SEMrelevant)
   missingness_SEM <- aggr(rosie_SEMrelevant)
@@ -718,7 +729,7 @@
           IL <- c("IL_1", "IL_2", "IL_3", "IL_4", "IL_5")
           IL
           IL_EFA_df <- rosie[IL]
-          View(IL_EFA_df)
+          # View(IL_EFA_df)
           
           #parallel analysis to get number of factors
           parallel2 <- fa.parallel(IL_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, but since the previous model fit and modindices give reason to believe that a one-factor structure is not optimal, 
@@ -956,7 +967,7 @@
                 Child_Parasocial <- c("Child_Parasocial_1", "Child_Parasocial_2", "Child_Parasocial_3", "Child_Parasocial_4", "Child_Parasocial_5")
                 Child_Parasocial
                 Child_Parasocial_EFA_df <- rosie[Child_Parasocial]
-                View(Child_Parasocial_EFA_df)
+                # View(Child_Parasocial_EFA_df)
                 
                 #parallel analysis to get number of factors
                 parallel1 <- fa.parallel(Child_Parasocial_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors, which corresponds to the bad model fit and modindices results above
@@ -1452,7 +1463,7 @@
               SN <- c("TAM_SN_1", "TAM_SN_2", "TAM_SN_3")
               SN
               SN_EFA_df <- rosie[SN]
-              View(SN_EFA_df)
+              # View(SN_EFA_df)
               
               #parallel analysis to get number of factors
               parallel4 <- fa.parallel(SN_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, so we'll stick with CFA
@@ -1546,7 +1557,7 @@
                 ICU <- c("TAM_ICU_1", "TAM_ICU_2", "TAM_ICU_3")
                 ICU
                 ICU_EFA_df <- rosie[ICU]
-                View(ICU_EFA_df)
+                # View(ICU_EFA_df)
                 
                 #parallel analysis to get number of factors
                 parallel3 <- fa.parallel(ICU_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors 
@@ -1895,7 +1906,7 @@
        library(fame)
        rosie_fscores$TT_avgsum <- rowMeans(rosie_fscores[, c(106:108)], na.rm = T)
        is.numeric(rosie_fscores$TT_avgsum)
-       View(rosie_fscores$TT_avgsum)
+       # View(rosie_fscores$TT_avgsum)
        
        #median split method
        rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum<=median(rosie_fscores$TT_avgsum)] = 1
@@ -1908,7 +1919,7 @@
            library(fame)
            rosie_fscores$IL_navigation_avgsum <- rowMeans(rosie_fscores[, c(102, 104:105)], na.rm = T)
            is.numeric(rosie_fscores$IL_navigation_avgsum)
-           View(rosie_fscores$IL_navigation_avgsum)
+           # View(rosie_fscores$IL_navigation_avgsum)
            
            #median split method !!! Note: Since items were formulated negatively, lower scores indicate higher literacy, so numbers for categories are switched
            rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=median(rosie_fscores$IL_navigation_avgsum)] = 2
@@ -1917,7 +1928,7 @@
            #information (items 1 + 3)
            rosie_fscores$IL_information_avgsum <- rowMeans(rosie_fscores[, c(101, 103)], na.rm = T)
            is.numeric(rosie_fscores$IL_information_avgsum)
-           View(rosie_fscores$IL_information_avgsum)
+           # View(rosie_fscores$IL_information_avgsum)
            
            #median split method !!! Note: Since items were formulated negatively, lower scores indicate higher literacy, so numbers for categories are switched
            rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=median(rosie_fscores$IL_information_avgsum)] = 2
@@ -1946,7 +1957,7 @@
            library(fame)
            rosie_fscores$Child_Parasocial_anthropomorphism_avgsum <- rowMeans(rosie_fscores[, c(73, 76:77)], na.rm = T)
            is.numeric(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
-           View(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
+           # View(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)
            
            #median split method
            rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum<=median(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)] = 1
@@ -1955,7 +1966,7 @@
            #parasocial relationship (items 2 + 3)
            rosie_fscores$Child_Parasocial_pararela_avgsum <- rowMeans(rosie_fscores[, c(74:75)], na.rm = T)
            is.numeric(rosie_fscores$Child_Parasocial_pararela_avgsum)
-           View(rosie_fscores$Child_Parasocial_pararela_avgsum)
+           # View(rosie_fscores$Child_Parasocial_pararela_avgsum)
            
            #median split method
            rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum<=median(rosie_fscores$Child_Parasocial_pararela_avgsum)] = 1
@@ -1985,7 +1996,7 @@
            library(fame)
            rosie_fscores$PMMS_restrMed_avgsum <- rowMeans(rosie_fscores[, c(62:63)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_restrMed_avgsum)
-           View(rosie_fscores$PMMS_restrMed_avgsum)
+           # View(rosie_fscores$PMMS_restrMed_avgsum)
            
            #modal split method
            rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum<=getmode(rosie_fscores$PMMS_restrMed_avgsum)] = 1
@@ -1995,7 +2006,7 @@
            #negacMed (items 3+5)
            rosie_fscores$PMMS_negacMed_avgsum <- rowMeans(rosie_fscores[, c(64, 66)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_negacMed_avgsum)
-           View(rosie_fscores$PMMS_negacMed_avgsum)
+           # View(rosie_fscores$PMMS_negacMed_avgsum)
            
            #modal split method
            rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum<=getmode(rosie_fscores$PMMS_negacMed_avgsum)] = 1
@@ -2005,7 +2016,7 @@
            #posacMed (items 4+6)
            rosie_fscores$PMMS_posacMed_avgsum <- rowMeans(rosie_fscores[, c(65, 67)], na.rm = T)
            is.numeric(rosie_fscores$PMMS_posacMed_avgsum)
-           View(rosie_fscores$PMMS_posacMed_avgsum)
+           # View(rosie_fscores$PMMS_posacMed_avgsum)
            
            #modal split method
            rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum<=getmode(rosie_fscores$PMMS_posacMed_avgsum)] = 1
@@ -2071,15 +2082,15 @@
                         SHL_f)~1
 
    
-   M_2class <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   LCAmodel2 <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
-   M_3class <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   LCAmodel3 <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
   
-   M_4class <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   LCAmodel4 <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
-   M_5class <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   LCAmodel5 <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
-   M_6class <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
  
    
   
@@ -2087,20 +2098,82 @@
    ### evaluating LCA ##########################
    #-------------------------------------------#
    
-   # https://statistics.ohlsen-web.de/latent-class-analysis-polca/
-   #Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
-   #we take an exploratory approach and compare multiple models (2-4 classes) against each other. 
-   #If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
-   #Additionally one could compare the different solutions by BIC or AIC information criteria. 
-   #BIC is preferred over AIC in latent class models, but usually both are used. 
-   #A smaller BIC is better than a bigger BIC. 
-   #Next to AIC and BIC one also gets a Chi-Square goodness of fit, which one can compare.
+   # https://statistics.ohlsen-web.de/latent-class-analysis-polca/ 
+   # Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
+   # we take an exploratory approach and compare multiple models (2-6 classes) against each other. 
+   # If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+   # Additionally one could compare the different solutions by BIC or AIC information criteria. 
+   # BIC is preferred over AIC in latent class models. 
+   # A smaller BIC is better than a bigger BIC. 
+
+        # >> 2-class model has lowest BIC
    
-   # >> 2-class model has lowest BIC
+   # https://www.tandfonline.com/doi/full/10.1080/10705510701575396
    
-   #visualize model fit via a screeplot
+        # >> 3-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
    
    
+   # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
+   
+   # getting other fit indices in a table
+   tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
+   names(tab.modfit)<-c("log-likelihood",
+                          "resid. df","BIC",
+                          "aBIC","cAIC","likelihood-ratio")
+   
+   tab.modfit
+   
+   for(i in 2:6){
+   tab.modfit<-rbind(tab.modfit,
+                       c(get(paste("LCAmodel",i,sep=""))$llik,
+                         get(paste("LCAmodel",i,sep=""))$resid.df,
+                         get(paste("LCAmodel",i,sep=""))$bic,
+                         (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                           ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *
+                              get(paste("LCAmodel",i,sep=""))$npar),
+                         (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                           get(paste("LCAmodel",i,sep=""))$npar *
+                           (1 + log(get(paste("LCAmodel",i,sep=""))$N))
+                       ))
+   }
+   tab.modfit<-round(tab.modfit[-1,],2)
+   tab.modfit$Nclass<-2:6
+   
+   tab.modfit
+   #   log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio  NA Nclass
+   # 2       -2582.21       122 5482.19 5289.00 5543.19         -2582.21 122      2
+   # 3       -2536.08        91 5551.43 5260.05 5643.43         -2536.08  91      3
+   # 4       -2504.95        60 5650.66 5261.10 5773.66         -2504.95  60      4
+   # 5       -2473.24        29 5748.74 5260.99 5902.74         -2473.24  29      5
+   # 6       -2455.61        -2 5874.97 5289.04 6059.97         -2455.61  -2      6
+   
+   #visualize model fit 
+         # convert table into long format
+         install.packages("forcats")
+         library("forcats")
+         tab.modfit$Nclass <-as.factor(tab.modfit$Nclass)
+         tab.modfit
+         results2<-tidyr::gather(tab.modfit,label,value,1:6)
+         results2
+   
+         # pass long-format table on to ggplot
+         library(ggplot2)
+         fit.plot<-ggplot(results2) +
+           geom_point(aes(x=Nclass,y=value),size=2) +
+           geom_line(aes(Nclass, value, group = 1)) +
+           theme_bw()+
+           labs(x = "Number of classes", y="", title = "") +
+           facet_grid(label ~. ,scales = "free") +
+           theme_bw(base_size = 10, base_family = "") +
+           theme(panel.grid.major.x = element_blank() ,
+                 panel.grid.major.y = element_line(colour="grey",
+                                                   size=0.3),
+                 legend.title = element_text(size = 10, face = 'bold'),
+                 axis.text = element_text(size = 12),
+                 axis.title = element_text(size = 12),
+                 legend.text= element_text(size=10),
+                 axis.line = element_line(colour = "black"))
+         fit.plot
    
      #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
@@ -2108,7 +2181,6 @@
        
        #output predicted classes from selected model so that we can use it in subsequent analyses:
        rosie_fscores$fam_class2=twoclass$predclass
-       
        
        View(rosie_fscores)
        
@@ -2205,7 +2277,7 @@
       
         ### Higher Order Model in Lavaan ###
        
-      ### model with 1DV ########################## 
+      ### 2-class model with 1DV ########################## 
               rosiesTAM_1DV <- '
               
               #measurement model
@@ -2285,7 +2357,7 @@
         
               
               
-      ### model with 3DVs ########################## 
+      ### 2-class model with 3DVs ########################## 
               rosiesTAM_3DVs <- '
               
               #measurement model
@@ -2377,63 +2449,135 @@
               # 35  TAM_ICU_3  ~    TAM_IMG  0.020 0.071  0.278  0.781   -0.115    0.163
               # 36  TAM_ICU_3  ~         SN  0.074 0.096  0.763  0.446   -0.107    0.271
             
+              
+              
+        ### 3-class model with 1DV ##########################  
+              #this reveals many convergence warning and model did not end normally!
+              
+        rosiesTAM_3classes1DV <- '
+
+        #measurement model
+          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+          SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
+          ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3
+        #regressions
+          PEoU ~ fam_class3
+          PU ~ fam_class3 + PEoU
+          E ~ fam_class3
+          TAM_IMG ~ fam_class3
+          SN ~ fam_class3
+          ICU ~ PEoU + PU + E + TAM_IMG + SN
+        #residual variances
+          TAM_PEoU_1 ~~ TAM_PEoU_1
+          TAM_PEoU_2 ~~ TAM_PEoU_2
+          TAM_PEoU_3 ~~ TAM_PEoU_3
+          TAM_PEoU_4 ~~ TAM_PEoU_4
+          TAM_PU_1 ~~ TAM_PU_1
+          TAM_PU_2 ~~ TAM_PU_2
+          TAM_PU_3 ~~ TAM_PU_3
+          TAM_PU_4 ~~ TAM_PU_4
+          TAM_E_1 ~~ TAM_E_1
+          TAM_E_2 ~~ TAM_E_2
+          TAM_E_3 ~~ TAM_E_3
+          TAM_E_4 ~~ TAM_E_4
+          TAM_SN_1 ~~ TAM_SN_1
+          TAM_SN_2 ~~ TAM_SN_2
+          TAM_SN_3 ~~ TAM_SN_3
+          TAM_ICU_1 ~~ TAM_ICU_1
+          TAM_ICU_2 ~~ TAM_ICU_2
+          TAM_ICU_3 ~~ TAM_ICU_3
+          TAM_IMG ~~ TAM_IMG
+          PEoU ~~ PEoU
+          PU ~~ PU
+          E ~~ E
+          SN ~~ SN
+          ICU ~~ ICU
+          fam_class3 ~~ fam_class3
+
+        '
+
+        #fit the model
+        rosiesTAM_3classes1DV_fit <- lavaan(rosiesTAM_3classes1DV, data = rosie_fscores)
+
+        #print summary
+        summary(rosiesTAM_3classes1DV_fit, standardized = T, fit.measures = T)
         
-        # #specify the model (with 3 family classes) #this reveals many convergence warning and model did not end normally!
-        # rosiesTAM_2 <- '
-        # 
-        # #measurement model
-        #   PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
-        #   PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
-        #   E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
-        #   SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
-        #   ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3 
-        # #regressions  
-        #   PEoU ~ fam_class3  
-        #   PU ~ fam_class3 + PEoU  
-        #   E ~ fam_class3 
-        #   TAM_IMG ~ fam_class3 
-        #   SN ~ fam_class3 
-        #   ICU ~ PEoU + PU + E + TAM_IMG + SN 
-        # #residual variances 
-        #   TAM_PEoU_1 ~~ TAM_PEoU_1
-        #   TAM_PEoU_2 ~~ TAM_PEoU_2
-        #   TAM_PEoU_3 ~~ TAM_PEoU_3
-        #   TAM_PEoU_4 ~~ TAM_PEoU_4
-        #   TAM_PU_1 ~~ TAM_PU_1
-        #   TAM_PU_2 ~~ TAM_PU_2
-        #   TAM_PU_3 ~~ TAM_PU_3
-        #   TAM_PU_4 ~~ TAM_PU_4
-        #   TAM_E_1 ~~ TAM_E_1
-        #   TAM_E_2 ~~ TAM_E_2
-        #   TAM_E_3 ~~ TAM_E_3
-        #   TAM_E_4 ~~ TAM_E_4
-        #   TAM_SN_1 ~~ TAM_SN_1
-        #   TAM_SN_2 ~~ TAM_SN_2
-        #   TAM_SN_3 ~~ TAM_SN_3
-        #   TAM_ICU_1 ~~ TAM_ICU_1
-        #   TAM_ICU_2 ~~ TAM_ICU_2
-        #   TAM_ICU_3 ~~ TAM_ICU_3
-        #   TAM_IMG ~~ TAM_IMG
-        #   PEoU ~~ PEoU
-        #   PU ~~ PU
-        #   E ~~ E
-        #   SN ~~ SN
-        #   ICU ~~ ICU
-        #   fam_class3 ~~ fam_class3
-        # 
-        # '
-        # 
-        # #fit the model
-        # rosiesTAM_2_fit <- lavaan(rosiesTAM_2, data = rosie_fscores)
-        # 
-        # #print summary  
-        # summary(rosiesTAM_2_fit, standardized = T, fit.measures = T)
         
+        ### 3-class model with 3DVs ##########################
+        rosiesTAM_3classes3DVs <- '
+
+        #measurement model
+          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+          SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
+        #regressions
+          PEoU ~ fam_class3
+          PU ~ fam_class3 + PEoU
+          E ~ fam_class3
+          TAM_IMG ~ fam_class3
+          SN ~ fam_class3
+          TAM_ICU_1 ~ PEoU + PU + E + TAM_IMG + SN
+          TAM_ICU_2 ~ PEoU + PU + E + TAM_IMG + SN
+          TAM_ICU_3 ~ PEoU + PU + E + TAM_IMG + SN
+         #residual variances 
+          TAM_PEoU_1 ~~ TAM_PEoU_1
+          TAM_PEoU_2 ~~ TAM_PEoU_2
+          TAM_PEoU_3 ~~ TAM_PEoU_3
+          TAM_PEoU_4 ~~ TAM_PEoU_4
+          TAM_PU_1 ~~ TAM_PU_1
+          TAM_PU_2 ~~ TAM_PU_2
+          TAM_PU_3 ~~ TAM_PU_3
+          TAM_PU_4 ~~ TAM_PU_4
+          TAM_E_1 ~~ TAM_E_1
+          TAM_E_2 ~~ TAM_E_2
+          TAM_E_3 ~~ TAM_E_3
+          TAM_E_4 ~~ TAM_E_4
+          TAM_SN_1 ~~ TAM_SN_1
+          TAM_SN_2 ~~ TAM_SN_2
+          TAM_SN_3 ~~ TAM_SN_3
+          TAM_ICU_1 ~~ TAM_ICU_1
+          TAM_ICU_2 ~~ TAM_ICU_2
+          TAM_ICU_3 ~~ TAM_ICU_3
+          TAM_IMG ~~ TAM_IMG
+          PEoU ~~ PEoU
+          PU ~~ PU
+          E ~~ E
+          SN ~~ SN
+          TAM_ICU_1 ~~ TAM_ICU_2
+          TAM_ICU_1 ~~ TAM_ICU_3
+          TAM_ICU_2 ~~ TAM_ICU_3
+          fam_class3 ~~ fam_class3
+
+        '
         
+        #fit the model
+        rosiesTAM_3classes3DVs_fit <- lavaan(rosiesTAM_3classes3DVs, data = rosie_fscores)
         
-        #?????????
-        #compare models
-        anova(rosiesTAM_fit, fit2?)
+        #print summary
+        summary(rosiesTAM_3classes3DVs_fit, standardized = T, fit.measures = T)
+        
+        #bootstrap model
+        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+        summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
+        parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
+                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                           standardized = FALSE, 
+                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                           cov.std = TRUE, fmi.options = list(), 
+                           rsquare = FALSE, 
+                           remove.system.eq = TRUE, remove.eq = TRUE, 
+                           remove.ineq = TRUE, remove.def = FALSE, 
+                           remove.nonfree = FALSE, 
+                           add.attributes = FALSE, 
+                           output = "data.frame", header = FALSE)
+        
+  
+        
+        #post-hoc test needed for significant regression path of SN ~ family type
+        
 ###----------------------------------------------------------------------------------------------------------------###
           
 #------------------------------------------------#
@@ -2451,6 +2595,10 @@
              intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
              edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
     
+    semPaths(rosiesTAM_3classes3DVs_fit, what = "col", "std", layout = "tree", rotation = 2, 
+             intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
+             edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
+    title("TAM + U&G Structural Regression Model")
     
 #########  :) Script run until here #################
     
