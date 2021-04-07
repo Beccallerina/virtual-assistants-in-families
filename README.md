@@ -1,4 +1,4 @@
-# Analyses 
+# Companion Material
 
 ## About this Webpage 
 On this website, you can find the companion material for the paper "Virtual Assistants in Families. A Cross-Sectional Online-Survey Study to Understand Families’ Decisions to Use Virtual Assistants in the Home." This paper reports on the first study conducted as part of project Rosie using the following research question for guidance: *How do individual characteristics of families with young children influence their intention formation to continue using virtual assistants in the family home?*
