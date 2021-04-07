@@ -20,7 +20,6 @@ We started by filtering valid responses from familiesw ith at least one child be
    #filtering valid responses 
    
     rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Gender != 0 & STATUS == 1)
-       View(rosie_dataset_renamed_families_complete)
    
    #recoding values of/variables FoPersU, SHL, and ICU to prepare for subsequent analyses
   
@@ -30,7 +29,6 @@ We started by filtering valid responses from familiesw ith at least one child be
     library(fame)
     rosie_dataset_renamed_families_complete$FoPersU <- rowMeans(rosie_dataset_renamed_families_complete[, 36:39], na.rm = T)
     is.numeric(rosie_dataset_renamed_families_complete$FoPersU)
-    View(rosie_dataset_renamed_families_complete)
   
     #Smart-Household-Level - SHL (Q6 IoT_Usage_9 - 24) 
     #Here, we counted the number of smart-devices each family owns, so the number of selected items 
@@ -53,7 +51,6 @@ We started by filtering valid responses from familiesw ith at least one child be
                                                    rosie_dataset_renamed_families_complete$IoT_Usage_23+
                                                    rosie_dataset_renamed_families_complete$IoT_Usage_24
     is.numeric(rosie_dataset_renamed_families_complete$SHL)
-    View(rosie_dataset_renamed_families_complete)
   
     #ICU
     #We asked as our DV how the families assume their usage to look like in the near future (TAM_ICU_1 myself, TAM_ICU_2 with my child, TAM_ICU_3 child individually)
@@ -67,13 +64,11 @@ We started by filtering valid responses from familiesw ith at least one child be
         rosie_dataset_renamed_families_complete$ICU_togetherwithchild <- rowMeans(rosie_dataset_renamed_families_complete[, 68:69], na.rm = T)
         is.numeric(rosie_dataset_renamed_families_complete$ICU_togetherwithchild)
         rosie_dataset_renamed_families_complete$ICU_togetherwithchild
-        View(rosie_dataset_renamed_families_complete)
         
         #SS_childusage_1 & 2
         rosie_dataset_renamed_families_complete$ICU_childindividually <- rowMeans(rosie_dataset_renamed_families_complete[, 70:71], na.rm = T)
         is.numeric(rosie_dataset_renamed_families_complete$ICU_childindividually)
         rosie_dataset_renamed_families_complete$ICU_childindividually
-        View(rosie_dataset_renamed_families_complete)
         
         #Based on this information we can also calculate how many parents have used the virtual assistant only by themselves and 
         #neither together with their child nor having let their child use it independently
@@ -91,7 +86,6 @@ Then, we proceeded with identifying any missingness in the dataset.
   
   #Where are missing values?
   complete.cases(rosie)
-  ?complete.cases
   summary(rosie)
   options(max.print=1000000)
  
@@ -118,7 +112,7 @@ Then, we proceeded with identifying any missingness in the dataset.
   
         #inspecting this row
         rosie[74,] 
-        # >> for some reason this participant has NAs for SS_childusage ***Most likely due to a survey system error***
+        # >> due to an error in the survey system this participant has NAs for SS_childusage 
   ```
 
 ### Measurement Validity
@@ -142,7 +136,6 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
                 #IL_1 IL_2 IL_3 IL_4 IL_5 
                   #3    2    2    0    0
                   #For IL_1: Where are those outliers exactly? In what rows?
-                  ??scores
                   library(outliers)
                   outlier_scores_IL_1  <- scores(rosie$IL_1 )
                   is_outlier_IL_1  <- outlier_scores_IL_1  > 3 | outlier_scores_IL_1  < -3
@@ -160,7 +153,6 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
                   head(outlier_IL_1_df) # >> outliers lay in observations 50, 74, 92
                   
                   #For IL_2: Where are those outliers exactly? In what rows?
-                  ??scores
                   library(outliers)
                   outlier_scores_IL_2 <- scores(rosie$IL_2)
                   is_outlier_IL_2 <- outlier_scores_IL_2 > 3 | outlier_scores_IL_2 < -3
@@ -178,7 +170,6 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
                   head(outlier_IL_2_df) # >> outliers lay in observations 7, 74
                   
                   #For IL_3: Where are those outliers exactly? In what rows?
-                  ??scores
                   library(outliers)
                   outlier_scores_IL_3 <- scores(rosie$IL_3)
                   is_outlier_IL_3 <- outlier_scores_IL_3 > 3 | outlier_scores_IL_3 < -3
@@ -225,7 +216,6 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
             IL <- c("IL_1", "IL_2", "IL_3", "IL_4", "IL_5")
             IL
             IL_EFA_df <- rosie[IL]
-            View(IL_EFA_df)
                 
             #parallel analysis to get number of factors
             parallel2 <- fa.parallel(IL_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, but since the previous model fit and modindices give reason to believe that a one-factor structure is not optimal, 
@@ -278,17 +268,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
   
   ```R
   
-         #summary of all CFA models 
-                    # onefac3items_TT
-                    # twofac5items_IL
-                    # twofac5items_Child_Parasocial
-                    # threefac2items_PMMS
-                    # onefac4items_TAM_PeoU
-                    # onefac4items_TAM_PU
-                    # onefac4items_TAM_E
-                    # onefac3items_TAM_SN
-                
-          #predicting factor scores of all CFA models
+          #predicting factor scores of all CFAs
                 onefac3items_TTfitPredict <- as.data.frame(predict(onefac3items_TT))
                 twofac5items_ILfitPredict <- as.data.frame(predict(twofac5items_IL))
                 twofac5items_Child_ParasocialfitPredict <- as.data.frame(predict(twofac5items_Child_Parasocial))
@@ -311,15 +291,12 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
   ```R
          #Dispositional: 
           
-             #Q26 TT >> 3 items
              TT <- rosie[, c(106:108)]
              psych::alpha(TT) ### --> 0.77
 
-             #Q32 Child_Parasocial >> 5 items
              Child_Parasocial <- rosie[, c(73:77)]
              psych::alpha(Child_Parasocial) ### --> 0.83
                         
-             #Q25 IL >> 5 items
              IL <- rosie[, c(101:105)]
              psych::alpha(IL) ### --> 0.86
 
@@ -327,25 +304,20 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
           
           #Social: 
           
-             #Q31 PMMS >> 6 items 
              PMMS <- rosie[, c(62:67)]
              psych::alpha(PMMS) ### --> 0.76
   
           #TAM: 
           
-             #Q17 TAM_PEoU >> 4
              TAM_PEoU <- rosie[, c(82:85)]
              psych::alpha(TAM_PEoU) ### --> 0.87
-
-             #Q18 TAM_PU >> 4
+             
              TAM_PU <- rosie[, c(86:89)]
              psych::alpha(TAM_PU) ### --> 0.92
 
-             #Q19 TAM_E >> 4
              TAM_E <- rosie[, c(90:93)]
              psych::alpha(TAM_E) ### --> 0.9
 
-             #Q21 TAM_SN >> 3
              TAM_SN <- rosie[, c(95:97)]
              psych::alpha(TAM_SN) ### --> 0.87
 
@@ -366,15 +338,8 @@ Once we evaluated measurement validity, we computed descriptive statistics to de
    # 1 = male, 2 = female
 
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(139:143)]),2)
-   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f
-   # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09
-   # TAM_PU_f         0.44     1.00    0.58     0.40      0.11
-   # TAM_E_f          0.63     0.58    1.00     0.25      0.02
-   # TAM_SN_f         0.15     0.40    0.25     1.00      0.07
-   # TAM_ICU_f        0.09     0.11    0.02     0.07      1.00
-   
-   
+   round(cor(rosie_fscores[,c(139:143, 98:100)]),2)
+ 
    #pairwise correlations all in one scatterplot matrix
    library(car)
    scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SN_f+TAM_IMG+TAM_ICU_f, data = rosie_fscores)
@@ -504,12 +469,7 @@ library(poLCA)
    tab.modfit$Nclass<-2:6
    
    tab.modfit
-    # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
-    #       -2582.21       122 5482.19 5289.00 5543.19          3257.74      2
-    #       -2536.08        91 5551.43 5260.05 5643.43          3165.48      3
-    #       -2497.36        60 5635.48 5245.92 5758.48          3088.05      4
-    #       -2466.02        29 5734.30 5246.55 5888.30          3025.36      5
-    #       -2446.72        -2 5857.20 5271.27 6042.20          2986.77      6
+ 
    
    #visualize model fit 
          # convert table into long format
@@ -547,7 +507,7 @@ library(poLCA)
        rosie_fscores$fam_class3=threeclass$predclass
         
        
-     #descriptives along classes
+     #descriptives along classes to get means 
      
         library(psych)
           psych::describeBy(rosie_fscores, group = "fam_class3")
@@ -563,13 +523,10 @@ library(poLCA)
        library(QuantPsyc)
        #for rosie dataset including extracted factor scores of SEM variables
        mult.norm(rosie_fscores[c(82:100)])$mult.test #all TAM core variables
-       # Beta-hat      kappa p-val
-       # Skewness  90.82382 2770.12639     0
-       # Kurtosis 475.90618   18.41431     0
        
-       # >> Since both p-values are less than .05, we reject the null hypothesis of the test. 
-       #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
-       # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
+             # >> Since both p-values are less than .05, we reject the null hypothesis of the test. 
+             #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
+             # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
        
        
  #install.packages("lavaan", dependencies = T)
@@ -577,6 +534,7 @@ library(poLCA)
       
     
  ### 3-class model with 3DVs ##########################
+        
         rosiesTAM_3classes3DVs <- '
 
         #measurement model
@@ -646,8 +604,8 @@ library(poLCA)
                            output = "data.frame", header = FALSE)
         
   
+        #TAM_SN significantly predicts fam_class3 so we need to run some post-hoc tests to find out where the difference(s) is/are
         
-        #post-hoc test needed for significant regression path of SN ~ family type
         install.packages("ggpubr")
         library("ggpubr")
         ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_1", 
@@ -666,21 +624,22 @@ library(poLCA)
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
                   ylab = "Subjective norm", xlab = "Family Type")
         
-        # Compute the analysis of variance
+        
         anova <- aov(TAM_SN_f ~ fam_class3, data = rosie_fscores)
-        # Summary of the analysis
         summary(anova)
-        # Which pairs of groups differ?
-        TukeyHSD(anova)
         
-        # $fam_class3
-        #           diff        lwr       upr     p adj
-        # 2-1 0.82702193  0.2527527 1.4012912 0.0023548
-        # 3-1 0.87265195  0.2162131 1.5290908 0.0055509
-        # 3-2 0.04563002 -0.6143875 0.7056476 0.9853926
+                 # Which pairs of groups differ?
+                 TukeyHSD(anova)
+
+                 # $fam_class3
+                 #           diff        lwr       upr     p adj
+                 # 2-1 0.82702193  0.2527527 1.4012912 0.0023548
+                 # 3-1 0.87265195  0.2162131 1.5290908 0.0055509
+                 # 3-2 0.04563002 -0.6143875 0.7056476 0.9853926
+
+                 ## >> There are significant group differences between family types 1 and 2 as well as between 1 and 3, with parents belonging
+                 ## >> to type 1 perceiving lower social norms than parents belonging to family type 2 and 3.
         
-        ## >> There are significant group differences between family types 1 and 2 as well as between 1 and 3, with parents belonging
-        ## >> to type 1 perceiving lower social norms than parents belonging to family type 2 and 3.
         
         # Alternative non-parametric test
         kruskal.test(TAM_SN_f ~ fam_class3, data = rosie_fscores)
