@@ -418,8 +418,6 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
        * household composition >> built up of Child_Nr and PERSONEN >> convert both items into factors
        * smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
 
-ENTER CODE FOR CATEGORIZATION
-
 ##### Running the LCA
 
 ENTER LCA SYNTAX
@@ -428,4 +426,3 @@ ENTER LCA SYNTAX
 
 #### Structural Equation Modelling: Technology acceptance (along TAM + U&G)
 
-### Exploratory Analyses
