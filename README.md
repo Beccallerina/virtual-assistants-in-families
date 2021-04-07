@@ -124,7 +124,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
   library(lavaan)
   
 ```
-  1. Confirmatory Factor Analysis for all model variables built up of two or more items
+ #### Confirmatory Factor Analysis for all model variables built up of two or more items
   
   ```R
   
@@ -264,7 +264,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
    
   ```    
       
-  2. Extract factor scores
+  #### Extract factor scores
   
   ```R
   
@@ -286,7 +286,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
  ```
         
     
-  3. Cronbach's Alpha
+  #### Cronbach's Alpha
   
   ```R
          #Dispositional: 
