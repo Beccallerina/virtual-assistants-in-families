@@ -624,7 +624,7 @@ library(poLCA)
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
                   ylab = "Subjective norm", xlab = "Family Type")
         
-        
+        rosie_fscores$fam_class3 <- as.factor(rosie_fscores$fam_class3)
         anova <- aov(TAM_SN_f ~ fam_class3, data = rosie_fscores)
         summary(anova)
         
@@ -648,4 +648,13 @@ library(poLCA)
         # data:  TAM_SN_f by fam_class3
         # Kruskal-Wallis chi-squared = 12.698, df = 2, p-value = 0.001749
         
+        
+ ### SemPaths Model Visualization ###
+       
+   library(semPlot)
+    semPaths(rosiesTAM_3classes3DVs_fit, what = "col", "std", layout = "tree", rotation = 2, 
+             intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
+             edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
+    title("TAM + U&G Structural Regression Model")
+    
 ```
