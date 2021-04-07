@@ -658,3 +658,10 @@ library(poLCA)
     title("TAM + U&G Structural Regression Model")
     
 ```
+
+### Exploratyory Analyses
+The following section shows the code used to perform further exploratory analyses.
+
+#### Analysis of variance between family types and DVs 
+
+
