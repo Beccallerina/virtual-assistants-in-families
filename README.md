@@ -420,9 +420,273 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
 
 ##### Running the LCA
 
-ENTER LCA SYNTAX
+```R
+
+library(poLCA) 
+   LCAmodel <- cbind(GSL,
+                        SOCIALEKLASSE2016,
+                        TT_LCAcategory_orig,
+                        IL_navigation_LCAcategory_orig,
+                        IL_information_LCAcategory_orig,
+                        FoPersU_f_LCA,
+                        Child_Gender,
+                        Temp_Extraversion_f,
+                        Temp_Negative_Affectivity_f,
+                        Temp_Effortful_Control_f,
+                        Child_Parasocial_anthropomorphism_LCAcategory_orig,
+                        Child_Parasocial_pararela_LCAcategory_orig,
+                        LFT_f,
+                        Child_Age_f,
+                        PMMS_restrMed_LCAcategory_orig,
+                        PMMS_negacMed_LCAcategory_orig,
+                        PMMS_posacMed_LCAcategory_orig,
+                        current_usage,
+                        Child_Nr_f,
+                        PERSONEN_f,
+                        SHL_f)~1
+
+   
+   LCAmodel2 <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   LCAmodel3 <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+  
+   LCAmodel4 <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   LCAmodel5 <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   
+   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+ 
+```
 
 ##### Evaluating and interpreting LCA
 
+```R
+
+# https://statistics.ohlsen-web.de/latent-class-analysis-polca/ 
+   # Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
+   # we take an exploratory approach and compare multiple models (2-6 classes) against each other. 
+   # If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+   # Additionally one could compare the different solutions by BIC or AIC information criteria. 
+   # BIC is preferred over AIC in latent class models. 
+   # A smaller BIC is better than a bigger BIC. 
+
+        # >> 2-class model has lowest BIC
+   
+# https://www.tandfonline.com/doi/full/10.1080/10705510701575396
+   
+        # >> 3-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
+   
+   
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
+   
+   # getting other fit indices in a table
+   tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
+   names(tab.modfit)<-c("log-likelihood",
+                          "resid. df","BIC",
+                          "aBIC","cAIC","likelihood-ratio")
+   
+   tab.modfit
+   
+   for(i in 2:6){
+   tab.modfit<-rbind(tab.modfit,
+                       c(get(paste("LCAmodel",i,sep=""))$llik,
+                         get(paste("LCAmodel",i,sep=""))$resid.df,
+                         get(paste("LCAmodel",i,sep=""))$bic,
+                         (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                           ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *
+                              get(paste("LCAmodel",i,sep=""))$npar),
+                         (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                           get(paste("LCAmodel",i,sep=""))$npar *
+                           (1 + log(get(paste("LCAmodel",i,sep=""))$N))
+                       ))
+   }
+   tab.modfit<-round(tab.modfit[-1,],2)
+   tab.modfit$Nclass<-2:6
+   
+   tab.modfit
+    # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+    #       -2582.21       122 5482.19 5289.00 5543.19          3257.74      2
+    #       -2536.08        91 5551.43 5260.05 5643.43          3165.48      3
+    #       -2497.36        60 5635.48 5245.92 5758.48          3088.05      4
+    #       -2466.02        29 5734.30 5246.55 5888.30          3025.36      5
+    #       -2446.72        -2 5857.20 5271.27 6042.20          2986.77      6
+   
+   #visualize model fit 
+         # convert table into long format
+         library("forcats")
+         tab.modfit$Nclass <-as.factor(tab.modfit$Nclass)
+         tab.modfit
+         results2<-tidyr::gather(tab.modfit,label,value,1:6)
+         results2
+   
+         # pass long-format table on to ggplot
+         library(ggplot2)
+         fit.plot<-ggplot(results2) +
+           geom_point(aes(x=Nclass,y=value),size=2) +
+           geom_line(aes(Nclass, value, group = 1)) +
+           theme_bw()+
+           labs(x = "Number of classes", y="Index values", title = "") +
+           facet_grid(label ~. ,scales = "free") +
+           theme_bw(base_size = 10, base_family = "") +
+           theme(panel.grid.major.x = element_blank() ,
+                 panel.grid.major.y = element_line(colour="grey",
+                                                   size=0.3),
+                 legend.title = element_text(size = 10, face = 'bold'),
+                 axis.text = element_text(size = 12),
+                 axis.title = element_text(size = 12),
+                 legend.text= element_text(size=10),
+                 axis.line = element_line(colour = "black"))
+         fit.plot
+         
+         
+    #extract 3-class solution and save in twoclass object (https://osf.io/vec6s/)
+       set.seed(123)
+       threeclass=poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       
+       #output predicted classes from selected model so that we can use it in subsequent analyses:
+       rosie_fscores$fam_class3=threeclass$predclass
+        
+       
+     #descriptives along classes
+     
+        library(psych)
+          psych::describeBy(rosie_fscores, group = "fam_class3")
+          # 1 = LSM, 2 = ILS, 3 = LLY
+          
+```
+
 #### Structural Equation Modelling: Technology acceptance (along TAM + U&G)
 
+```R
+
+#check multivariate normality
+       library(QuantPsyc)
+       #for rosie dataset including extracted factor scores of SEM variables
+       mult.norm(rosie_fscores[c(82:100)])$mult.test #all TAM core variables
+       # Beta-hat      kappa p-val
+       # Skewness  90.82382 2770.12639     0
+       # Kurtosis 475.90618   18.41431     0
+       
+       # >> Since both p-values are less than .05, we reject the null hypothesis of the test. 
+       #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
+       # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
+       
+       
+ #install.packages("lavaan", dependencies = T)
+      library(lavaan)
+      
+    
+ ### 3-class model with 3DVs ##########################
+        rosiesTAM_3classes3DVs <- '
+
+        #measurement model
+          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+          SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
+        #regressions
+          PEoU ~ fam_class3
+          PU ~ fam_class3 + PEoU
+          E ~ fam_class3
+          TAM_IMG ~ fam_class3
+          SN ~ fam_class3
+          TAM_ICU_1 ~ PEoU + PU + E + TAM_IMG + SN
+          TAM_ICU_2 ~ PEoU + PU + E + TAM_IMG + SN
+          TAM_ICU_3 ~ PEoU + PU + E + TAM_IMG + SN
+         #residual variances 
+          TAM_PEoU_1 ~~ TAM_PEoU_1
+          TAM_PEoU_2 ~~ TAM_PEoU_2
+          TAM_PEoU_3 ~~ TAM_PEoU_3
+          TAM_PEoU_4 ~~ TAM_PEoU_4
+          TAM_PU_1 ~~ TAM_PU_1
+          TAM_PU_2 ~~ TAM_PU_2
+          TAM_PU_3 ~~ TAM_PU_3
+          TAM_PU_4 ~~ TAM_PU_4
+          TAM_E_1 ~~ TAM_E_1
+          TAM_E_2 ~~ TAM_E_2
+          TAM_E_3 ~~ TAM_E_3
+          TAM_E_4 ~~ TAM_E_4
+          TAM_SN_1 ~~ TAM_SN_1
+          TAM_SN_2 ~~ TAM_SN_2
+          TAM_SN_3 ~~ TAM_SN_3
+          TAM_ICU_1 ~~ TAM_ICU_1
+          TAM_ICU_2 ~~ TAM_ICU_2
+          TAM_ICU_3 ~~ TAM_ICU_3
+          TAM_IMG ~~ TAM_IMG
+          PEoU ~~ PEoU
+          PU ~~ PU
+          E ~~ E
+          SN ~~ SN
+          TAM_ICU_1 ~~ TAM_ICU_2
+          TAM_ICU_1 ~~ TAM_ICU_3
+          TAM_ICU_2 ~~ TAM_ICU_3
+          fam_class3 ~~ fam_class3
+
+        '
+        
+        #fit the model
+        rosiesTAM_3classes3DVs_fit <- lavaan(rosiesTAM_3classes3DVs, data = rosie_fscores)
+        
+        #print summary
+        summary(rosiesTAM_3classes3DVs_fit, standardized = T, fit.measures = T)
+        
+        #bootstrap model
+        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+        summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
+        parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
+                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                           standardized = FALSE, 
+                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                           cov.std = TRUE, fmi.options = list(), 
+                           rsquare = FALSE, 
+                           remove.system.eq = TRUE, remove.eq = TRUE, 
+                           remove.ineq = TRUE, remove.def = FALSE, 
+                           remove.nonfree = FALSE, 
+                           add.attributes = FALSE, 
+                           output = "data.frame", header = FALSE)
+        
+  
+        
+        #post-hoc test needed for significant regression path of SN ~ family type
+        install.packages("ggpubr")
+        library("ggpubr")
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_1", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm 1", xlab = "Family Type")
+        
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_2", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm 2", xlab = "Family Type")
+        
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_3", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm 3", xlab = "Family Type")
+        
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_f", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm", xlab = "Family Type")
+        
+        # Compute the analysis of variance
+        anova <- aov(TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        # Summary of the analysis
+        summary(anova)
+        # Which pairs of groups differ?
+        TukeyHSD(anova)
+        
+        # $fam_class3
+        #           diff        lwr       upr     p adj
+        # 2-1 0.82702193  0.2527527 1.4012912 0.0023548
+        # 3-1 0.87265195  0.2162131 1.5290908 0.0055509
+        # 3-2 0.04563002 -0.6143875 0.7056476 0.9853926
+        
+        ## >> There are significant group differences between family types 1 and 2 as well as between 1 and 3, with parents belonging
+        ## >> to type 1 perceiving lower social norms than parents belonging to family type 2 and 3.
+        
+        # Alternative non-parametric test
+        kruskal.test(TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        # Kruskal-Wallis rank sum test
+        # 
+        # data:  TAM_SN_f by fam_class3
+        # Kruskal-Wallis chi-squared = 12.698, df = 2, p-value = 0.001749
+        
+```
