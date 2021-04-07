@@ -1662,13 +1662,13 @@
           Child_Parasocial <- rosie[, c(73:77)]
           psych::alpha(Child_Parasocial) ### --> 0.83
           
-                #for each factor separately
-                Anthropomorphism <- rosie[, c(73, 76:77)]
-                psych::alpha(Anthropomorphism) ### --> 0.89
-                
-                Parasocial_relationship <- rosie[, c(74:75)]
-                psych::alpha(Parasocial_relationship) ### --> 0.57
-          
+                # #for each factor separately
+                # Anthropomorphism <- rosie[, c(73, 76:77)]
+                # psych::alpha(Anthropomorphism) ### --> 0.89
+                # 
+                # Parasocial_relationship <- rosie[, c(74:75)]
+                # psych::alpha(Parasocial_relationship) ### --> 0.57
+                # 
           #Developmental: NONE
           
           #Social: 
@@ -1677,15 +1677,15 @@
           PMMS <- rosie[, c(62:67)]
           psych::alpha(PMMS) ### --> 0.76
           
-              #for each factor separately
-              restrMed <- rosie[, c(62:63)]
-              psych::alpha(restrMed) ### --> 0.73
-              
-              negacMed <- rosie[, c(64, 66)]
-              psych::alpha(negacMed) ### --> 0.74
-              
-              posacMed <- rosie[, c(65:67)]
-              psych::alpha(posacMed) ### --> 0.64
+              # #for each factor separately
+              # restrMed <- rosie[, c(62:63)]
+              # psych::alpha(restrMed) ### --> 0.73
+              # 
+              # negacMed <- rosie[, c(64, 66)]
+              # psych::alpha(negacMed) ### --> 0.74
+              # 
+              # posacMed <- rosie[, c(65:67)]
+              # psych::alpha(posacMed) ### --> 0.64
 
           
           #TAM: 
@@ -1704,19 +1704,13 @@
           
           #Q21 TAM_SN >> 3
           TAM_SN <- rosie[, c(95:97)]
-          psych::alpha(TAM_SN, keys = c(1, -1, -1)) ### --> 0.68
+          psych::alpha(TAM_SN) ### --> 0.87
           
-          #Q22 TAM_ICU >> 3 
-          TAM_ICU <- rosie[, c(98:100)]
-          psych::alpha(TAM_ICU) ### --> 0.43
+          # #Q22 TAM_ICU >> 3 
+          # TAM_ICU <- rosie[, c(98:100)]
+          # psych::alpha(TAM_ICU) ### --> 0.43
           
-                #for each factor separately
-                child_co_usage <- rosie[, c(99:100)]
-                psych::alpha(child_co_usage) ### --> 0.72
-                
-                parent_only_usage <- rosie[, c(98)]
-                psych::alpha(parent_only_usage) ### --> error because only 1 item in this factor
-          
+
 
 ###----------------------------------------------------------------------------------------------------------------###  
                 
@@ -1829,7 +1823,7 @@
 
          corr_cross(rosie_fscores[,c(139:143)], # name of dataset
                     max_pvalue = 0.05, # display only significant correlations (at 5% level)
-                    top = 20 # display top 10 couples of variables (by correlation coefficient)
+                    top = 20 # display top 20 couples of variables (by correlation coefficient)
          )
   
    
@@ -2140,16 +2134,15 @@
    tab.modfit$Nclass<-2:6
    
    tab.modfit
-   #   log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio  NA Nclass
-   # 2       -2582.21       122 5482.19 5289.00 5543.19         -2582.21 122      2
-   # 3       -2536.08        91 5551.43 5260.05 5643.43         -2536.08  91      3
-   # 4       -2504.95        60 5650.66 5261.10 5773.66         -2504.95  60      4
-   # 5       -2473.24        29 5748.74 5260.99 5902.74         -2473.24  29      5
-   # 6       -2455.61        -2 5874.97 5289.04 6059.97         -2455.61  -2      6
+    # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+    #       -2582.21       122 5482.19 5289.00 5543.19          3257.74      2
+    #       -2536.08        91 5551.43 5260.05 5643.43          3165.48      3
+    #       -2497.36        60 5635.48 5245.92 5758.48          3088.05      4
+    #       -2466.02        29 5734.30 5246.55 5888.30          3025.36      5
+    #       -2446.72        -2 5857.20 5271.27 6042.20          2986.77      6
    
    #visualize model fit 
          # convert table into long format
-         install.packages("forcats")
          library("forcats")
          tab.modfit$Nclass <-as.factor(tab.modfit$Nclass)
          tab.modfit
@@ -2162,7 +2155,7 @@
            geom_point(aes(x=Nclass,y=value),size=2) +
            geom_line(aes(Nclass, value, group = 1)) +
            theme_bw()+
-           labs(x = "Number of classes", y="", title = "") +
+           labs(x = "Number of classes", y="Index values", title = "") +
            facet_grid(label ~. ,scales = "free") +
            theme_bw(base_size = 10, base_family = "") +
            theme(panel.grid.major.x = element_blank() ,
@@ -2174,7 +2167,17 @@
                  legend.text= element_text(size=10),
                  axis.line = element_line(colour = "black"))
          fit.plot
+         
+         
+         
+     # LMT - likelihood ratio test???
+         library(tidyLPA)
+         # null model = new model (K). alternative model = nested model (K-1)
+         test = calc_lrt(LCAmodel4$N, LCAmodel4$llik, LCAmodel4$npar, 4, LCAmodel5$llik, LCAmodel5$npar, 5)
+         test
+       
    
+         
      #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
        twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
@@ -2216,6 +2219,15 @@
        # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="3"] <- "ZZZ"
   
    
+       
+  #-------------------------------------------------------#
+  ### descriptives along classes ##########################
+  #-------------------------------------------------------#
+       
+       library(psych)
+       psych::describeBy(rosie_fscores, group = "fam_class3")
+       # 1 = LSM, 2 = ILS, 3 = LLY
+       
 ###----------------------------------------------------------------------------------------------------------------###      
       
 #----------------------------------------------------------#
@@ -2577,6 +2589,50 @@
   
         
         #post-hoc test needed for significant regression path of SN ~ family type
+        install.packages("ggpubr")
+        library("ggpubr")
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_1", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm 1", xlab = "Family Type")
+        
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_2", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm 2", xlab = "Family Type")
+        
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_3", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm 3", xlab = "Family Type")
+        
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_f", 
+                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+                  ylab = "Subjective norm", xlab = "Family Type")
+        
+        # Compute the analysis of variance
+        anova <- aov(TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        # Summary of the analysis
+        summary(anova)
+        # Which pairs of groups differ?
+        TukeyHSD(anova)
+        # Tukey multiple comparisons of means
+        # 95% family-wise confidence level
+        # 
+        # Fit: aov(formula = TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        # 
+        # $fam_class3
+        #           diff        lwr       upr     p adj
+        # 2-1 0.82702193  0.2527527 1.4012912 0.0023548
+        # 3-1 0.87265195  0.2162131 1.5290908 0.0055509
+        # 3-2 0.04563002 -0.6143875 0.7056476 0.9853926
+        
+        ## >> There are significant group differences between family types 1 and 2 as well as between 1 and 3, with parents belonging
+        ## >> to type 1 perceiving lower social norms than parents belonging to family type 2 and 3.
+        
+        # Alternative non-parametric test
+        kruskal.test(TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        # Kruskal-Wallis rank sum test
+        # 
+        # data:  TAM_SN_f by fam_class3
+        # Kruskal-Wallis chi-squared = 12.698, df = 2, p-value = 0.001749
         
 ###----------------------------------------------------------------------------------------------------------------###
           
