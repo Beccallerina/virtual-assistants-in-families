@@ -25,11 +25,13 @@
  av <- available.packages(filters=list())
  
  #citations of packages
- #for filtering
- citation("tidyverse") #Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
- #for descriptives
- citation("pastecs") #Philippe Grosjean and Frederic Ibanez (2018). pastecs: Package for Analysis of Space-Time Ecological Series. R package version 1.3.21. https://CRAN.R-project.org/package=pastecs
+ citation("lavaan") #Yves Rosseel (2012). lavaan: An R Package for Structural Equation Modeling. Journal of Statistical Software, 48(2), 1-36. URL http://www.jstatsoft.org/v48/i02/.
  citation("psych") #Revelle, W. (2020) psych: Procedures for Personality and Psychological Research, Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 2.0.12,.
+ citation("poLCA") #Drew A. Linzer, Jeffrey B. Lewis (2011). poLCA: An R Package for Polytomous Variable Latent Class Analysis. Journal of Statistical Software, 42(10), 1-29. URL http://www.jstatsoft.org/v42/i10/.
+ citation("semPlot") #Sacha Epskamp (2019). semPlot: Path Diagrams and Visual Analysis of Various SEM Packages' Output. R package version 1.1.2. https://CRAN.R-project.org/package=semPlot
+
+ #get loaded versions of packages
+print(sessionInfo())
  
 #----------------------------------------------------------------------------------------------------------------#    
  
@@ -89,9 +91,9 @@
       #Q17 TAM_PEoU >> 4
       #Q18 TAM_PU >> 4
       #Q19 TAM_E >> 4
-      #Q20 TAM_IMG >> 1
-      #Q21 TAM_SN >> 3
-      #Q22 TAM_ICU >> 3 
+      #Q20 TAM_SS >> 1
+      #Q21 TAM_SI >> 3
+      #Q22 TAM_UI >> 3 
       #Q25 IL >> 5 items
       #Q26 TT >> 3 items
       #STATUS
@@ -207,13 +209,13 @@
                                                            'TAM_E_2' = 'Q19_2',
                                                            'TAM_E_3' = 'Q19_3',
                                                            'TAM_E_4' = 'Q19_4',
-                                                           'TAM_IMG' = 'Q20',
-                                                           'TAM_SN_1' = 'Q21_1',
-                                                           'TAM_SN_2' = 'Q21_2',
-                                                           'TAM_SN_3' = 'Q21_3',
-                                                           'TAM_ICU_1' = 'Q22_1',
-                                                           'TAM_ICU_2' = 'Q22_2',
-                                                           'TAM_ICU_3' = 'Q22_3',
+                                                           'TAM_SS' = 'Q20',
+                                                           'TAM_SI_1' = 'Q21_1',
+                                                           'TAM_SI_2' = 'Q21_2',
+                                                           'TAM_SI_3' = 'Q21_3',
+                                                           'TAM_UI_1' = 'Q22_1',
+                                                           'TAM_UI_2' = 'Q22_2',
+                                                           'TAM_UI_3' = 'Q22_3',
                                                            'IL_1' = 'Q25_1',
                                                            'IL_2' = 'Q25_2',
                                                            'IL_3' = 'Q25_3',
@@ -226,44 +228,16 @@
    #to check
    # View(rosie_dataset_renamed)
    names(rosie_dataset_renamed)
-   # [1] "INTNR"              "IoT_Usage_1"        "IoT_Usage_2"        "IoT_Usage_3"        "IoT_Usage_4"        "IoT_Usage_5"        "IoT_Usage_6"       
-   # [8] "IoT_Usage_7"        "IoT_Usage_8"        "IoT_Usage_9"        "IoT_Usage_10"       "IoT_Usage_11"       "IoT_Usage_12"       "IoT_Usage_13"      
-   # [15] "IoT_Usage_14"       "IoT_Usage_15"       "IoT_Usage_16"       "IoT_Usage_17"       "IoT_Usage_18"       "IoT_Usage_19"       "IoT_Usage_20"      
-   # [22] "IoT_Usage_21"       "IoT_Usage_22"       "IoT_Usage_23"       "IoT_Usage_24"       "IoT_Usage_25"       "IoT_Usage_other"    "Q4_96"             
-   # [29] "GA_Freq_1"          "GA_Freq_2"          "GA_Freq_3"          "GA_Freq_4"          "GA_Freq_5"          "GA_Freq_6"          "GA_Freq_7"         
-   # [36] "GA_Freq_8"          "GA_Freq_9"          "GA_Freq_10"         "GA_Freq_11"         "IoT_Freq_1"         "IoT_Freq_2"         "IoT_Freq_3"        
-   # [43] "IoT_Freq_4"         "IoT_Freq_5"         "IoT_Freq_6"         "IoT_Freq_7"         "IoT_Freq_8"         "IoT_Freq_9"         "IoT_Freq_10"       
-   # [50] "IoT_Freq_11"        "IoT_Freq_12"        "IoT_Freq_13"        "IoT_Freq_14"        "IoT_Freq_15"        "IoT_Freq_16"        "Child_Nr"          
-   # [57] "Child_Age"          "Child_Gender"       "Child_Temp_1"       "Child_Temp_2"       "Child_Temp_3"       "PMMS_1"             "PMMS_2"            
-   # [64] "PMMS_3"             "PMMS_4"             "PMMS_5"             "PMMS_6"             "SS_cousage_1"       "SS_cousage_2"       "SS_childusage_1"   
-   # [71] "SS_childusage_2"    "Incorporation"      "Child_Parasocial_1" "Child_Parasocial_2" "Child_Parasocial_3" "Child_Parasocial_4" "Child_Parasocial_5"
-   # [78] "Location"           "Q13_96"             "Early_Adopter"      "Conversion"         "TAM_PEoU_1"         "TAM_PEoU_2"         "TAM_PEoU_3"        
-   # [85] "TAM_PEoU_4"         "TAM_PU_1"           "TAM_PU_2"           "TAM_PU_3"           "TAM_PU_4"           "TAM_E_1"            "TAM_E_2"           
-   # [92] "TAM_E_3"            "TAM_E_4"            "TAM_IMG"            "TAM_SN_1"           "TAM_SN_2"           "TAM_SN_3"           "TAM_ICU_1"         
-   # [99] "TAM_ICU_2"          "TAM_ICU_3"          "IL_1"               "IL_2"               "IL_3"               "IL_4"               "IL_5"              
-   # [106] "TT_1"               "TT_2"               "TT_3"               "STATUS"             "PERSONEN"           "SOCIALEKLASSE2016"  "GSL"               
-   # [113] "LFT" 
-   
    
 #-----------------------------------------------#
 ### ROSIE TARGET GROUP ##########################
 #-----------------------------------------------#
    
    #filtering responses for Rosie target group (in total: 224 responses, completes: 183)
+   library(dplyr)
    ?dplyr::filter
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Gender != 0 & STATUS == 1)
    # View(rosie_dataset_renamed_families_complete)
-   
-   
-   hist(rosie_dataset_renamed$IoT_Usage_8)
-   hist(rosie_dataset_renamed$IoT_Usage_9)
-   crosstab(rosie_dataset_renamed$IoT_Usage_8)
-   sum(rosie_dataset_renamed$IoT_Usage_8==1)
-   library(psych)
-   describe(rosie_dataset_renamed_families_complete$IoT_Usage_8)
-   source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
-   crosstab(rosie_dataset_renamed_families_complete, row.vars = "IoT_Usage_8", type = "f")
-   crosstab(rosie_dataset_renamed_families_complete, row.vars = "IoT_Usage_9", type = "f")
    
 #----------------------------------------------------------------------#
 #       CONTINUE WITH FILTERED DATASET
@@ -316,8 +290,8 @@
     is.numeric(rosie_dataset_renamed_families_complete$SHL)
     # View(rosie_dataset_renamed_families_complete)
   
-  #ICU
-      #We asked as our DV how the families assume their usage to look like in the near future (TAM_ICU_1 myself, TAM_ICU_2 with my child, TAM_ICU_3 child individually)
+  #UI
+      #We asked as our DV how the families assume their usage to look like in the near future (TAM_UI_1 myself, TAM_UI_2 with my child, TAM_UI_3 child individually)
       #We also asked how the families' usage has looked like until now (SS_cousage_1: samen met uw kind smart speaker without display, SS_cousage_2: samen met uw kind smart speaker with display, SS_childusage_1: uw kind zelfstandig without display, SS_childusage_2: uw kind zelfstandig with display)
         
         #Here, we computed the mean for each participant on their answers to the four questions 
@@ -325,46 +299,46 @@
         #(the higher the score the stronger the usage; scale from 1-6)
     
         #SS_cousage_1 & 2  
-        rosie_dataset_renamed_families_complete$ICU_togetherwithchild <- rowMeans(rosie_dataset_renamed_families_complete[, 68:69], na.rm = T)
-        is.numeric(rosie_dataset_renamed_families_complete$ICU_togetherwithchild)
-        rosie_dataset_renamed_families_complete$ICU_togetherwithchild
+        rosie_dataset_renamed_families_complete$UI_togetherwithchild <- rowMeans(rosie_dataset_renamed_families_complete[, 68:69], na.rm = T)
+        is.numeric(rosie_dataset_renamed_families_complete$UI_togetherwithchild)
+        rosie_dataset_renamed_families_complete$UI_togetherwithchild
         # View(rosie_dataset_renamed_families_complete)
         
         #SS_childusage_1 & 2
-        rosie_dataset_renamed_families_complete$ICU_childindividually <- rowMeans(rosie_dataset_renamed_families_complete[, 70:71], na.rm = T)
-        is.numeric(rosie_dataset_renamed_families_complete$ICU_childindividually)
-        rosie_dataset_renamed_families_complete$ICU_childindividually
+        rosie_dataset_renamed_families_complete$UI_childindividually <- rowMeans(rosie_dataset_renamed_families_complete[, 70:71], na.rm = T)
+        is.numeric(rosie_dataset_renamed_families_complete$UI_childindividually)
+        rosie_dataset_renamed_families_complete$UI_childindividually
         # View(rosie_dataset_renamed_families_complete)
         
         #Based on this information we can also calculate how many parents have used the virtual assistant only by themselves and 
         #neither together with their child nor having let their child use it independently
-        rosie_dataset_renamed_families_complete$current_usage <- ifelse(rosie_dataset_renamed_families_complete$ICU_togetherwithchild == 1 &
-                                                                           rosie_dataset_renamed_families_complete$ICU_childindividually == 1, 1, 2)
+        rosie_dataset_renamed_families_complete$current_usage <- ifelse(rosie_dataset_renamed_families_complete$UI_togetherwithchild == 1 &
+                                                                           rosie_dataset_renamed_families_complete$UI_childindividually == 1, 1, 2)
         #1 = parent only
         #2 = with child
           
         # View(rosie_dataset_renamed_families_complete)
         
-        summary(rosie_dataset_renamed_families_complete[,c(116:118)]) #there seems to be one NA in ICU_childindividually, this is row 74 (in R) = pp 888
+        summary(rosie_dataset_renamed_families_complete[,c(116:118)]) #there seems to be one NA in UI_childindividually, this is row 74 (in R) = pp 888
         
           #inspecting this 1 NA further  
           #create new subset df 
-          rosie_ICU <- rosie_dataset_renamed_families_complete[,c(116:118, 98:100)]
-          # View(rosie_ICU)
+          rosie_UI <- rosie_dataset_renamed_families_complete[,c(116:118, 98:100)]
+          # View(rosie_UI)
           
           #and now remove missing values
-          rosie_ICU_noNA <- na.omit(rosie_ICU)
-          # View(rosie_ICU_noNA)
+          rosie_UI_noNA <- na.omit(rosie_UI)
+          # View(rosie_UI_noNA)
         
-          #correlating the control variables ICU_togetherwithchild & ICU_childindividually with the DVs TAM_ICU_1 myself, TAM_ICU_2 with my child, TAM_ICU_3 child individually
-            round(cor(rosie_ICU_noNA), 2)
-            #                       ICU_togetherwithchild ICU_childindividually ICU_parentonly TAM_ICU_1 TAM_ICU_2 TAM_ICU_3
-            # ICU_togetherwithchild                  1.00                ! 0.78        ! -0.64     -0.05    ! 0.45    ! 0.36
-            # ICU_childindividually                  0.78                  1.00        ! -0.55     -0.10    ! 0.43    ! 0.40
-            # ICU_parentonly                        -0.64                 -0.55           1.00      0.07    !-0.42     -0.29
-            # TAM_ICU_1                             -0.05                 -0.10           0.07      1.00     -0.04      0.06
-            # TAM_ICU_2                              0.45                  0.43          -0.42     -0.04      1.00      0.58
-            # TAM_ICU_3                              0.36                  0.40          -0.29      0.06      0.58      1.00
+          #correlating the control variables UI_togetherwithchild & UI_childindividually with the DVs TAM_UI_1 myself, TAM_UI_2 with my child, TAM_UI_3 child individually
+            round(cor(rosie_UI_noNA), 2)
+            #                       UI_togetherwithchild UI_childindividually UI_parentonly TAM_UI_1 TAM_UI_2 TAM_UI_3
+            # UI_togetherwithchild                  1.00                ! 0.78        ! -0.64     -0.05    ! 0.45    ! 0.36
+            # UI_childindividually                  0.78                  1.00        ! -0.55     -0.10    ! 0.43    ! 0.40
+            # UI_parentonly                        -0.64                 -0.55           1.00      0.07    !-0.42     -0.29
+            # TAM_UI_1                             -0.05                 -0.10           0.07      1.00     -0.04      0.06
+            # TAM_UI_2                              0.45                  0.43          -0.42     -0.04      1.00      0.58
+            # TAM_UI_3                              0.36                  0.40          -0.29      0.06      0.58      1.00
             
             # >> reveals:
             #parents who have used the smart speaker together with the child are likely to have let the child use it individually as well (.78)
@@ -384,27 +358,6 @@
   rosie <- rosie_dataset_renamed_families_complete
   View(rosie)
   names(rosie)
-  # [1] "INTNR"                 "IoT_Usage_1"           "IoT_Usage_2"           "IoT_Usage_3"           "IoT_Usage_4"           "IoT_Usage_5"          
-  # [7] "IoT_Usage_6"           "IoT_Usage_7"           "IoT_Usage_8"           "IoT_Usage_9"           "IoT_Usage_10"          "IoT_Usage_11"         
-  # [13] "IoT_Usage_12"          "IoT_Usage_13"          "IoT_Usage_14"          "IoT_Usage_15"          "IoT_Usage_16"          "IoT_Usage_17"         
-  # [19] "IoT_Usage_18"          "IoT_Usage_19"          "IoT_Usage_20"          "IoT_Usage_21"          "IoT_Usage_22"          "IoT_Usage_23"         
-  # [25] "IoT_Usage_24"          "IoT_Usage_25"          "IoT_Usage_other"       "Q4_96"                 "GA_Freq_1"             "GA_Freq_2"            
-  # [31] "GA_Freq_3"             "GA_Freq_4"             "GA_Freq_5"             "GA_Freq_6"             "GA_Freq_7"             "GA_Freq_8"            
-  # [37] "GA_Freq_9"             "GA_Freq_10"            "GA_Freq_11"            "IoT_Freq_1"            "IoT_Freq_2"            "IoT_Freq_3"           
-  # [43] "IoT_Freq_4"            "IoT_Freq_5"            "IoT_Freq_6"            "IoT_Freq_7"            "IoT_Freq_8"            "IoT_Freq_9"           
-  # [49] "IoT_Freq_10"           "IoT_Freq_11"           "IoT_Freq_12"           "IoT_Freq_13"           "IoT_Freq_14"           "IoT_Freq_15"          
-  # [55] "IoT_Freq_16"           "Child_Nr"              "Child_Age"             "Child_Gender"          "Child_Temp_1"          "Child_Temp_2"         
-  # [61] "Child_Temp_3"          "PMMS_1"                "PMMS_2"                "PMMS_3"                "PMMS_4"                "PMMS_5"               
-  # [67] "PMMS_6"                "SS_cousage_1"          "SS_cousage_2"          "SS_childusage_1"       "SS_childusage_2"       "Incorporation"        
-  # [73] "Child_Parasocial_1"    "Child_Parasocial_2"    "Child_Parasocial_3"    "Child_Parasocial_4"    "Child_Parasocial_5"    "Location"             
-  # [79] "Q13_96"                "Early_Adopter"         "Conversion"            "TAM_PEoU_1"            "TAM_PEoU_2"            "TAM_PEoU_3"           
-  # [85] "TAM_PEoU_4"            "TAM_PU_1"              "TAM_PU_2"              "TAM_PU_3"              "TAM_PU_4"              "TAM_E_1"              
-  # [91] "TAM_E_2"               "TAM_E_3"               "TAM_E_4"               "TAM_IMG"               "TAM_SN_1"              "TAM_SN_2"             
-  # [97] "TAM_SN_3"              "TAM_ICU_1"             "TAM_ICU_2"             "TAM_ICU_3"             "IL_1"                  "IL_2"                 
-  # [103] "IL_3"                  "IL_4"                  "IL_5"                  "TT_1"                  "TT_2"                  "TT_3"                 
-  # [109] "STATUS"                "PERSONEN"              "SOCIALEKLASSE2016"     "GSL"                   "LFT"                   "FoPersU"              
-  # [115] "SHL"                   "ICU_togetherwithchild" "ICU_childindividually" "ICU_parentonly"
-
   
 #---------------------------------------------------#
 ### INSPECTING MISSINGNESS ##########################
@@ -435,7 +388,7 @@
   missingness_SEM <- aggr(rosie_SEMrelevant)
   missingness_SEM
   summary(missingness_SEM)
-  #only 1 missing value in ICU_childindividually but this does not impact the SEM in any way
+  #only 1 missing value in UI_childindividually but this does not impact the SEM in any way
   
         #inspecting this row
         rosie[74,] 
@@ -450,7 +403,7 @@
   
   #-------------------------------------------------------------------------------------#
   #1) Confirmatory Factor Analysis for all model variables built up of two or more items
-    #TAM_IMG and TAM_ICU only consist of one item and were therefore excluded here
+    #TAM_SS and TAM_UI only consist of one item and were therefore excluded here
   
     #Dispositional: 
       #TT >> 3 items
@@ -466,8 +419,8 @@
       #TAM_PEoU >> 4 items
       #TAM_PU >> 4 items
       #TAM_E >> 4 items
-      #TAM_SN >> 3 items
-      (#TAM_ICU >> 3 items)
+      #TAM_SI >> 3 items
+      (#TAM_UI >> 3 items)
       #IL >> 5 items
       
   #2) Extract factor scores
@@ -591,7 +544,6 @@
           summary(onefac3items_TT, fit.measures=TRUE, standardized=TRUE) # >> Seems like a "just" identified model. Wait and see for testing whole measurement model in SEM.
           # >> fit index criteria: Chi-Square = / because 0 df just identified, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10
     
-          
           
           ### IL >> 5 items #########################      
           
@@ -1296,6 +1248,7 @@
           summary(onefac4items_TAM_PU, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .234 > .05, CFI = .998 > 0.95, TLI = .995 > 0.90 and RMSEA = .050 < 0.10 >> VERY NICE
           
+          
           ### TAM_E >> 4 items #########################
           
           #Prep: Check for normality and outliers
@@ -1398,7 +1351,7 @@
           # >> fit index criteria: Chi-Square = .058 > .05, CFI = .993 > 0.95, TLI = .979 > 0.90 and RMSEA = .100 < 0.10 >> NICE
           
           
-          ### TAM_SN >> 3 items #########################
+          ### TAM_SI >> 3 items #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1414,44 +1367,44 @@
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
-                boxplot(rosie$TAM_SN_1)
-                boxplot(rosie$TAM_SN_2) 
-                boxplot(rosie$TAM_SN_3)
-                hist(rosie$TAM_SN_1) #so not normal
-                hist(rosie$TAM_SN_2) #so not normal
-                hist(rosie$TAM_SN_3) #so not normal
-                densityplot(rosie$TAM_SN_1)
-                densityplot(rosie$TAM_SN_2)
-                densityplot(rosie$TAM_SN_3)
+                boxplot(rosie$TAM_SI_1)
+                boxplot(rosie$TAM_SI_2) 
+                boxplot(rosie$TAM_SI_3)
+                hist(rosie$TAM_SI_1) #so not normal
+                hist(rosie$TAM_SI_2) #so not normal
+                hist(rosie$TAM_SI_3) #so not normal
+                densityplot(rosie$TAM_SI_1)
+                densityplot(rosie$TAM_SI_2)
+                densityplot(rosie$TAM_SI_3)
                 
                 #numerically 
                 #standardize a variable and count the number of cases with values greater or less than 3
-                standardized_TAM_SN <- scale(rosie[,c(95:97)]) 
-                outliers_TAM_SN <- colSums(abs(standardized_TAM_SN)>=3, na.rm = T) 
-                outliers_TAM_SN
-                #TAM_SN_1 TAM_SN_2 TAM_SN_3 
+                standardized_TAM_SI <- scale(rosie[,c(95:97)]) 
+                outliers_TAM_SI <- colSums(abs(standardized_TAM_SI)>=3, na.rm = T) 
+                outliers_TAM_SI
+                #TAM_SI_1 TAM_SI_2 TAM_SI_3 
                 #0        0        0 
               
           #Step 1: correlations
           #The function cor specifies the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
           round(cor(rosie[,95:97]),2) 
-          #          TAM_SN_1 TAM_SN_2 TAM_SN_3
-          # TAM_SN_1     1.00    -0.37    -0.27
-          # TAM_SN_2    -0.37     1.00     0.61
-          # TAM_SN_3    -0.27     0.61     1.00
+          #          TAM_SI_1 TAM_SI_2 TAM_SI_3
+          # TAM_SI_1     1.00    -0.37    -0.27
+          # TAM_SI_2    -0.37     1.00     0.61
+          # TAM_SI_3    -0.27     0.61     1.00
           
           #Step 2: variance-covariance matrix
           round(cov(rosie[,95:97]),2) 
-          #          TAM_SN_1 TAM_SN_2 TAM_SN_3
-          # TAM_SN_1     3.60    -1.19    -0.94
-          # TAM_SN_2    -1.19     2.86     1.88
-          # TAM_SN_3    -0.94     1.88     3.31
+          #          TAM_SI_1 TAM_SI_2 TAM_SI_3
+          # TAM_SI_1     3.60    -1.19    -0.94
+          # TAM_SI_2    -1.19     2.86     1.88
+          # TAM_SI_3    -0.94     1.88     3.31
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1h  <- ' TAM_SN_f  =~ TAM_SN_1 + TAM_SN_2 + TAM_SN_3 '
-          onefac3items_TAM_SN <- cfa(m1h, data=rosie) 
-          summary(onefac3items_TAM_SN, fit.measures=TRUE, standardized=TRUE)
+          m1h  <- ' TAM_SI_f  =~ TAM_SI_1 + TAM_SI_2 + TAM_SI_3 '
+          onefac3items_TAM_SI <- cfa(m1h, data=rosie) 
+          summary(onefac3items_TAM_SI, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = 0 > .05, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10 >> AGAIN, problematic because just identified        
           
               #to double check this structure let's run an EFA
@@ -1460,17 +1413,17 @@
               library(GPArotation)
               
               #creating a subset with the variables relevant for this EFA
-              SN <- c("TAM_SN_1", "TAM_SN_2", "TAM_SN_3")
-              SN
-              SN_EFA_df <- rosie[SN]
-              # View(SN_EFA_df)
+              SI <- c("TAM_SI_1", "TAM_SI_2", "TAM_SI_3")
+              SI
+              SI_EFA_df <- rosie[SI]
+              # View(SI_EFA_df)
               
               #parallel analysis to get number of factors
-              parallel4 <- fa.parallel(SN_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, so we'll stick with CFA
+              parallel4 <- fa.parallel(SI_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, so we'll stick with CFA
           
               
               
-          ### TAM_ICU >> 3 items #########################
+          ### (TAM_UI >> 3 items) #########################
           
           #Prep: Check for normality and outliers
           ### Criterion for judgement on skewness:
@@ -1486,66 +1439,66 @@
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
               #visually
               library(lattice)
-              boxplot(rosie$TAM_ICU_1)
-              boxplot(rosie$TAM_ICU_2) 
-              boxplot(rosie$TAM_ICU_3)
-              hist(rosie$TAM_ICU_1) 
-              hist(rosie$TAM_ICU_2)
-              hist(rosie$TAM_ICU_3) 
-              densityplot(rosie$TAM_ICU_1)
-              densityplot(rosie$TAM_ICU_2)
-              densityplot(rosie$TAM_ICU_3)
+              boxplot(rosie$TAM_UI_1)
+              boxplot(rosie$TAM_UI_2) 
+              boxplot(rosie$TAM_UI_3)
+              hist(rosie$TAM_UI_1) 
+              hist(rosie$TAM_UI_2)
+              hist(rosie$TAM_UI_3) 
+              densityplot(rosie$TAM_UI_1)
+              densityplot(rosie$TAM_UI_2)
+              densityplot(rosie$TAM_UI_3)
               
               #numerically 
               #standardize a variable and count the number of cases with values greater or less than 3
-              standardized_TAM_ICU <- scale(rosie[,c(98:100)]) 
-              outliers_TAM_ICU <- colSums(abs(standardized_TAM_ICU)>=3, na.rm = T) 
-              outliers_TAM_ICU
-              #TAM_ICU_1 TAM_ICU_2 TAM_ICU_3 
+              standardized_TAM_UI <- scale(rosie[,c(98:100)]) 
+              outliers_TAM_UI <- colSums(abs(standardized_TAM_UI)>=3, na.rm = T) 
+              outliers_TAM_UI
+              #TAM_UI_1 TAM_UI_2 TAM_UI_3 
               #0         5         0
               
               #For TAM_E_3: Where are those outliers exactly? In what rows?
               ??scores
               library(outliers)
-              outlier_scores_TAM_ICU_2 <- scores(rosie$TAM_ICU_2)
-              is_outlier_TAM_ICU_2 <- outlier_scores_TAM_ICU_2 > 3 | outlier_scores_TAM_ICU_2 < -3
+              outlier_scores_TAM_UI_2 <- scores(rosie$TAM_UI_2)
+              is_outlier_TAM_UI_2 <- outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3
               #add a column with info whether the refund_value is an outlier
-              rosie$is_outlier_TAM_ICU_2 <- is_outlier_TAM_ICU_2
+              rosie$is_outlier_TAM_UI_2 <- is_outlier_TAM_UI_2
               #look at plot
               library(ggplot2)
-              ggplot(rosie, aes(TAM_ICU_2) +
+              ggplot(rosie, aes(TAM_UI_2) +
                 geom_boxplot() +
                 coord_flip() +
-                facet_wrap(~is_outlier_TAM_ICU_2)
+                facet_wrap(~is_outlier_TAM_UI_2)
               #create a dataframe with only outliers
-              outlier_TAM_ICU_2_df <- rosie[outlier_scores_TAM_ICU_2 > 3 | outlier_scores_TAM_ICU_2 < -3, ]
+              outlier_TAM_UI_2_df <- rosie[outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3, ]
               #take a peek
-              head(outlier_TAM_ICU_2_df) # >> outliers lay in observations 37, 68, 90, 159, 170
+              head(outlier_TAM_UI_2_df) # >> outliers lay in observations 37, 68, 90, 159, 170
               
-              # >> TAM_ICU_1 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
-              # >> TAM_ICU_2 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), 5 outliers
-              # >> TAM_ICU_3 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), no outliers
+              # >> TAM_UI_1 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
+              # >> TAM_UI_2 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), 5 outliers
+              # >> TAM_UI_3 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), no outliers
           
           #Step 1: correlations
           #The function cor specifies a the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
           round(cor(rosie[,98:100]), 2) 
-          #          TAM_ICU_1 TAM_ICU_2 TAM_ICU_3
-          #TAM_ICU_1      1.00     -0.02      0.07
-          #TAM_ICU_2     -0.02      1.00      0.58
-          #TAM_ICU_3      0.07      0.58      1.00
+          #          TAM_UI_1 TAM_UI_2 TAM_UI_3
+          #TAM_UI_1      1.00     -0.02      0.07
+          #TAM_UI_2     -0.02      1.00      0.58
+          #TAM_UI_3      0.07      0.58      1.00
           
           #Step 2: variance-covariance matrix
           round(cov(rosie[,98:100]), 2) 
-          #          TAM_ICU_1 TAM_ICU_2 TAM_ICU_3
-          #TAM_ICU_1      2.97     -0.05      0.22
-          #TAM_ICU_2     -0.05      1.89      1.42
-          #TAM_ICU_3      0.22      1.42      3.17
+          #          TAM_UI_1 TAM_UI_2 TAM_UI_3
+          #TAM_UI_1      2.97     -0.05      0.22
+          #TAM_UI_2     -0.05      1.89      1.42
+          #TAM_UI_3      0.22      1.42      3.17
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
-          m1r  <- ' TAM_ICU_f  =~ TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3'
-          onefac3items_TAM_ICU <- cfa(m1r, data=rosie, std.lv=TRUE) 
-          summary(onefac3items_TAM_ICU, fit.measures=TRUE, standardized=TRUE)
+          m1r  <- ' TAM_UI_f  =~ TAM_UI_1 + TAM_UI_2 + TAM_UI_3'
+          onefac3items_TAM_UI <- cfa(m1r, data=rosie, std.lv=TRUE) 
+          summary(onefac3items_TAM_UI, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .091 > .05, CFI = .999 > 0.95, TLI = 1.00 > 0.90 and RMSEA = 0 < 0.10 >> VERY NICE BUT I HAVE A WEIRD GUT FEELING BECAUSE OF THE NAs FOR SEs
           
                 #to double check this structure let's run an EFA
@@ -1554,30 +1507,30 @@
                 library(GPArotation)
                 
                 #creating a subset with the variables relevant for this EFA
-                ICU <- c("TAM_ICU_1", "TAM_ICU_2", "TAM_ICU_3")
-                ICU
-                ICU_EFA_df <- rosie[ICU]
-                # View(ICU_EFA_df)
+                UI <- c("TAM_UI_1", "TAM_UI_2", "TAM_UI_3")
+                UI
+                UI_EFA_df <- rosie[UI]
+                # View(UI_EFA_df)
                 
                 #parallel analysis to get number of factors
-                parallel3 <- fa.parallel(ICU_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors 
+                parallel3 <- fa.parallel(UI_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors 
                 
                 #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
-                ICU_2factors <- fa(ICU_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #factors do not seem to correlate with each other, so orthogonal rotation is better here
-                ICU_2factors
-                print(ICU_2factors)
+                UI_2factors <- fa(UI_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #factors do not seem to correlate with each other, so orthogonal rotation is better here
+                UI_2factors
+                print(UI_2factors)
                 
-                      ICU_2factors_var <- fa(ICU_EFA_df,nfactors = 2,rotate = 'varimax',fm='minres') 
-                      ICU_2factors_var
-                      print(ICU_2factors_var)
+                      UI_2factors_var <- fa(UI_EFA_df,nfactors = 2,rotate = 'varimax',fm='minres') 
+                      UI_2factors_var
+                      print(UI_2factors_var)
                 
                       #determine cut-off value of loadings .3
-                      print(ICU_2factors_var$loadings,cutoff = 0.3)
+                      print(UI_2factors_var$loadings,cutoff = 0.3)
                       #Loadings:
                       #  MR1    MR2   
-                      #TAM_ICU_1         0.337
-                      #TAM_ICU_2  0.776       
-                      #TAM_ICU_3  0.770       
+                      #TAM_UI_1         0.337
+                      #TAM_UI_2  0.776       
+                      #TAM_UI_3  0.770       
                       
                       #MR1   MR2
                       #SS loadings    1.196 0.156
@@ -1585,7 +1538,7 @@
                       #Cumulative Var 0.399 0.450
                       
                       #look at it visually
-                      fa.diagram(ICU_2factors_var)
+                      fa.diagram(UI_2factors_var)
                       
                       # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
                       # >> The Tucker-Lewis Index (TLI) is 1.041. This is an acceptable value considering it’s over 0.9.
@@ -1595,7 +1548,7 @@
                       # >> Factor 2 holding items 2 and 3 => child (co)usage
                       
                       #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified; also this scale does not represent an existing multiple-item scale
-                      #but this supports the correlation results for the ICU levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
+                      #but this supports the correlation results for the UI levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
                       
       
           #-------------------------------------------#
@@ -1612,8 +1565,8 @@
                     # onefac4items_TAM_PeoU
                     # onefac4items_TAM_PU
                     # onefac4items_TAM_E
-                    # onefac3items_TAM_SN
-                    #(onefac3items_TAM_ICU)
+                    # onefac3items_TAM_SI
+                    #(onefac3items_TAM_UI)
                 
                 #predicting factor scores of all CFA models
                 onefac3items_TTfitPredict <- as.data.frame(predict(onefac3items_TT))
@@ -1623,14 +1576,14 @@
                 onefac4items_TAM_PeoUfitPredict <- as.data.frame(predict(onefac4items_TAM_PEoU))
                 onefac4items_TAM_PUfitPredict <- as.data.frame(predict(onefac4items_TAM_PU))
                 onefac4items_TAM_EfitPredict <- as.data.frame(predict(onefac4items_TAM_E))
-                onefac3items_TAM_SNfitPredict <- as.data.frame(predict(onefac3items_TAM_SN))
-                onefac3items_TAM_ICUfitPredict <- as.data.frame(predict(onefac3items_TAM_ICU)) #R warns about some negative variances, this corresponds to the CFA results above
+                onefac3items_TAM_SIfitPredict <- as.data.frame(predict(onefac3items_TAM_SI))
+                onefac3items_TAM_UIfitPredict <- as.data.frame(predict(onefac3items_TAM_UI)) #R warns about some negative variances, this corresponds to the CFA results above
 
                 
                 #adding to rosie-dataset
                 rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_ILfitPredict, twofac5items_Child_ParasocialfitPredict,
                                        threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
-                                       onefac3items_TAM_SNfitPredict, onefac3items_TAM_ICUfitPredict)
+                                       onefac3items_TAM_SIfitPredict, onefac3items_TAM_UIfitPredict)
                 View(rosie_fscores)
                 
         
@@ -1651,12 +1604,12 @@
           IL <- rosie[, c(101:105)]
           psych::alpha(IL) ### --> 0.86
           
-          #for each factor separately
-          Information <- rosie[, c(101, 103)]
-          psych::alpha(Information) ### --> 0.82
-          
-          Navigation <- rosie[, c(102, 104:105)]
-          psych::alpha(Navigation) ### --> 0.8
+                # #for each factor separately
+                # Information <- rosie[, c(101, 103)]
+                # psych::alpha(Information) ### --> 0.82
+                # 
+                # Navigation <- rosie[, c(102, 104:105)]
+                # psych::alpha(Navigation) ### --> 0.8
           
           #Q32 Child_Parasocial >> 5 items
           Child_Parasocial <- rosie[, c(73:77)]
@@ -1702,13 +1655,13 @@
           TAM_E <- rosie[, c(90:93)]
           psych::alpha(TAM_E) ### --> 0.9
           
-          #Q21 TAM_SN >> 3
-          TAM_SN <- rosie[, c(95:97)]
-          psych::alpha(TAM_SN) ### --> 0.87
+          #Q21 TAM_SI >> 3
+          TAM_SI <- rosie[, c(95:97)]
+          psych::alpha(TAM_SI) ### --> 0.87
           
-          # #Q22 TAM_ICU >> 3 
-          # TAM_ICU <- rosie[, c(98:100)]
-          # psych::alpha(TAM_ICU) ### --> 0.43
+          # #Q22 TAM_UI >> 3 
+          # TAM_UI <- rosie[, c(98:100)]
+          # psych::alpha(TAM_UI) ### --> 0.43
           
 
 
@@ -1726,34 +1679,55 @@
    library(psych)
    psych::describeBy(rosie_fscores, group = "GSL")
    # 1 = male, 2 = female
+   
+   #get percentages of social classes
+   source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+   crosstab(rosie_fscores, row.vars = "SOCIALEKLASSE2016", type = "row.pct")
+   # SOCIALEKLASSE2016      %
+   # 1  43.17
+   # 2  32.24
+   # 5   2.73
+   # 3  18.03
+   # 4   3.83
+   # Sum 100.00
+   
+   crosstab(rosie_fscores, row.vars = "PERSONEN", type = "row.pct")
+   # PERSONEN      %
+   # 1   3.83
+   # 2   7.65
+   # 3  16.94
+   # 4  53.55
+   # 5  14.21
+   # 6   3.83
+   # Sum 100.00
                 
    #specific descriptives on the different DV-levels
-   hist(rosie$ICU_togetherwithchild)
-   mean(rosie$ICU_togetherwithchild) # 3.34153
-   describe(rosie$ICU_togetherwithchild)
+   hist(rosie$UI_togetherwithchild)
+   mean(rosie$UI_togetherwithchild) # 3.34153
+   describe(rosie$UI_togetherwithchild)
    #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
    #X1    1 183 3.34 1.45      4    3.35 1.48   1   6     5 -0.18     -0.9 0.11
                 
-   hist(rosie$ICU_childindividually)
-   mean(rosie$ICU_childindividually, na.rm=T) # 3.214286
-   describe(rosie$ICU_childindividually, na.rm=T)
+   hist(rosie$UI_childindividually)
+   mean(rosie$UI_childindividually, na.rm=T) # 3.214286
+   describe(rosie$UI_childindividually, na.rm=T)
    #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
    #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
   
    #check for ceiling effect on DV-levels
-   describe(rosie_fscores$TAM_ICU_1)
-   hist(rosie_fscores$TAM_ICU_1)
+   describe(rosie_fscores$TAM_UI_1)
+   hist(rosie_fscores$TAM_UI_1)
    
-   describe(rosie_fscores$TAM_ICU_2)
-   hist(rosie_fscores$TAM_ICU_2)
-   densityplot(rosie_fscores$TAM_ICU_2)
+   describe(rosie_fscores$TAM_UI_2)
+   hist(rosie_fscores$TAM_UI_2)
+   densityplot(rosie_fscores$TAM_UI_2)
    
-   describe(rosie_fscores$TAM_ICU_3)
-   hist(rosie_fscores$TAM_ICU_3)
-   densityplot(rosie_fscores$TAM_ICU_3)
+   describe(rosie_fscores$TAM_UI_3)
+   hist(rosie_fscores$TAM_UI_3)
+   densityplot(rosie_fscores$TAM_UI_3)
    
-   describe(rosie_fscores$TAM_ICU_f)
-   hist(rosie_fscores$TAM_ICU_f)
+   describe(rosie_fscores$TAM_UI_f)
+   hist(rosie_fscores$TAM_UI_f)
    
    #taking a visual look
    
@@ -1801,20 +1775,20 @@
   
    #getting correlations matrix for TAM-variables
    round(cor(rosie_fscores[,c(139:143, 98:100)]),2)
-   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SN_f TAM_ICU_f TAM_ICU_1 TAM_ICU_2 TAM_ICU_3
+   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SI_f TAM_UI_f TAM_UI_1 TAM_UI_2 TAM_UI_3
    # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09      0.06      0.36      0.29
    # TAM_PU_f         0.44     1.00    0.58     0.40      0.11      0.13      0.45      0.36
    # TAM_E_f          0.63     0.58    1.00     0.25      0.02      0.11      0.53      0.33
-   # TAM_SN_f         0.15     0.40    0.25     1.00      0.07      0.22      0.20      0.20
-   # TAM_ICU_f        0.09     0.11    0.02     0.07      1.00      0.00      0.00      0.81
-   # TAM_ICU_1        0.06     0.13    0.11     0.22      0.00      1.00     -0.02      0.07
-   # TAM_ICU_2        0.36     0.45    0.53     0.20      0.00     -0.02      1.00      0.58
-   # TAM_ICU_3        0.29     0.36    0.33     0.20      0.81      0.07      0.58      1.00
+   # TAM_SI_f         0.15     0.40    0.25     1.00      0.07      0.22      0.20      0.20
+   # TAM_UI_f        0.09     0.11    0.02     0.07      1.00      0.00      0.00      0.81
+   # TAM_UI_1        0.06     0.13    0.11     0.22      0.00      1.00     -0.02      0.07
+   # TAM_UI_2        0.36     0.45    0.53     0.20      0.00     -0.02      1.00      0.58
+   # TAM_UI_3        0.29     0.36    0.33     0.20      0.81      0.07      0.58      1.00
    
    
          #pairwise correlations all in one scatterplot matrix
          library(car)
-         scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SN_f+TAM_IMG+TAM_ICU_f, data = rosie_fscores)
+         scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SI_f+TAM_SS+TAM_UI_f, data = rosie_fscores)
          
          #for better visual overview 
          library(devtools)
@@ -1892,7 +1866,7 @@
        # smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
    
    #------------------------------------------------------#
-   ### artificial categorization ##########################
+   ### categorization ##########################
    #------------------------------------------------------#
 
    # - TT
@@ -2084,10 +2058,10 @@
    
    LCAmodel5 <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
-   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) #ALERT: number of parameters estimated ( 185 ) exceeds number of observations ( 183 ), ALERT: negative degrees of freedom; respecify model
  
    
-  
+  summary(LCAmodel3)
    #-------------------------------------------#
    ### evaluating LCA ##########################
    #-------------------------------------------#
@@ -2123,23 +2097,25 @@
                          get(paste("LCAmodel",i,sep=""))$resid.df,
                          get(paste("LCAmodel",i,sep=""))$bic,
                          (-2*get(paste("LCAmodel",i,sep=""))$llik) +
-                           ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *
+                           ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *  
                               get(paste("LCAmodel",i,sep=""))$npar),
                          (-2*get(paste("LCAmodel",i,sep=""))$llik) +
                            get(paste("LCAmodel",i,sep=""))$npar *
-                           (1 + log(get(paste("LCAmodel",i,sep=""))$N))
+                           (1 + log(get(paste("LCAmodel",i,sep=""))$N)),
+                         get(paste("LCAmodel",i,sep=""))$Gsq
                        ))
    }
    tab.modfit<-round(tab.modfit[-1,],2)
    tab.modfit$Nclass<-2:6
+  
    
    tab.modfit
-    # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
-    #       -2582.21       122 5482.19 5289.00 5543.19          3257.74      2
-    #       -2536.08        91 5551.43 5260.05 5643.43          3165.48      3
-    #       -2497.36        60 5635.48 5245.92 5758.48          3088.05      4
-    #       -2466.02        29 5734.30 5246.55 5888.30          3025.36      5
-    #       -2446.72        -2 5857.20 5271.27 6042.20          2986.77      6
+   #  log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+   #        -2582.21       122 5482.19 5289.00 5543.19          3257.74      2
+   #        -2543.46        91 5566.19 5274.81 5658.19          3180.25      3
+   #        -2500.62        60 5642.00 5252.43 5765.00          3094.56      4
+   #        -2468.61        29 5739.47 5251.73 5893.47          3030.54      5
+   #        -2436.68        -2 5837.11 5251.18 6022.11          2966.68      6
    
    #visualize model fit 
          # convert table into long format
@@ -2169,14 +2145,46 @@
          fit.plot
          
          
+   # make a graph of probabilities
          
-     # LMT - likelihood ratio test???
-         library(tidyLPA)
-         # null model = new model (K). alternative model = nested model (K-1)
-         test = calc_lrt(LCAmodel4$N, LCAmodel4$llik, LCAmodel4$npar, 4, LCAmodel5$llik, LCAmodel5$npar, 5)
-         test
-       
-   
+         #2-class model
+         lc2 <- reshape2::melt(LCAmodel2$probs, level=2)
+         zp2 <- ggplot(lc2,aes(x = L2, y = value, fill = Var2))
+         zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
+         zp2 <- zp2 + facet_grid(Var1 ~ .)
+         # zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
+         zp2 <- zp2 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
+         zp2 <- zp2 + theme(panel.grid.major.y=element_blank(),
+                            axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
+         zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
+         #zp2 <- zp2 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
+         print(zp2)
+         
+         #3-class model
+         lc3 <- reshape2::melt(LCAmodel3$probs, level=2)
+         zp3 <- ggplot(lc3,aes(x = L2, y = value, fill = Var2))
+         zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
+         zp3 <- zp3 + facet_grid(Var1 ~ .)
+         # zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
+         zp3 <- zp3 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
+         zp3 <- zp3 + theme(panel.grid.major.y=element_blank(),
+                            axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
+         zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
+         #zp3 <- zp3 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
+         print(zp3)
+         
+         #4-class model
+         lc4 <- reshape2::melt(LCAmodel4$probs, level=2)
+         zp4 <- ggplot(lc4,aes(x = L2, y = value, fill = Var2))
+         zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
+         zp4 <- zp4 + facet_grid(Var1 ~ .)
+         # zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
+         zp4 <- zp4 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
+         zp4 <- zp4 + theme(panel.grid.major.y=element_blank(),
+                            axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
+         zp4 <- zp4 + guides(fill = guide_legend(reverse=TRUE))
+         #zp4 <- zp4 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
+         print(zp4)
          
      #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
@@ -2203,6 +2211,7 @@
            # 5                       1   4   5
            # Sum                    71 112 183
        
+           
     #extract 3-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
        threeclass=poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
@@ -2218,7 +2227,15 @@
        # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="2"] <- "YYY"
        # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="3"] <- "ZZZ"
   
-   
+       
+    #extract 4-class solution and save in fourclass object (https://osf.io/vec6s/)
+       set.seed(123)
+       fourclass=poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       
+       #output predicted classes from selected model so that we can use it in subsequent analyses:
+       rosie_fscores$fam_class4=fourclass$predclass
+       
+       View(rosie_fscores)
        
   #-------------------------------------------------------#
   ### descriptives along classes ##########################
@@ -2227,6 +2244,10 @@
        library(psych)
        psych::describeBy(rosie_fscores, group = "fam_class3")
        # 1 = LSM, 2 = ILS, 3 = LLY
+       
+       library(psych)
+       psych::describeBy(rosie_fscores, group = "fam_class4")
+       # 1 = SMYC, 2 = MSMS, 3 = LYLB, 4 = ILA
        
 ###----------------------------------------------------------------------------------------------------------------###      
       
@@ -2296,15 +2317,15 @@
       #           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
       #           PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
       #           E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
-      #           SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
-      #           ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3 
+      #           SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3 
+      #           UI =~ 1*TAM_UI_1 + TAM_UI_2 + TAM_UI_3 
       #         #regressions  
       #           PEoU ~ fam_class2  
       #           PU ~ fam_class2 + PEoU  
       #           E ~ fam_class2 
-      #           TAM_IMG ~ fam_class2 
-      #           SN ~ fam_class2 
-      #           ICU ~ PEoU + PU + E + TAM_IMG + SN 
+      #           TAM_SS ~ fam_class2 
+      #           SI ~ fam_class2 
+      #           UI ~ PEoU + PU + E + TAM_SS + SI 
       #         #residual variances 
       #           TAM_PEoU_1 ~~ TAM_PEoU_1
       #           TAM_PEoU_2 ~~ TAM_PEoU_2
@@ -2318,18 +2339,18 @@
       #           TAM_E_2 ~~ TAM_E_2
       #           TAM_E_3 ~~ TAM_E_3
       #           TAM_E_4 ~~ TAM_E_4
-      #           TAM_SN_1 ~~ TAM_SN_1
-      #           TAM_SN_2 ~~ TAM_SN_2
-      #           TAM_SN_3 ~~ TAM_SN_3
-      #           TAM_ICU_1 ~~ TAM_ICU_1
-      #           TAM_ICU_2 ~~ TAM_ICU_2
-      #           TAM_ICU_3 ~~ TAM_ICU_3
-      #           TAM_IMG ~~ TAM_IMG
+      #           TAM_SI_1 ~~ TAM_SI_1
+      #           TAM_SI_2 ~~ TAM_SI_2
+      #           TAM_SI_3 ~~ TAM_SI_3
+      #           TAM_UI_1 ~~ TAM_UI_1
+      #           TAM_UI_2 ~~ TAM_UI_2
+      #           TAM_UI_3 ~~ TAM_UI_3
+      #           TAM_SS ~~ TAM_SS
       #           PEoU ~~ PEoU
       #           PU ~~ PU
       #           E ~~ E
-      #           SN ~~ SN
-      #           ICU ~~ ICU
+      #           SI ~~ SI
+      #           UI ~~ UI
       #           fam_class2 ~~ fam_class2
       #         
       #         '
@@ -2359,13 +2380,13 @@
       #         # 20         PU  ~ fam_class2 -0.105  0.190 -0.556  0.578   -0.479    0.265
       #         # 21         PU  ~       PEoU  0.601  0.109  5.500  0.000    0.398    0.826
       #         # 22          E  ~ fam_class2 -0.322  0.207 -1.554  0.120   -0.716    0.097
-      #         # 23    TAM_IMG  ~ fam_class2 -0.106  0.286 -0.371  0.710   -0.651    0.471
-      #         # 24         SN  ~ fam_class2 -0.781  0.225 -3.469  0.001   -1.239   -0.356
-      #         # 25        ICU  ~       PEoU  0.001  0.023  0.037  0.971   -0.047    0.042
-      #         # 26        ICU  ~         PU  0.005  0.028  0.183  0.854   -0.071    0.037
-      #         # 27        ICU  ~          E  0.011  0.050  0.217  0.828   -0.132    0.064
-      #         # 28        ICU  ~    TAM_IMG  0.001  0.011  0.090  0.928   -0.026    0.017
-      #         # 29        ICU  ~         SN  0.001  0.014  0.042  0.966   -0.029    0.025
+      #         # 23    TAM_SS  ~ fam_class2 -0.106  0.286 -0.371  0.710   -0.651    0.471
+      #         # 24         SI  ~ fam_class2 -0.781  0.225 -3.469  0.001   -1.239   -0.356
+      #         # 25        UI  ~       PEoU  0.001  0.023  0.037  0.971   -0.047    0.042
+      #         # 26        UI  ~         PU  0.005  0.028  0.183  0.854   -0.071    0.037
+      #         # 27        UI  ~          E  0.011  0.050  0.217  0.828   -0.132    0.064
+      #         # 28        UI  ~    TAM_SS  0.001  0.011  0.090  0.928   -0.026    0.017
+      #         # 29        UI  ~         SI  0.001  0.014  0.042  0.966   -0.029    0.025
       #   
       #         
       #         
@@ -2376,16 +2397,16 @@
       #           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
       #           PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
       #           E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
-      #           SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3 
+      #           SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3 
       #         #regressions  
       #           PEoU ~ fam_class2  
       #           PU ~ fam_class2 + PEoU  
       #           E ~ fam_class2 
-      #           TAM_IMG ~ fam_class2 
-      #           SN ~ fam_class2 
-      #           TAM_ICU_1 ~ PEoU + PU + E + TAM_IMG + SN 
-      #           TAM_ICU_2 ~ PEoU + PU + E + TAM_IMG + SN 
-      #           TAM_ICU_3 ~ PEoU + PU + E + TAM_IMG + SN 
+      #           TAM_SS ~ fam_class2 
+      #           SI ~ fam_class2 
+      #           TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI 
+      #           TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
+      #           TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
       #         #residual variances 
       #           TAM_PEoU_1 ~~ TAM_PEoU_1
       #           TAM_PEoU_2 ~~ TAM_PEoU_2
@@ -2399,20 +2420,20 @@
       #           TAM_E_2 ~~ TAM_E_2
       #           TAM_E_3 ~~ TAM_E_3
       #           TAM_E_4 ~~ TAM_E_4
-      #           TAM_SN_1 ~~ TAM_SN_1
-      #           TAM_SN_2 ~~ TAM_SN_2
-      #           TAM_SN_3 ~~ TAM_SN_3
-      #           TAM_ICU_1 ~~ TAM_ICU_1
-      #           TAM_ICU_2 ~~ TAM_ICU_2
-      #           TAM_ICU_3 ~~ TAM_ICU_3
-      #           TAM_IMG ~~ TAM_IMG
+      #           TAM_SI_1 ~~ TAM_SI_1
+      #           TAM_SI_2 ~~ TAM_SI_2
+      #           TAM_SI_3 ~~ TAM_SI_3
+      #           TAM_UI_1 ~~ TAM_UI_1
+      #           TAM_UI_2 ~~ TAM_UI_2
+      #           TAM_UI_3 ~~ TAM_UI_3
+      #           TAM_SS ~~ TAM_SS
       #           PEoU ~~ PEoU
       #           PU ~~ PU
       #           E ~~ E
-      #           SN ~~ SN
-      #           TAM_ICU_1 ~~ TAM_ICU_2
-      #           TAM_ICU_1 ~~ TAM_ICU_3
-      #           TAM_ICU_2 ~~ TAM_ICU_3
+      #           SI ~~ SI
+      #           TAM_UI_1 ~~ TAM_UI_2
+      #           TAM_UI_1 ~~ TAM_UI_3
+      #           TAM_UI_2 ~~ TAM_UI_3
       #           fam_class2 ~~ fam_class2
       #         
       #         '
@@ -2443,23 +2464,23 @@
       #         # 17         PU  ~ fam_class2  0.106 0.184  0.572  0.567   -0.270    0.453
       #         # 18         PU  ~       PEoU  0.600 0.110  5.451  0.000    0.389    0.821
       #         # 19          E  ~ fam_class2  0.321 0.196  1.634  0.102   -0.071    0.698
-      #         # 20    TAM_IMG  ~ fam_class2  0.106 0.295  0.360  0.719   -0.465    0.692
-      #         # 21         SN  ~ fam_class2  0.778 0.235  3.317  0.001    0.334    1.253
-      #         # 22  TAM_ICU_1  ~       PEoU  0.028 0.139  0.203  0.839   -0.251    0.292
-      #         # 23  TAM_ICU_1  ~         PU -0.033 0.139 -0.235  0.814   -0.306    0.239
-      #         # 24  TAM_ICU_1  ~          E  0.085 0.153  0.555  0.579   -0.209    0.391
-      #         # 25  TAM_ICU_1  ~    TAM_IMG  0.185 0.069  2.704  0.007    0.051    0.319
-      #         # 26  TAM_ICU_1  ~         SN  0.185 0.100  1.841  0.066   -0.015    0.378
-      #         # 27  TAM_ICU_2  ~       PEoU  0.012 0.142  0.082  0.934   -0.258    0.298
-      #         # 28  TAM_ICU_2  ~         PU  0.186 0.115  1.614  0.106   -0.042    0.410
-      #         # 29  TAM_ICU_2  ~          E  0.456 0.129  3.546  0.000    0.197    0.701
-      #         # 30  TAM_ICU_2  ~    TAM_IMG  0.041 0.058  0.708  0.479   -0.070    0.157
-      #         # 31  TAM_ICU_2  ~         SN  0.014 0.081  0.169  0.866   -0.136    0.180
-      #         # 32  TAM_ICU_3  ~       PEoU  0.158 0.172  0.920  0.358   -0.184    0.490
-      #         # 33  TAM_ICU_3  ~         PU  0.266 0.168  1.585  0.113   -0.071    0.587
-      #         # 34  TAM_ICU_3  ~          E  0.191 0.167  1.141  0.254   -0.128    0.527
-      #         # 35  TAM_ICU_3  ~    TAM_IMG  0.020 0.071  0.278  0.781   -0.115    0.163
-      #         # 36  TAM_ICU_3  ~         SN  0.074 0.096  0.763  0.446   -0.107    0.271
+      #         # 20    TAM_SS  ~ fam_class2  0.106 0.295  0.360  0.719   -0.465    0.692
+      #         # 21         SI  ~ fam_class2  0.778 0.235  3.317  0.001    0.334    1.253
+      #         # 22  TAM_UI_1  ~       PEoU  0.028 0.139  0.203  0.839   -0.251    0.292
+      #         # 23  TAM_UI_1  ~         PU -0.033 0.139 -0.235  0.814   -0.306    0.239
+      #         # 24  TAM_UI_1  ~          E  0.085 0.153  0.555  0.579   -0.209    0.391
+      #         # 25  TAM_UI_1  ~    TAM_SS  0.185 0.069  2.704  0.007    0.051    0.319
+      #         # 26  TAM_UI_1  ~         SI  0.185 0.100  1.841  0.066   -0.015    0.378
+      #         # 27  TAM_UI_2  ~       PEoU  0.012 0.142  0.082  0.934   -0.258    0.298
+      #         # 28  TAM_UI_2  ~         PU  0.186 0.115  1.614  0.106   -0.042    0.410
+      #         # 29  TAM_UI_2  ~          E  0.456 0.129  3.546  0.000    0.197    0.701
+      #         # 30  TAM_UI_2  ~    TAM_SS  0.041 0.058  0.708  0.479   -0.070    0.157
+      #         # 31  TAM_UI_2  ~         SI  0.014 0.081  0.169  0.866   -0.136    0.180
+      #         # 32  TAM_UI_3  ~       PEoU  0.158 0.172  0.920  0.358   -0.184    0.490
+      #         # 33  TAM_UI_3  ~         PU  0.266 0.168  1.585  0.113   -0.071    0.587
+      #         # 34  TAM_UI_3  ~          E  0.191 0.167  1.141  0.254   -0.128    0.527
+      #         # 35  TAM_UI_3  ~    TAM_SS  0.020 0.071  0.278  0.781   -0.115    0.163
+      #         # 36  TAM_UI_3  ~         SI  0.074 0.096  0.763  0.446   -0.107    0.271
       #       
       #         
       #         
@@ -2472,15 +2493,15 @@
       #     PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
       #     PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
       #     E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-      #     SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
-      #     ICU =~ 1*TAM_ICU_1 + TAM_ICU_2 + TAM_ICU_3
+      #     SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #     UI =~ 1*TAM_UI_1 + TAM_UI_2 + TAM_UI_3
       #   #regressions
       #     PEoU ~ fam_class3
       #     PU ~ fam_class3 + PEoU
       #     E ~ fam_class3
-      #     TAM_IMG ~ fam_class3
-      #     SN ~ fam_class3
-      #     ICU ~ PEoU + PU + E + TAM_IMG + SN
+      #     TAM_SS ~ fam_class3
+      #     SI ~ fam_class3
+      #     UI ~ PEoU + PU + E + TAM_SS + SI
       #   #residual variances
       #     TAM_PEoU_1 ~~ TAM_PEoU_1
       #     TAM_PEoU_2 ~~ TAM_PEoU_2
@@ -2494,18 +2515,18 @@
       #     TAM_E_2 ~~ TAM_E_2
       #     TAM_E_3 ~~ TAM_E_3
       #     TAM_E_4 ~~ TAM_E_4
-      #     TAM_SN_1 ~~ TAM_SN_1
-      #     TAM_SN_2 ~~ TAM_SN_2
-      #     TAM_SN_3 ~~ TAM_SN_3
-      #     TAM_ICU_1 ~~ TAM_ICU_1
-      #     TAM_ICU_2 ~~ TAM_ICU_2
-      #     TAM_ICU_3 ~~ TAM_ICU_3
-      #     TAM_IMG ~~ TAM_IMG
+      #     TAM_SI_1 ~~ TAM_SI_1
+      #     TAM_SI_2 ~~ TAM_SI_2
+      #     TAM_SI_3 ~~ TAM_SI_3
+      #     TAM_UI_1 ~~ TAM_UI_1
+      #     TAM_UI_2 ~~ TAM_UI_2
+      #     TAM_UI_3 ~~ TAM_UI_3
+      #     TAM_SS ~~ TAM_SS
       #     PEoU ~~ PEoU
       #     PU ~~ PU
       #     E ~~ E
-      #     SN ~~ SN
-      #     ICU ~~ ICU
+      #     SI ~~ SI
+      #     UI ~~ UI
       #     fam_class3 ~~ fam_class3
       # 
       #   '
@@ -2517,6 +2538,9 @@
       #   summary(rosiesTAM_3classes1DV_fit, standardized = T, fit.measures = T)
       #   
       #   
+       
+       
+       
         ### 3-class model with 3DVs ##########################
         rosiesTAM_3classes3DVs <- '
 
@@ -2524,16 +2548,16 @@
           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
           PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
           E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-          SN =~ 1*TAM_SN_1 + TAM_SN_2 + TAM_SN_3
+          SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
         #regressions
           PEoU ~ fam_class3
           PU ~ fam_class3 + PEoU
           E ~ fam_class3
-          TAM_IMG ~ fam_class3
-          SN ~ fam_class3
-          TAM_ICU_1 ~ PEoU + PU + E + TAM_IMG + SN
-          TAM_ICU_2 ~ PEoU + PU + E + TAM_IMG + SN
-          TAM_ICU_3 ~ PEoU + PU + E + TAM_IMG + SN
+          TAM_SS ~ fam_class3
+          SI ~ fam_class3
+          TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+          TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+          TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
          #residual variances 
           TAM_PEoU_1 ~~ TAM_PEoU_1
           TAM_PEoU_2 ~~ TAM_PEoU_2
@@ -2547,20 +2571,20 @@
           TAM_E_2 ~~ TAM_E_2
           TAM_E_3 ~~ TAM_E_3
           TAM_E_4 ~~ TAM_E_4
-          TAM_SN_1 ~~ TAM_SN_1
-          TAM_SN_2 ~~ TAM_SN_2
-          TAM_SN_3 ~~ TAM_SN_3
-          TAM_ICU_1 ~~ TAM_ICU_1
-          TAM_ICU_2 ~~ TAM_ICU_2
-          TAM_ICU_3 ~~ TAM_ICU_3
-          TAM_IMG ~~ TAM_IMG
+          TAM_SI_1 ~~ TAM_SI_1
+          TAM_SI_2 ~~ TAM_SI_2
+          TAM_SI_3 ~~ TAM_SI_3
+          TAM_UI_1 ~~ TAM_UI_1
+          TAM_UI_2 ~~ TAM_UI_2
+          TAM_UI_3 ~~ TAM_UI_3
+          TAM_SS ~~ TAM_SS
           PEoU ~~ PEoU
           PU ~~ PU
           E ~~ E
-          SN ~~ SN
-          TAM_ICU_1 ~~ TAM_ICU_2
-          TAM_ICU_1 ~~ TAM_ICU_3
-          TAM_ICU_2 ~~ TAM_ICU_3
+          SI ~~ SI
+          TAM_UI_1 ~~ TAM_UI_2
+          TAM_UI_1 ~~ TAM_UI_3
+          TAM_UI_2 ~~ TAM_UI_3
           fam_class3 ~~ fam_class3
 
         '
@@ -2588,28 +2612,28 @@
         
   
         
-        #post-hoc test needed for significant regression path of SN ~ family type
+        #post-hoc test needed for significant regression path of SI ~ family type
         install.packages("ggpubr")
         library("ggpubr")
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_1", 
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_1", 
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
                   ylab = "Subjective norm 1", xlab = "Family Type")
         
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_2", 
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_2", 
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
                   ylab = "Subjective norm 2", xlab = "Family Type")
         
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_3", 
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_3", 
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
                   ylab = "Subjective norm 3", xlab = "Family Type")
         
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SN_f", 
+        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_f", 
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
                   ylab = "Subjective norm", xlab = "Family Type")
         
         # Compute the analysis of variance
         rosie_fscores$fam_class3 <- as.factor(rosie_fscores$fam_class3)
-        anova <- aov(TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        anova <- aov(TAM_SI_f ~ fam_class3, data = rosie_fscores)
         # Summary of the analysis
         summary(anova)
         # Which pairs of groups differ?
@@ -2617,7 +2641,7 @@
         # Tukey multiple comparisons of means
         # 95% family-wise confidence level
         # 
-        # Fit: aov(formula = TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        # Fit: aov(formula = TAM_SI_f ~ fam_class3, data = rosie_fscores)
         # 
         # $fam_class3
         #           diff        lwr       upr     p adj
@@ -2629,11 +2653,85 @@
         ## >> to type 1 perceiving lower social norms than parents belonging to family type 2 and 3.
         
         # Alternative non-parametric test
-        kruskal.test(TAM_SN_f ~ fam_class3, data = rosie_fscores)
+        kruskal.test(TAM_SI_f ~ fam_class3, data = rosie_fscores)
         # Kruskal-Wallis rank sum test
         # 
-        # data:  TAM_SN_f by fam_class3
+        # data:  TAM_SI_f by fam_class3
         # Kruskal-Wallis chi-squared = 12.698, df = 2, p-value = 0.001749
+        
+        
+        
+        
+        
+        ### 4-class model with 3DVs ##########################
+        rosiesTAM_4classes3DVs <- '
+
+        #measurement model
+          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+          SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+        #regressions
+          PEoU ~ fam_class4
+          PU ~ fam_class4 + PEoU
+          E ~ fam_class4
+          TAM_SS ~ fam_class4
+          SI ~ fam_class4
+          TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+          TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+          TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+         #residual variances 
+          TAM_PEoU_1 ~~ TAM_PEoU_1
+          TAM_PEoU_2 ~~ TAM_PEoU_2
+          TAM_PEoU_3 ~~ TAM_PEoU_3
+          TAM_PEoU_4 ~~ TAM_PEoU_4
+          TAM_PU_1 ~~ TAM_PU_1
+          TAM_PU_2 ~~ TAM_PU_2
+          TAM_PU_3 ~~ TAM_PU_3
+          TAM_PU_4 ~~ TAM_PU_4
+          TAM_E_1 ~~ TAM_E_1
+          TAM_E_2 ~~ TAM_E_2
+          TAM_E_3 ~~ TAM_E_3
+          TAM_E_4 ~~ TAM_E_4
+          TAM_SI_1 ~~ TAM_SI_1
+          TAM_SI_2 ~~ TAM_SI_2
+          TAM_SI_3 ~~ TAM_SI_3
+          TAM_UI_1 ~~ TAM_UI_1
+          TAM_UI_2 ~~ TAM_UI_2
+          TAM_UI_3 ~~ TAM_UI_3
+          TAM_SS ~~ TAM_SS
+          PEoU ~~ PEoU
+          PU ~~ PU
+          E ~~ E
+          SI ~~ SI
+          TAM_UI_1 ~~ TAM_UI_2
+          TAM_UI_1 ~~ TAM_UI_3
+          TAM_UI_2 ~~ TAM_UI_3
+          fam_class4 ~~ fam_class4
+
+        '
+        
+        #fit the model
+        rosiesTAM_4classes3DVs_fit <- lavaan(rosiesTAM_4classes3DVs, data = rosie_fscores)
+        
+        #print summary
+        summary(rosiesTAM_4classes3DVs_fit, standardized = T, fit.measures = T)
+        
+        #bootstrap model
+        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+        summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
+        parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
+                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                           standardized = FALSE, 
+                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                           cov.std = TRUE, fmi.options = list(), 
+                           rsquare = FALSE, 
+                           remove.system.eq = TRUE, remove.eq = TRUE, 
+                           remove.ineq = TRUE, remove.def = FALSE, 
+                           remove.nonfree = FALSE, 
+                           add.attributes = FALSE, 
+                           output = "data.frame", header = FALSE)
+        
         
 ###----------------------------------------------------------------------------------------------------------------###
           
