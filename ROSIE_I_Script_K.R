@@ -541,7 +541,7 @@ print(sessionInfo())
           m1a  <- ' TT_f  =~ TT_1 + TT_2 + TT_3' 
           onefac3items_TT <- cfa(m1a, data=rosie) 
           summary(onefac3items_TT, fit.measures=TRUE, standardized=TRUE) # >> Seems like a "just" identified model. Wait and see for testing whole measurement model in SEM.
-          # >> fit index criteria: Chi-Square = / because 0 df just identified, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10
+          # >> fit index criteria: Chi-Square = 0 because 0 df just identified, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10
     
           
           ### IL >> 5 items #########################      
@@ -1404,7 +1404,7 @@ print(sessionInfo())
           m1h  <- ' TAM_SI_f  =~ TAM_SI_1 + TAM_SI_2 + TAM_SI_3 '
           onefac3items_TAM_SI <- cfa(m1h, data=rosie) 
           summary(onefac3items_TAM_SI, fit.measures=TRUE, standardized=TRUE)
-          # >> fit index criteria: Chi-Square = 0 > .05, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10 >> AGAIN, problematic because just identified        
+          # >> fit index criteria: Chi-Square = 0 NOT > .05, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA = 0 < 0.10         
           
               #to double check this structure let's run an EFA
               
@@ -1422,134 +1422,134 @@ print(sessionInfo())
           
               
               
-          ### (TAM_UI >> 3 items) #########################
-          
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-              #visually
-              library(lattice)
-              boxplot(rosie$TAM_UI_1)
-              boxplot(rosie$TAM_UI_2) 
-              boxplot(rosie$TAM_UI_3)
-              hist(rosie$TAM_UI_1) 
-              hist(rosie$TAM_UI_2)
-              hist(rosie$TAM_UI_3) 
-              densityplot(rosie$TAM_UI_1)
-              densityplot(rosie$TAM_UI_2)
-              densityplot(rosie$TAM_UI_3)
-              
-              #numerically 
-              #standardize a variable and count the number of cases with values greater or less than 3
-              standardized_TAM_UI <- scale(rosie[,c(98:100)]) 
-              outliers_TAM_UI <- colSums(abs(standardized_TAM_UI)>=3, na.rm = T) 
-              outliers_TAM_UI
-              #TAM_UI_1 TAM_UI_2 TAM_UI_3 
-              #0         5         0
-              
-              #For TAM_E_3: Where are those outliers exactly? In what rows?
-              ??scores
-              library(outliers)
-              outlier_scores_TAM_UI_2 <- scores(rosie$TAM_UI_2)
-              is_outlier_TAM_UI_2 <- outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3
-              #add a column with info whether the refund_value is an outlier
-              rosie$is_outlier_TAM_UI_2 <- is_outlier_TAM_UI_2
-              #look at plot
-              library(ggplot2)
-              ggplot(rosie, aes(TAM_UI_2) +
-                geom_boxplot() +
-                coord_flip() +
-                facet_wrap(~is_outlier_TAM_UI_2)
-              #create a dataframe with only outliers
-              outlier_TAM_UI_2_df <- rosie[outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3, ]
-              #take a peek
-              head(outlier_TAM_UI_2_df) # >> outliers lay in observations 37, 68, 90, 159, 170
-              
-              # >> TAM_UI_1 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
-              # >> TAM_UI_2 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), 5 outliers
-              # >> TAM_UI_3 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), no outliers
-          
-          #Step 1: correlations
-          #The function cor specifies a the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
-          round(cor(rosie[,98:100]), 2) 
-          #          TAM_UI_1 TAM_UI_2 TAM_UI_3
-          #TAM_UI_1      1.00     -0.02      0.07
-          #TAM_UI_2     -0.02      1.00      0.58
-          #TAM_UI_3      0.07      0.58      1.00
-          
-          #Step 2: variance-covariance matrix
-          round(cov(rosie[,98:100]), 2) 
-          #          TAM_UI_1 TAM_UI_2 TAM_UI_3
-          #TAM_UI_1      2.97     -0.05      0.22
-          #TAM_UI_2     -0.05      1.89      1.42
-          #TAM_UI_3      0.22      1.42      3.17
-          
-          #Step 3: one-factor CFA
-          #one factor three items, default marker method
-          m1r  <- ' TAM_UI_f  =~ TAM_UI_1 + TAM_UI_2 + TAM_UI_3'
-          onefac3items_TAM_UI <- cfa(m1r, data=rosie, std.lv=TRUE) 
-          summary(onefac3items_TAM_UI, fit.measures=TRUE, standardized=TRUE)
-          # >> fit index criteria: Chi-Square = .091 > .05, CFI = .999 > 0.95, TLI = 1.00 > 0.90 and RMSEA = 0 < 0.10 >> VERY NICE BUT I HAVE A WEIRD GUT FEELING BECAUSE OF THE NAs FOR SEs
-          
-                #to double check this structure let's run an EFA
-          
-                library(psych)
-                library(GPArotation)
-                
-                #creating a subset with the variables relevant for this EFA
-                UI <- c("TAM_UI_1", "TAM_UI_2", "TAM_UI_3")
-                UI
-                UI_EFA_df <- rosie[UI]
-                # View(UI_EFA_df)
-                
-                #parallel analysis to get number of factors
-                parallel3 <- fa.parallel(UI_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors 
-                
-                #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
-                UI_2factors <- fa(UI_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #factors do not seem to correlate with each other, so orthogonal rotation is better here
-                UI_2factors
-                print(UI_2factors)
-                
-                      UI_2factors_var <- fa(UI_EFA_df,nfactors = 2,rotate = 'varimax',fm='minres') 
-                      UI_2factors_var
-                      print(UI_2factors_var)
-                
-                      #determine cut-off value of loadings .3
-                      print(UI_2factors_var$loadings,cutoff = 0.3)
-                      #Loadings:
-                      #  MR1    MR2   
-                      #TAM_UI_1         0.337
-                      #TAM_UI_2  0.776       
-                      #TAM_UI_3  0.770       
-                      
-                      #MR1   MR2
-                      #SS loadings    1.196 0.156
-                      #Proportion Var 0.399 0.052
-                      #Cumulative Var 0.399 0.450
-                      
-                      #look at it visually
-                      fa.diagram(UI_2factors_var)
-                      
-                      # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
-                      # >> The Tucker-Lewis Index (TLI) is 1.041. This is an acceptable value considering it’s over 0.9.
-                      
-                      #the two emerging factors:
-                      # >> Factor 1 holding item 1 => parent only usage
-                      # >> Factor 2 holding items 2 and 3 => child (co)usage
-                      
-                      #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified; also this scale does not represent an existing multiple-item scale
-                      #but this supports the correlation results for the UI levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
-                      
-      
+          # ### (TAM_UI >> 3 items) #########################
+          # 
+          # #Prep: Check for normality and outliers
+          # ### Criterion for judgement on skewness:
+          # ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
+          # ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
+          # ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
+          # 
+          # ### Criterion for judgment on kurtosis:
+          # ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
+          # ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
+          # ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
+          # 
+          #   #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+          #     #visually
+          #     library(lattice)
+          #     boxplot(rosie$TAM_UI_1)
+          #     boxplot(rosie$TAM_UI_2) 
+          #     boxplot(rosie$TAM_UI_3)
+          #     hist(rosie$TAM_UI_1) 
+          #     hist(rosie$TAM_UI_2)
+          #     hist(rosie$TAM_UI_3) 
+          #     densityplot(rosie$TAM_UI_1)
+          #     densityplot(rosie$TAM_UI_2)
+          #     densityplot(rosie$TAM_UI_3)
+          #     
+          #     #numerically 
+          #     #standardize a variable and count the number of cases with values greater or less than 3
+          #     standardized_TAM_UI <- scale(rosie[,c(98:100)]) 
+          #     outliers_TAM_UI <- colSums(abs(standardized_TAM_UI)>=3, na.rm = T) 
+          #     outliers_TAM_UI
+          #     #TAM_UI_1 TAM_UI_2 TAM_UI_3 
+          #     #0         5         0
+          #     
+          #     #For TAM_UI_2: Where are those outliers exactly? In what rows?
+          #     ??scores
+          #     library(outliers)
+          #     outlier_scores_TAM_UI_2 <- scores(rosie$TAM_UI_2)
+          #     is_outlier_TAM_UI_2 <- outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3
+          #     #add a column with info whether the refund_value is an outlier
+          #     rosie$is_outlier_TAM_UI_2 <- is_outlier_TAM_UI_2
+          #     #look at plot
+          #     library(ggplot2)
+          #     ggplot(rosie, aes(TAM_UI_2) +
+          #       geom_boxplot() +
+          #       coord_flip() +
+          #       facet_wrap(~is_outlier_TAM_UI_2)
+          #     #create a dataframe with only outliers
+          #     outlier_TAM_UI_2_df <- rosie[outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3, ]
+          #     #take a peek
+          #     head(outlier_TAM_UI_2_df) # >> outliers lay in observations 37, 68, 90, 159, 170
+          #     
+          #     # >> TAM_UI_1 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
+          #     # >> TAM_UI_2 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), 5 outliers
+          #     # >> TAM_UI_3 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), no outliers
+          # 
+          # #Step 1: correlations
+          # #The function cor specifies a the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
+          # round(cor(rosie[,98:100]), 2) 
+          # #          TAM_UI_1 TAM_UI_2 TAM_UI_3
+          # #TAM_UI_1      1.00     -0.02      0.07
+          # #TAM_UI_2     -0.02      1.00      0.58
+          # #TAM_UI_3      0.07      0.58      1.00
+          # 
+          # #Step 2: variance-covariance matrix
+          # round(cov(rosie[,98:100]), 2) 
+          # #          TAM_UI_1 TAM_UI_2 TAM_UI_3
+          # #TAM_UI_1      2.97     -0.05      0.22
+          # #TAM_UI_2     -0.05      1.89      1.42
+          # #TAM_UI_3      0.22      1.42      3.17
+          # 
+          # #Step 3: one-factor CFA
+          # #one factor three items, default marker method
+          # m1r  <- ' TAM_UI_f  =~ TAM_UI_1 + TAM_UI_2 + TAM_UI_3'
+          # onefac3items_TAM_UI <- cfa(m1r, data=rosie, std.lv=TRUE) 
+          # summary(onefac3items_TAM_UI, fit.measures=TRUE, standardized=TRUE)
+          # # >> fit index criteria: Chi-Square = .091 > .05, CFI = .999 > 0.95, TLI = 1.00 > 0.90 and RMSEA = 0 < 0.10 >> VERY NICE BUT I HAVE A WEIRD GUT FEELING BECAUSE OF THE NAs FOR SEs
+          # 
+          #       #to double check this structure let's run an EFA
+          # 
+          #       library(psych)
+          #       library(GPArotation)
+          #       
+          #       #creating a subset with the variables relevant for this EFA
+          #       UI <- c("TAM_UI_1", "TAM_UI_2", "TAM_UI_3")
+          #       UI
+          #       UI_EFA_df <- rosie[UI]
+          #       # View(UI_EFA_df)
+          #       
+          #       #parallel analysis to get number of factors
+          #       parallel3 <- fa.parallel(UI_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors 
+          #       
+          #       #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
+          #       UI_2factors <- fa(UI_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #factors do not seem to correlate with each other, so orthogonal rotation is better here
+          #       UI_2factors
+          #       print(UI_2factors)
+          #       
+          #             UI_2factors_var <- fa(UI_EFA_df,nfactors = 2,rotate = 'varimax',fm='minres') 
+          #             UI_2factors_var
+          #             print(UI_2factors_var)
+          #       
+          #             #determine cut-off value of loadings .3
+          #             print(UI_2factors_var$loadings,cutoff = 0.3)
+          #             #Loadings:
+          #             #  MR1    MR2   
+          #             #TAM_UI_1         0.337
+          #             #TAM_UI_2  0.776       
+          #             #TAM_UI_3  0.770       
+          #             
+          #             #MR1   MR2
+          #             #SS loadings    1.196 0.156
+          #             #Proportion Var 0.399 0.052
+          #             #Cumulative Var 0.399 0.450
+          #             
+          #             #look at it visually
+          #             fa.diagram(UI_2factors_var)
+          #             
+          #             # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
+          #             # >> The Tucker-Lewis Index (TLI) is 1.041. This is an acceptable value considering it’s over 0.9.
+          #             
+          #             #the two emerging factors:
+          #             # >> Factor 1 holding item 1 => parent only usage
+          #             # >> Factor 2 holding items 2 and 3 => child (co)usage
+          #             
+          #             #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified; also this scale does not represent an existing multiple-item scale
+          #             #and instead represents a separate DV each --> yet: it supports the correlation results for the UI levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
+          #             
+          # 
           #-------------------------------------------#
           ####---- 2) Extracting factors scores----####
           #-------------------------------------------#
@@ -1576,13 +1576,13 @@ print(sessionInfo())
                 onefac4items_TAM_PUfitPredict <- as.data.frame(predict(onefac4items_TAM_PU))
                 onefac4items_TAM_EfitPredict <- as.data.frame(predict(onefac4items_TAM_E))
                 onefac3items_TAM_SIfitPredict <- as.data.frame(predict(onefac3items_TAM_SI))
-                onefac3items_TAM_UIfitPredict <- as.data.frame(predict(onefac3items_TAM_UI)) #R warns about some negative variances, this corresponds to the CFA results above
+                #onefac3items_TAM_UIfitPredict <- as.data.frame(predict(onefac3items_TAM_UI)) #R warns about some negative variances, this corresponds to the CFA results above
 
                 
                 #adding to rosie-dataset
                 rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_ILfitPredict, twofac5items_Child_ParasocialfitPredict,
                                        threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
-                                       onefac3items_TAM_SIfitPredict, onefac3items_TAM_UIfitPredict)
+                                       onefac3items_TAM_SIfitPredict) # ,onefac3items_TAM_UIfitPredict)
                 View(rosie_fscores)
                 
         
@@ -1595,11 +1595,11 @@ print(sessionInfo())
           
           #Dispositional: 
           
-          #Q26 TT >> 3 items
+          #TT >> 3 items
           TT <- rosie[, c(106:108)]
           psych::alpha(TT) ### --> 0.77
           
-          #Q25 IL >> 5 items
+          #IL >> 5 items
           IL <- rosie[, c(101:105)]
           psych::alpha(IL) ### --> 0.86
           
@@ -1610,7 +1610,7 @@ print(sessionInfo())
                 # Navigation <- rosie[, c(102, 104:105)]
                 # psych::alpha(Navigation) ### --> 0.8
           
-          #Q32 Child_Parasocial >> 5 items
+          #Child_Parasocial >> 5 items
           Child_Parasocial <- rosie[, c(73:77)]
           psych::alpha(Child_Parasocial) ### --> 0.83
           
@@ -1620,12 +1620,12 @@ print(sessionInfo())
                 # 
                 # Parasocial_relationship <- rosie[, c(74:75)]
                 # psych::alpha(Parasocial_relationship) ### --> 0.57
-                # 
+                
           #Developmental: NONE
           
           #Social: 
           
-          #Q31 PMMS >> 6 items 
+          #PMMS >> 6 items 
           PMMS <- rosie[, c(62:67)]
           psych::alpha(PMMS) ### --> 0.76
           
@@ -1642,23 +1642,23 @@ print(sessionInfo())
           
           #TAM: 
           
-          #Q17 TAM_PEoU >> 4
+          #TAM_PEoU >> 4
           TAM_PEoU <- rosie[, c(82:85)]
           psych::alpha(TAM_PEoU) ### --> 0.87
           
-          #Q18 TAM_PU >> 4
+          #TAM_PU >> 4
           TAM_PU <- rosie[, c(86:89)]
           psych::alpha(TAM_PU) ### --> 0.92
           
-          #Q19 TAM_E >> 4
+          #TAM_E >> 4
           TAM_E <- rosie[, c(90:93)]
           psych::alpha(TAM_E) ### --> 0.9
           
-          #Q21 TAM_SI >> 3
+          #TAM_SI >> 3
           TAM_SI <- rosie[, c(95:97)]
           psych::alpha(TAM_SI) ### --> 0.87
           
-          # #Q22 TAM_UI >> 3 
+          # TAM_UI >> 3 
           # TAM_UI <- rosie[, c(98:100)]
           # psych::alpha(TAM_UI) ### --> 0.43
           
@@ -1725,8 +1725,8 @@ print(sessionInfo())
    hist(rosie_fscores$TAM_UI_3)
    densityplot(rosie_fscores$TAM_UI_3)
    
-   describe(rosie_fscores$TAM_UI_f)
-   hist(rosie_fscores$TAM_UI_f)
+   # describe(rosie_fscores$TAM_UI_f)
+   # hist(rosie_fscores$TAM_UI_f)
    
    #taking a visual look
    
@@ -1773,17 +1773,16 @@ print(sessionInfo())
    hist(rosie$SHL)
   
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(139:143, 98:100)]),2)
-   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SI_f TAM_UI_f TAM_UI_1 TAM_UI_2 TAM_UI_3
-   # TAM_PEoU_f       1.00     0.44    0.63     0.15      0.09      0.06      0.36      0.29
-   # TAM_PU_f         0.44     1.00    0.58     0.40      0.11      0.13      0.45      0.36
-   # TAM_E_f          0.63     0.58    1.00     0.25      0.02      0.11      0.53      0.33
-   # TAM_SI_f         0.15     0.40    0.25     1.00      0.07      0.22      0.20      0.20
-   # TAM_UI_f        0.09     0.11    0.02     0.07      1.00      0.00      0.00      0.81
-   # TAM_UI_1        0.06     0.13    0.11     0.22      0.00      1.00     -0.02      0.07
-   # TAM_UI_2        0.36     0.45    0.53     0.20      0.00     -0.02      1.00      0.58
-   # TAM_UI_3        0.29     0.36    0.33     0.20      0.81      0.07      0.58      1.00
-   
+   round(cor(rosie_fscores[,c(140:143,94, 98:100)]),2)
+   #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SI_f TAM_SS TAM_UI_1 TAM_UI_2 TAM_UI_3
+   # TAM_PEoU_f       1.00     0.44    0.63     0.15  -0.02     0.06     0.36     0.29
+   # TAM_PU_f         0.44     1.00    0.58     0.40   0.21     0.13     0.45     0.36
+   # TAM_E_f          0.63     0.58    1.00     0.25   0.05     0.11     0.53     0.33
+   # TAM_SI_f         0.15     0.40    0.25     1.00   0.26     0.22     0.20     0.20
+   # TAM_SS          -0.02     0.21    0.05     0.26   1.00     0.24     0.12     0.09
+   # TAM_UI_1         0.06     0.13    0.11     0.22   0.24     1.00    -0.02     0.07
+   # TAM_UI_2         0.36     0.45    0.53     0.20   0.12    -0.02     1.00     0.58
+   # TAM_UI_3         0.29     0.36    0.33     0.20   0.09     0.07     0.58     1.00
    
          #pairwise correlations all in one scatterplot matrix
          library(car)
@@ -2011,9 +2010,7 @@ print(sessionInfo())
    
    rosie_fscores$PERSONEN_f <- as.factor(rosie_fscores$PERSONEN)
    
-   
-   View(rosie_fscores) 
-   
+
    
    # - smart-household-level
    rosie_fscores$SHL_f[rosie_fscores$SHL<=median(rosie_fscores$SHL)] = 1
@@ -2075,28 +2072,11 @@ print(sessionInfo())
    
    LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) 
  
-   LCAmodel7 <- poLCA(LCAmodel, data=rosie_fscores, nclass=7, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) #error
-   
    summary(LCAmodel3)
    
    #-------------------------------------------#
    ### evaluating LCA ##########################
    #-------------------------------------------#
-   
-   # https://statistics.ohlsen-web.de/latent-class-analysis-polca/ 
-   # Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
-   # we take an exploratory approach and compare multiple models (2-6 classes) against each other. 
-   # If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
-   # Additionally one could compare the different solutions by BIC or AIC information criteria. 
-   # BIC is preferred over AIC in latent class models. 
-   # A smaller BIC is better than a bigger BIC. 
-
-        # >> 2-class model has lowest BIC
-   
-   # https://www.tandfonline.com/doi/full/10.1080/10705510701575396
-   
-        # >> 3-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
-   
    
    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
    
@@ -2128,13 +2108,12 @@ print(sessionInfo())
       
        
        tab.modfit
-       #   log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+       # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
        # 2       -2568.87       124 5445.10 5258.24 5504.10          3231.07      2
-       # 3       -2527.96        94 5519.56 5237.68 5608.56          3149.24      3
-       # 4       -2487.72        64 5595.37 5218.48 5714.37          3068.77      4
-       # 5       -2477.67        29 5757.60 5269.86 5911.60          3048.67      5
-       # 6       -2452.26        -2 5868.28 5282.36 6053.28          2997.86      6
-
+       # 3       -2528.79        94 5521.23 5239.35 5610.23          3150.92      3
+       # 4       -2487.66        64 5595.25 5218.35 5714.25          3068.64      4
+       # 5       -2454.14        34 5684.49 5212.58 5833.49          3001.61      5
+       # 6       -2437.22         4 5806.93 5240.00 5985.93          2967.76      6
    
    #visualize model fit 
          # convert table into long format
@@ -2164,48 +2143,83 @@ print(sessionInfo())
          fit.plot
          
          
-         #make a graph of probabilities
-         library(ggplot2)
+         # https://statistics.ohlsen-web.de/latent-class-analysis-polca/ 
+         # Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
+         # we take an exploratory approach and compare multiple models (2-6 classes) against each other. 
+         # If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+         # Additionally one could compare the different solutions by BIC or AIC information criteria. 
+         # BIC is preferred over AIC in latent class models. 
+         # A smaller BIC is better than a bigger BIC. 
          
+         # >> 2-class model has lowest BIC
+         
+         # https://www.tandfonline.com/doi/full/10.1080/10705510701575396
+         
+         # >> 5-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
+         
+         
+         #make a graph of probabilities
+         install.packages("ggplot2")
+         library(ggplot2)
                #2-class model
-               lc2 <- reshape2::melt(LCAmodel2$probs, level=2)
-               zp2 <- ggplot(lc2,aes(x = L2, y = value, fill = Var2))
-               zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
-               zp2 <- zp2 + facet_grid(Var1 ~ .)
-               # zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
-               zp2 <- zp2 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
-               zp2 <- zp2 + theme(panel.grid.major.y=element_blank(),
-                                  axis.text.x=element_text(angle=90, vjust=0.5, hjust=2))
-               zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
-               #zp2 <- zp2 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
-               print(zp2)
+               lcmodel2 <- reshape2::melt(LCAmodel2$probs, level=2)
+               zp1 <- ggplot(lcmodel2,aes(x = L2, y = value, fill = Var2))
+               zp1 <- zp1 + geom_bar(stat = "identity", position = "stack")
+               zp1 <- zp1 + facet_grid(Var1 ~ .) 
+               zp1 <- zp1 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+               zp1 <- zp1 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+               zp1 <- zp1 + theme( axis.text.y=element_blank(),
+                                   axis.text.x=element_text(angle=90, vjust=0.5, hjust=0.2),
+                                   axis.ticks.y=element_blank(),                    
+                                   panel.grid.major.y=element_blank())
+               zp1 <- zp1 + guides(fill = guide_legend(reverse=TRUE))
+               print(zp1)
+         
                
                #3-class model
-               lc3 <- reshape2::melt(LCAmodel3$probs, level=2)
-               zp3 <- ggplot(lc3,aes(x = L2, y = value, fill = Var2))
-               zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
-               zp3 <- zp3 + facet_grid(Var1 ~ .)
-               # zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
-               zp3 <- zp3 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
-               zp3 <- zp3 + theme(panel.grid.major.y=element_blank(),
-                                  axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
-               zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
-               #zp3 <- zp3 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
-               print(zp3)
+               lcmodel3 <- reshape2::melt(LCAmodel3$probs, level=2)
+               zp2 <- ggplot(lcmodel3,aes(x = L2, y = value, fill = Var2))
+               zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
+               zp2 <- zp2 + facet_grid(Var1 ~ .) 
+               zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+               zp2 <- zp2 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+               zp2 <- zp2 + theme( axis.text.y=element_blank(),
+                                   axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                   axis.ticks.y=element_blank(),                    
+                                   panel.grid.major.y=element_blank())
+               zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
+               print(zp2)
                
                #4-class model
-               lc4 <- reshape2::melt(LCAmodel4$probs, level=2)
-               zp4 <- ggplot(lc4,aes(x = L2, y = value, fill = Var2))
+               lcmodel4 <- reshape2::melt(LCAmodel4$probs, level=2)
+               zp3 <- ggplot(lcmodel4,aes(x = L2, y = value, fill = Var2))
+               zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
+               zp3 <- zp3 + facet_grid(Var1 ~ .) 
+               zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+               zp3 <- zp3 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+               zp3 <- zp3 + theme( axis.text.y=element_blank(),
+                                   axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                   axis.ticks.y=element_blank(),                    
+                                   panel.grid.major.y=element_blank())
+               zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
+               print(zp3)
+               
+               
+               #5-class model
+               lcmodel5 <- reshape2::melt(LCAmodel5$probs, level=2)
+               zp4 <- ggplot(lcmodel5,aes(x = L2, y = value, fill = Var2))
                zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
-               zp4 <- zp4 + facet_grid(Var1 ~ .)
-               # zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
-               zp4 <- zp4 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
-               zp4 <- zp4 + theme(panel.grid.major.y=element_blank(),
-                                  axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
+               zp4 <- zp4 + facet_grid(Var1 ~ .) 
+               zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+               zp4 <- zp4 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+               zp4 <- zp4 + theme( axis.text.y=element_blank(),
+                                   axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                   axis.ticks.y=element_blank(),                    
+                                   panel.grid.major.y=element_blank())
                zp4 <- zp4 + guides(fill = guide_legend(reverse=TRUE))
-               #zp4 <- zp4 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
                print(zp4)
          
+               
      #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
        twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
