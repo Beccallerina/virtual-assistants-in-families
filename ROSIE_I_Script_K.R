@@ -247,7 +247,7 @@ print(sessionInfo())
 #------------------------------------------#
   
   #make sure the following variables are coded as explicit factors:
-    #Q29 Child_Gender
+    #Child_Gender
     #SOCIALEKLASSE2016 (for SES) 
     #STATUS (complete or screened-out)
     #GSL (parent gender)
@@ -257,7 +257,6 @@ print(sessionInfo())
    rosie_dataset_renamed_families_complete[, 112] <- sapply(rosie_dataset_renamed_families_complete[, 112], as.factor) 
    
   #recoding values of variables
-  
     #Frequency of personal use - FoPersU (Q5 GA_Freq) --> relevant for smart speakers are items: GA_Freq_8-11
     #Here, we computed the mean for each participant on their answers to the frequency of smart speaker usage to get an indicator for their previous experience 
     #(the higher this value the higher the FoPersU; scale from 1-6)
@@ -1701,7 +1700,7 @@ print(sessionInfo())
    # 6   3.83
    # Sum 100.00
                 
-   #specific descriptives on the different DV-levels
+   #specific descriptives regarding the different DV-levels
    hist(rosie$UI_togetherwithchild)
    mean(rosie$UI_togetherwithchild) # 3.34153
    describe(rosie$UI_togetherwithchild)
@@ -1800,7 +1799,23 @@ print(sessionInfo())
                     top = 20 # display top 20 couples of variables (by correlation coefficient)
          )
   
-   
+         
+   #checking household numbers
+   crosstab(rosie_fscores, row.vars = "PERSONEN", type = "f")
+   # PERSONEN Count
+   # 1     7 >> This is concerning!
+   # 2    14
+   # 3    31
+   # 4    98
+   # 5    26
+   # 6     7
+   # Sum   183
+        
+         #assign all 1s in the variable PERSONEN to the 2s because there cannot be a 1-person household for a parent+young child (mistake by survey company/participants)
+         rosie_fscores$PERSONEN[rosie_fscores$PERSONEN == 1] <- 2
+         #check if this worked
+         crosstab(rosie_fscores, row.vars = "PERSONEN", type = "f")
+      
 ###----------------------------------------------------------------------------------------------------------------###   
    
    #--------------------------------------------------#
@@ -2058,10 +2073,12 @@ print(sessionInfo())
    
    LCAmodel5 <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
    
-   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) #ALERT: number of parameters estimated ( 185 ) exceeds number of observations ( 183 ), ALERT: negative degrees of freedom; respecify model
+   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) 
  
+   LCAmodel7 <- poLCA(LCAmodel, data=rosie_fscores, nclass=7, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) #error
    
-  summary(LCAmodel3)
+   summary(LCAmodel3)
+   
    #-------------------------------------------#
    ### evaluating LCA ##########################
    #-------------------------------------------#
@@ -2083,39 +2100,41 @@ print(sessionInfo())
    
    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
    
-   # getting other fit indices in a table
-   tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
-   names(tab.modfit)<-c("log-likelihood",
-                          "resid. df","BIC",
-                          "aBIC","cAIC","likelihood-ratio")
-   
-   tab.modfit
-   
-   for(i in 2:6){
-   tab.modfit<-rbind(tab.modfit,
-                       c(get(paste("LCAmodel",i,sep=""))$llik,
-                         get(paste("LCAmodel",i,sep=""))$resid.df,
-                         get(paste("LCAmodel",i,sep=""))$bic,
-                         (-2*get(paste("LCAmodel",i,sep=""))$llik) +
-                           ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *  
-                              get(paste("LCAmodel",i,sep=""))$npar),
-                         (-2*get(paste("LCAmodel",i,sep=""))$llik) +
-                           get(paste("LCAmodel",i,sep=""))$npar *
-                           (1 + log(get(paste("LCAmodel",i,sep=""))$N)),
-                         get(paste("LCAmodel",i,sep=""))$Gsq
-                       ))
-   }
-   tab.modfit<-round(tab.modfit[-1,],2)
-   tab.modfit$Nclass<-2:6
-  
-   
-   tab.modfit
-   #  log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
-   #        -2582.21       122 5482.19 5289.00 5543.19          3257.74      2
-   #        -2543.46        91 5566.19 5274.81 5658.19          3180.25      3
-   #        -2500.62        60 5642.00 5252.43 5765.00          3094.56      4
-   #        -2468.61        29 5739.47 5251.73 5893.47          3030.54      5
-   #        -2436.68        -2 5837.11 5251.18 6022.11          2966.68      6
+   # getting fit indices in a table
+       tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
+       names(tab.modfit)<-c("log-likelihood",
+                              "resid. df","BIC",
+                              "aBIC","cAIC","likelihood-ratio")
+       
+       tab.modfit
+       
+       set.seed(123)
+       for(i in 2:6){
+       tab.modfit<-rbind(tab.modfit,
+                           c(get(paste("LCAmodel",i,sep=""))$llik,
+                             get(paste("LCAmodel",i,sep=""))$resid.df,
+                             get(paste("LCAmodel",i,sep=""))$bic,
+                             (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                               ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *  
+                                  get(paste("LCAmodel",i,sep=""))$npar),
+                             (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                               get(paste("LCAmodel",i,sep=""))$npar *
+                               (1 + log(get(paste("LCAmodel",i,sep=""))$N)),
+                             get(paste("LCAmodel",i,sep=""))$Gsq
+                           ))
+       }
+       tab.modfit<-round(tab.modfit[-1,],2)
+       tab.modfit$Nclass<-2:6
+      
+       
+       tab.modfit
+       #   log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+       # 2       -2568.87       124 5445.10 5258.24 5504.10          3231.07      2
+       # 3       -2527.96        94 5519.56 5237.68 5608.56          3149.24      3
+       # 4       -2487.72        64 5595.37 5218.48 5714.37          3068.77      4
+       # 5       -2477.67        29 5757.60 5269.86 5911.60          3048.67      5
+       # 6       -2452.26        -2 5868.28 5282.36 6053.28          2997.86      6
+
    
    #visualize model fit 
          # convert table into long format
@@ -2128,63 +2147,64 @@ print(sessionInfo())
          # pass long-format table on to ggplot
          library(ggplot2)
          fit.plot<-ggplot(results2) +
-           geom_point(aes(x=Nclass,y=value),size=2) +
+           geom_point(aes(x=Nclass,y=value),size=1) +
            geom_line(aes(Nclass, value, group = 1)) +
            theme_bw()+
            labs(x = "Number of classes", y="Index values", title = "") +
            facet_grid(label ~. ,scales = "free") +
-           theme_bw(base_size = 10, base_family = "") +
+           theme_bw(base_size = 8, base_family = "") +
            theme(panel.grid.major.x = element_blank() ,
                  panel.grid.major.y = element_line(colour="grey",
                                                    size=0.3),
-                 legend.title = element_text(size = 10, face = 'bold'),
-                 axis.text = element_text(size = 12),
-                 axis.title = element_text(size = 12),
-                 legend.text= element_text(size=10),
+                 legend.title = element_text(size = 8, face = 'bold'),
+                 axis.text = element_text(size = 8),
+                 axis.title = element_text(size = 8),
+                 legend.text= element_text(size=8),
                  axis.line = element_line(colour = "black"))
          fit.plot
          
          
-   # make a graph of probabilities
+         #make a graph of probabilities
+         library(ggplot2)
          
-         #2-class model
-         lc2 <- reshape2::melt(LCAmodel2$probs, level=2)
-         zp2 <- ggplot(lc2,aes(x = L2, y = value, fill = Var2))
-         zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
-         zp2 <- zp2 + facet_grid(Var1 ~ .)
-         # zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
-         zp2 <- zp2 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
-         zp2 <- zp2 + theme(panel.grid.major.y=element_blank(),
-                            axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
-         zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
-         #zp2 <- zp2 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
-         print(zp2)
-         
-         #3-class model
-         lc3 <- reshape2::melt(LCAmodel3$probs, level=2)
-         zp3 <- ggplot(lc3,aes(x = L2, y = value, fill = Var2))
-         zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
-         zp3 <- zp3 + facet_grid(Var1 ~ .)
-         # zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
-         zp3 <- zp3 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
-         zp3 <- zp3 + theme(panel.grid.major.y=element_blank(),
-                            axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
-         zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
-         #zp3 <- zp3 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
-         print(zp3)
-         
-         #4-class model
-         lc4 <- reshape2::melt(LCAmodel4$probs, level=2)
-         zp4 <- ggplot(lc4,aes(x = L2, y = value, fill = Var2))
-         zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
-         zp4 <- zp4 + facet_grid(Var1 ~ .)
-         # zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
-         zp4 <- zp4 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
-         zp4 <- zp4 + theme(panel.grid.major.y=element_blank(),
-                            axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
-         zp4 <- zp4 + guides(fill = guide_legend(reverse=TRUE))
-         #zp4 <- zp4 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
-         print(zp4)
+               #2-class model
+               lc2 <- reshape2::melt(LCAmodel2$probs, level=2)
+               zp2 <- ggplot(lc2,aes(x = L2, y = value, fill = Var2))
+               zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
+               zp2 <- zp2 + facet_grid(Var1 ~ .)
+               # zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
+               zp2 <- zp2 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
+               zp2 <- zp2 + theme(panel.grid.major.y=element_blank(),
+                                  axis.text.x=element_text(angle=90, vjust=0.5, hjust=2))
+               zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
+               #zp2 <- zp2 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
+               print(zp2)
+               
+               #3-class model
+               lc3 <- reshape2::melt(LCAmodel3$probs, level=2)
+               zp3 <- ggplot(lc3,aes(x = L2, y = value, fill = Var2))
+               zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
+               zp3 <- zp3 + facet_grid(Var1 ~ .)
+               # zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
+               zp3 <- zp3 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
+               zp3 <- zp3 + theme(panel.grid.major.y=element_blank(),
+                                  axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
+               zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
+               #zp3 <- zp3 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
+               print(zp3)
+               
+               #4-class model
+               lc4 <- reshape2::melt(LCAmodel4$probs, level=2)
+               zp4 <- ggplot(lc4,aes(x = L2, y = value, fill = Var2))
+               zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
+               zp4 <- zp4 + facet_grid(Var1 ~ .)
+               # zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys", labels = c("0 (not present)", "1 (present)")) +theme_bw()
+               zp4 <- zp4 + labs(x = "Family typology indicators",y="Class-conditinoal item probability", fill ="")
+               zp4 <- zp4 + theme(panel.grid.major.y=element_blank(),
+                                  axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))
+               zp4 <- zp4 + guides(fill = guide_legend(reverse=TRUE))
+               #zp4 <- zp4 + scale_fill_manual(labels = c("1 (present)", "0 (not present)"))
+               print(zp4)
          
      #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
@@ -2194,6 +2214,8 @@ print(sessionInfo())
        rosie_fscores$fam_class2=twoclass$predclass
        
        View(rosie_fscores)
+       
+       rosie_fscores$fam_class2 <- factor(rosie_fscores$fam_class2, ordered = TRUE)
        
        #name the levels of the class factor using the response probabilities plot
        # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="1"] <- "XXX"
@@ -2222,6 +2244,8 @@ print(sessionInfo())
        
        View(rosie_fscores)
        
+       rosie_fscores$fam_class3 <- factor(rosie_fscores$fam_class3, ordered = TRUE)
+       
        #name the levels of the class factor using the response probabilities plot
        # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="1"] <- "XXX"
        # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="2"] <- "YYY"
@@ -2237,17 +2261,322 @@ print(sessionInfo())
        
        View(rosie_fscores)
        
+       rosie_fscores$fam_class4 <- factor(rosie_fscores$fam_class4, ordered = TRUE)
+       
+       
+    
+    #running logistic regression to see which indicators are likely to not discriminate between class
+       log_reg <- glm(fam_class4 ~ GSL+
+                      SOCIALEKLASSE2016+
+                      TT_LCAcategory_orig+
+                      IL_navigation_LCAcategory_orig+
+                      IL_information_LCAcategory_orig+
+                      FoPersU_f_LCA+
+                      Child_Gender+
+                      Temp_Extraversion_f+
+                      Temp_Negative_Affectivity_f+
+                      Temp_Effortful_Control_f+
+                      Child_Parasocial_anthropomorphism_LCAcategory_orig+
+                      Child_Parasocial_pararela_LCAcategory_orig+
+                      LFT_f+
+                      Child_Age_f+
+                      PMMS_restrMed_LCAcategory_orig+
+                      PMMS_negacMed_LCAcategory_orig+
+                      PMMS_posacMed_LCAcategory_orig+
+                      current_usage+
+                      Child_Nr_f+
+                      PERSONEN_f+
+                      SHL_f,
+                      data = rosie_fscores, family = "binomial")
+       summary(log_reg)
+       
   #-------------------------------------------------------#
   ### descriptives along classes ##########################
   #-------------------------------------------------------#
        
-       library(psych)
-       psych::describeBy(rosie_fscores, group = "fam_class3")
-       # 1 = LSM, 2 = ILS, 3 = LLY
+       #2-class model
+             #numbers
+             library(psych)
+             psych::describeBy(rosie_fscores, group = "fam_class2")
+             # 1 = IUS, 2 = LSB
+             
+             #visualization (for all indicators that seem to be distinct according to first glance at LCA output and graph of probabilities:
+             #literacy, parent age, household size, PMMS, SES, technology trust)
+             
+             library("ggplot2")
+
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, IL_information_avgsum, FUN=mean), y=IL_information_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, IL_navigation_avgsum, FUN=mean), y=IL_navigation_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, LFT, FUN=mean), y=LFT)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PERSONEN, FUN=mean), y=PERSONEN)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Household Size (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PMMS_restrMed_avgsum, FUN=mean), y=PMMS_restrMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Restrictive Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PMMS_negacMed_avgsum, FUN=mean), y=PMMS_negacMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Negative Active Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PMMS_posacMed_avgsum, FUN=mean), y=PMMS_posacMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, SOCIALEKLASSE2016, FUN=mean), y=SOCIALEKLASSE2016)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="SES (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, TT_avgsum, FUN=mean), y=TT_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
        
-       library(psych)
-       psych::describeBy(rosie_fscores, group = "fam_class4")
-       # 1 = SMYC, 2 = MSMS, 3 = LYLB, 4 = ILA
+       #3-class model
+             #numbers
+             library(psych)
+             psych::describeBy(rosie_fscores, group = "fam_class3")
+             # 1 = LSM, 2 = ILS, 3 = LLY
+             
+             #visualization (for all indicators that seem to be distinct according to first glance at LCA output and graph of probabilities:
+             #literacy, parent age, household size, PMMS, SES, technology trust, child temperament negative affectivity)
+             
+             library("ggplot2")
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, IL_information_avgsum, FUN=mean), y=IL_information_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, IL_navigation_avgsum, FUN=mean), y=IL_navigation_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, LFT, FUN=mean), y=LFT)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PERSONEN, FUN=mean), y=PERSONEN)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Household Size (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PMMS_restrMed_avgsum, FUN=mean), y=PMMS_restrMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Restrictive Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PMMS_negacMed_avgsum, FUN=mean), y=PMMS_negacMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Negative Active Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PMMS_posacMed_avgsum, FUN=mean), y=PMMS_posacMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, SOCIALEKLASSE2016, FUN=mean), y=SOCIALEKLASSE2016)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="SES (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, TT_avgsum, FUN=mean), y=TT_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class3, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+       
+             
+        #4-class model
+             #numbers
+             library(psych)
+             psych::describeBy(rosie_fscores, group = "fam_class4")
+             # 1 = SMYC, 2 = MSMS, 3 = LYLB, 4 = ILA
+             
+             #visualization (for all indicators that seem to be distinct according to first glance at LCA output and graph of probabilities:
+             #parent gender, literacy, parent age, household size, PMMS, SES, technology trust, child temperament negative affectivity)
+             
+             library("ggplot2")
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, GSL, FUN=mean), y=GSL)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Parent Gender (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, IL_information_avgsum, FUN=mean), y=IL_information_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, IL_navigation_avgsum, FUN=mean), y=IL_navigation_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, LFT, FUN=mean), y=LFT)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PERSONEN, FUN=mean), y=PERSONEN)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Household Size (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PMMS_restrMed_avgsum, FUN=mean), y=PMMS_restrMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Restrictive Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PMMS_negacMed_avgsum, FUN=mean), y=PMMS_negacMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Negative Active Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PMMS_posacMed_avgsum, FUN=mean), y=PMMS_posacMed_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, SOCIALEKLASSE2016, FUN=mean), y=SOCIALEKLASSE2016)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="SES (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, TT_avgsum, FUN=mean), y=TT_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class4, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+     
        
 ###----------------------------------------------------------------------------------------------------------------###      
       
@@ -2255,15 +2584,12 @@ print(sessionInfo())
 ### STRUCTURAL EQUATION MODELLING ##########################
 #----------------------------------------------------------#
       
-   #-----------------------------------------------#
-   ### SEM-power analysis ##########################
-   #-----------------------------------------------#
+   #----------------------------------------------------------#
+   ### SEM-power analysis/simulation ##########################
+   #----------------------------------------------------------#
    
    #https://yilinandrewang.shinyapps.io/pwrSEM/ 
      
-   ??simsem
-   #http://rstudio-pubs-static.s3.amazonaws.com/253855_164b16e3a9074cf9a6f3045cbe1f99ce.html 
-   
        
 ###----------------------------------------------------------------------------------------------------------------###
        
@@ -2389,75 +2715,76 @@ print(sessionInfo())
       #         # 29        UI  ~         SI  0.001  0.014  0.042  0.966   -0.029    0.025
       #   
       #         
-      #         
+       
+       
       # ### 2-class model with 3DVs ########################## 
-      #         rosiesTAM_3DVs <- '
-      #         
-      #         #measurement model
-      #           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
-      #           PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
-      #           E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
-      #           SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3 
-      #         #regressions  
-      #           PEoU ~ fam_class2  
-      #           PU ~ fam_class2 + PEoU  
-      #           E ~ fam_class2 
-      #           TAM_SS ~ fam_class2 
-      #           SI ~ fam_class2 
-      #           TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI 
-      #           TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
-      #           TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
-      #         #residual variances 
-      #           TAM_PEoU_1 ~~ TAM_PEoU_1
-      #           TAM_PEoU_2 ~~ TAM_PEoU_2
-      #           TAM_PEoU_3 ~~ TAM_PEoU_3
-      #           TAM_PEoU_4 ~~ TAM_PEoU_4
-      #           TAM_PU_1 ~~ TAM_PU_1
-      #           TAM_PU_2 ~~ TAM_PU_2
-      #           TAM_PU_3 ~~ TAM_PU_3
-      #           TAM_PU_4 ~~ TAM_PU_4
-      #           TAM_E_1 ~~ TAM_E_1
-      #           TAM_E_2 ~~ TAM_E_2
-      #           TAM_E_3 ~~ TAM_E_3
-      #           TAM_E_4 ~~ TAM_E_4
-      #           TAM_SI_1 ~~ TAM_SI_1
-      #           TAM_SI_2 ~~ TAM_SI_2
-      #           TAM_SI_3 ~~ TAM_SI_3
-      #           TAM_UI_1 ~~ TAM_UI_1
-      #           TAM_UI_2 ~~ TAM_UI_2
-      #           TAM_UI_3 ~~ TAM_UI_3
-      #           TAM_SS ~~ TAM_SS
-      #           PEoU ~~ PEoU
-      #           PU ~~ PU
-      #           E ~~ E
-      #           SI ~~ SI
-      #           TAM_UI_1 ~~ TAM_UI_2
-      #           TAM_UI_1 ~~ TAM_UI_3
-      #           TAM_UI_2 ~~ TAM_UI_3
-      #           fam_class2 ~~ fam_class2
-      #         
-      #         '
-      #         
-      #         #fit the model
-      #         rosiesTAM_3DVs_fit <- lavaan(rosiesTAM_3DVs, data = rosie_fscores)
-      #         
-      #         #print summary  
-      #         summary(rosiesTAM_3DVs_fit, standardized = T, fit.measures = T)
-      #         
-      #         #bootstrap model
-      #         rosiesTAM_3DVs_fit_boostrapped_se <- sem(rosiesTAM_3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
-      #         summary(rosiesTAM_3DVs_fit_boostrapped_se, fit.measures = TRUE) 
-      #         parameterEstimates(rosiesTAM_3DVs_fit_boostrapped_se, 
-      #                            se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
-      #                            standardized = FALSE, 
-      #                            fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
-      #                            cov.std = TRUE, fmi.options = list(), 
-      #                            rsquare = FALSE, 
-      #                            remove.system.eq = TRUE, remove.eq = TRUE, 
-      #                            remove.ineq = TRUE, remove.def = FALSE, 
-      #                            remove.nonfree = FALSE, 
-      #                            add.attributes = FALSE, 
-      #                            output = "data.frame", header = FALSE)
+      rosiesTAM_3DVs <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class2
+        PU ~ fam_class2 + PEoU
+        E ~ fam_class2
+        TAM_SS ~ fam_class2
+        SI ~ fam_class2
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        TAM_UI_1 ~~ TAM_UI_2
+        TAM_UI_1 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        fam_class2 ~~ fam_class2
+
+      '
+
+      #fit the model
+      rosiesTAM_3DVs_fit <- lavaan(rosiesTAM_3DVs, data = rosie_fscores, estimator = "WLSMV")
+
+      #print summary
+      summary(rosiesTAM_3DVs_fit, standardized = T, fit.measures = T)
+
+              #bootstrap model
+              rosiesTAM_3DVs_fit_boostrapped_se <- sem(rosiesTAM_3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000, estimator = "WLS")
+              summary(rosiesTAM_3DVs_fit_boostrapped_se, fit.measures = TRUE)
+              parameterEstimates(rosiesTAM_3DVs_fit_boostrapped_se,
+                                 se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                                 standardized = FALSE,
+                                 fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                                 cov.std = TRUE, fmi.options = list(),
+                                 rsquare = FALSE,
+                                 remove.system.eq = TRUE, remove.eq = TRUE,
+                                 remove.ineq = TRUE, remove.def = FALSE,
+                                 remove.nonfree = FALSE,
+                                 add.attributes = FALSE,
+                                 output = "data.frame", header = FALSE)
       #         
       #         #           lhs op        rhs    est    se      z pvalue ci.lower ci.upper
       #         # 16       PEoU  ~ fam_class2  0.136 0.180  0.752  0.452   -0.223    0.484
@@ -2596,7 +2923,7 @@ print(sessionInfo())
         summary(rosiesTAM_3classes3DVs_fit, standardized = T, fit.measures = T)
         
         #bootstrap model
-        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000, estimator = "WLS") 
         summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
         parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
                            se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
@@ -2613,7 +2940,6 @@ print(sessionInfo())
   
         
         #post-hoc test needed for significant regression path of SI ~ family type
-        install.packages("ggpubr")
         library("ggpubr")
         ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_1", 
                   color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
@@ -2718,7 +3044,7 @@ print(sessionInfo())
         summary(rosiesTAM_4classes3DVs_fit, standardized = T, fit.measures = T)
         
         #bootstrap model
-        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
+        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores, se = "bootstrap", bootstrap = 1000, estimator = "WLS") 
         summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
         parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
                            se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
@@ -2742,7 +3068,7 @@ print(sessionInfo())
 ### SemPaths Model Visualization ###
        
     library(semPlot)
-    semPaths(rosiesTAM_3classes3DVs_fit, what = "col", "std", layout = "tree", rotation = 2, 
+    semPaths(rosiesTAM_4classes3DVs_fit, what = "col", "std", layout = "tree", rotation = 2, 
              intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
              edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
     title("TAM + U&G Structural Regression Model")
@@ -2750,14 +3076,102 @@ print(sessionInfo())
 #########  :) Script run until here #################
     
 ###----------------------------------------------------------------------------------------------------------------###
+    
+#------------------------------------------------#
+### Exploratory Analyses ##########################
+#------------------------------------------------#  
+    
+    
+  ### see how the family types directly relate to our DVs ##########################
+    # Compute the analysis of variance
+    anova <- aov(TAM_UI_1 ~ fam_class3, data = rosie_fscores) #not significant
+    # Summary of the analysis
+    summary(anova) #not significant
+    # Alternative non-parametric test
+    kruskal.test(TAM_UI_1 ~ fam_class3, data = rosie_fscores) #not significant
 
+    # Compute the analysis of variance
+    anova <- aov(TAM_UI_2 ~ fam_class3, data = rosie_fscores) 
+    # Summary of the analysis
+    summary(anova) #close but not significant
+    # Alternative non-parametric test
+    kruskal.test(TAM_UI_2 ~ fam_class3, data = rosie_fscores) #close but not significant
+    
+    # Compute the analysis of variance
+    anova <- aov(TAM_UI_3 ~ fam_class3, data = rosie_fscores) 
+    # Summary of the analysis
+    summary(anova) #not significant
+    # Alternative non-parametric test
+    kruskal.test(TAM_UI_3 ~ fam_class3, data = rosie_fscores) #not significant
+    
+    ### >> no significant relationships between the family type and our DVs
     
     
+  
+
+  ### only TAM separately from family typology ##########################
+    rosiesTAM_only <- '
+
+        #measurement model
+          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+          SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+        #regressions
+          TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+          TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+          TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+         #residual variances 
+          TAM_PEoU_1 ~~ TAM_PEoU_1
+          TAM_PEoU_2 ~~ TAM_PEoU_2
+          TAM_PEoU_3 ~~ TAM_PEoU_3
+          TAM_PEoU_4 ~~ TAM_PEoU_4
+          TAM_PU_1 ~~ TAM_PU_1
+          TAM_PU_2 ~~ TAM_PU_2
+          TAM_PU_3 ~~ TAM_PU_3
+          TAM_PU_4 ~~ TAM_PU_4
+          TAM_E_1 ~~ TAM_E_1
+          TAM_E_2 ~~ TAM_E_2
+          TAM_E_3 ~~ TAM_E_3
+          TAM_E_4 ~~ TAM_E_4
+          TAM_SI_1 ~~ TAM_SI_1
+          TAM_SI_2 ~~ TAM_SI_2
+          TAM_SI_3 ~~ TAM_SI_3
+          TAM_UI_1 ~~ TAM_UI_1
+          TAM_UI_2 ~~ TAM_UI_2
+          TAM_UI_3 ~~ TAM_UI_3
+          TAM_SS ~~ TAM_SS
+          PEoU ~~ PEoU
+          PU ~~ PU
+          E ~~ E
+          SI ~~ SI
+          TAM_UI_1 ~~ TAM_UI_2
+          TAM_UI_1 ~~ TAM_UI_3
+          TAM_UI_2 ~~ TAM_UI_3
+
+        '
     
+    #fit the model
+    rosiesTAM_only_fit <- lavaan(rosiesTAM_only, data = rosie_fscores)
     
+    #print summary
+    summary(rosiesTAM_only_fit, standardized = T, fit.measures = T)
     
-    
-    
+    #bootstrap model
+    rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores, se = "bootstrap", bootstrap = 1000, estimator = "WLS") 
+    summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
+    parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
+                       se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
+                       standardized = FALSE, 
+                       fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
+                       cov.std = TRUE, fmi.options = list(), 
+                       rsquare = FALSE, 
+                       remove.system.eq = TRUE, remove.eq = TRUE, 
+                       remove.ineq = TRUE, remove.def = FALSE, 
+                       remove.nonfree = FALSE, 
+                       add.attributes = FALSE, 
+                       output = "data.frame", header = FALSE)
+###----------------------------------------------------------------------------------------------------------------###  
     
 #----------------------------------------------------------#
 ### OTHER POTENTIALLY USEFUL CODE ##########################
