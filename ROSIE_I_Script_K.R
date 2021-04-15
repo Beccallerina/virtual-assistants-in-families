@@ -251,10 +251,11 @@ print(sessionInfo())
     #SOCIALEKLASSE2016 (for SES) 
     #STATUS (complete or screened-out)
     #GSL (parent gender)
-   rosie_dataset_renamed_families_complete[, 58] <- sapply(rosie_dataset_renamed_families_complete[, 58], as.factor)
-   rosie_dataset_renamed_families_complete[, 111] <- sapply(rosie_dataset_renamed_families_complete[, 111], as.factor)
-   rosie_dataset_renamed_families_complete[, 109] <- sapply(rosie_dataset_renamed_families_complete[, 109], as.factor) 
-   rosie_dataset_renamed_families_complete[, 112] <- sapply(rosie_dataset_renamed_families_complete[, 112], as.factor) 
+   rosie_dataset_renamed_families_complete$Child_Gender <- as.factor(rosie_dataset_renamed_families_complete$Child_Gender)
+   rosie_dataset_renamed_families_complete$SOCIALEKLASSE2016 <- as.factor(rosie_dataset_renamed_families_complete$SOCIALEKLASSE2016)
+   rosie_dataset_renamed_families_complete$STATUS <- as.factor(rosie_dataset_renamed_families_complete$STATUS)
+   rosie_dataset_renamed_families_complete$GSL <- as.factor(rosie_dataset_renamed_families_complete$GSL)
+
    
   #recoding values of variables
     #Frequency of personal use - FoPersU (Q5 GA_Freq) --> relevant for smart speakers are items: GA_Freq_8-11
@@ -318,12 +319,12 @@ print(sessionInfo())
           
         # View(rosie_dataset_renamed_families_complete)
         
-        summary(rosie_dataset_renamed_families_complete[,c(116:118)]) #there seems to be one NA in UI_childindividually, this is row 74 (in R) = pp 888
+        summary(rosie_dataset_renamed_families_complete[,c(117:119)]) #there seems to be one NA in UI_childindividually, this is row 74 (in R) = pp 888, this was due to a fault in the survey programming
         
           #inspecting this 1 NA further  
           #create new subset df 
-          rosie_UI <- rosie_dataset_renamed_families_complete[,c(116:118, 98:100)]
-          # View(rosie_UI)
+          rosie_UI <- rosie_dataset_renamed_families_complete[,c(117:119, 98:100)]
+          #View(rosie_UI)
           
           #and now remove missing values
           rosie_UI_noNA <- na.omit(rosie_UI)
@@ -380,19 +381,14 @@ print(sessionInfo())
   # >> no missingness
   
   #plotting the missing values for variables relevant for SEM later to identify their pattern
-  rosie_SEMrelevant <- rosie[,-c(2:81, 101:115)]
-  # View(rosie_SEMrelevant)
+  rosie_SEMrelevant <- rosie[,-c(2:81, 101:119)]
+  #View(rosie_SEMrelevant)
   library(VIM)
   aggr(rosie_SEMrelevant)
   missingness_SEM <- aggr(rosie_SEMrelevant)
   missingness_SEM
   summary(missingness_SEM)
-  #only 1 missing value in UI_childindividually but this does not impact the SEM in any way
-  
-        #inspecting this row
-        rosie[74,] 
-        # >> for some reason this participant has NAs for SS_childusage ***Most likely due to a survey system error***
-  
+  #>> no missingness
 
 #----------------------------------------------------------------------------------------------------------------#
   
@@ -432,6 +428,19 @@ print(sessionInfo())
 ### 1) CFA (Measurement model)##########################
 #---------------------------------------------------#
   
+
+#Prep: Check for normality and outliers
+### Criterion for judgement on skewness:
+### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
+### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
+### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
+
+### Criterion for judgment on kurtosis:
+### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
+### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
+### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
+
+
   #https://stats.idre.ucla.edu/r/seminars/rcfa/ 
   #https://stats.idre.ucla.edu/wp-content/uploads/2020/02/cfa.r
   
@@ -468,17 +477,6 @@ print(sessionInfo())
   
           ### TT >> 3 items ##########################
           
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-  
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
@@ -545,17 +543,6 @@ print(sessionInfo())
     
           
           ### IL >> 5 items #########################      
-          
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
           
           #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
@@ -683,8 +670,7 @@ print(sessionInfo())
           # View(IL_EFA_df)
           
           #parallel analysis to get number of factors
-          parallel2 <- fa.parallel(IL_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, but since the previous model fit and modindices give reason to believe that a one-factor structure is not optimal, 
-          #we compare it to a two-factor model
+          parallel2 <- fa.parallel(IL_EFA_df, fm = 'minres', fa = 'fa') #suggests indeed 2 factors
           
           #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
           IL_2factors <- fa(IL_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #and indeed, factors seem to correlate with each other, so oblique rotation is better here
@@ -709,10 +695,7 @@ print(sessionInfo())
           #look at it visually
           fa.diagram(IL_2factors)
           
-          # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
-          # >> The root mean square error of approximation (RMSEA) is 0. This shows good model fit as it is below 0.05. 
-          # >> The Tucker-Lewis Index (TLI) is 1.024. This is an acceptable value considering it’s over 0.9.
-          
+      
           #naming factors
           # >> Factor 1 holding items 2, 4, and 5 => navigation
           # >> Factor 2 holding items 1 and 3 => information
@@ -731,17 +714,6 @@ print(sessionInfo())
           
           ### Child_Temp >> 3 items ##########################
   
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
             #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
@@ -789,8 +761,8 @@ print(sessionInfo())
           summary(onefac3items_Child_Temp, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = / because 0 df just identified, CFI = 1 > 0.95, TLI = 1 > 0.90 and RMSEA p-value = NA???? < 0.10
   
-              #After inspecting the fit indices and revising the scale, we conclude that each Child_temp item does not per se represent an item that in total measure temperament.
-              #Instead, each item represent a separate temperament type and therefore we recode each item into a separate variable with which we proceed.
+              #After inspecting the fit indices and revising the scale, we confirm that each item represents a separate temperament type 
+              #and therefore we recode each item into a separate variable with which we proceed.
           
                   #renaming Child_Temp items along original single-item Temperament Scale by Sleddens et al. (2012)
                   library(dplyr)
@@ -802,18 +774,7 @@ print(sessionInfo())
           
           ### Child_Parasocial >> 5 items#########################
           
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+          #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
                 boxplot(rosie$Child_Parasocial_1)
@@ -924,7 +885,7 @@ print(sessionInfo())
                 parallel1 <- fa.parallel(Child_Parasocial_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors, which corresponds to the bad model fit and modindices results above
                 
                 #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
-                fa(Child_Parasocial_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #and indeed, factors seem to correlate with each other, so oblique rotation is better here
+                Child_Parasocial_2factors <- fa(Child_Parasocial_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #and indeed, factors seem to correlate with each other, so oblique rotation is better here
                 Child_Parasocial_2factors
                 print(Child_Parasocial_2factors)
                 
@@ -946,11 +907,7 @@ print(sessionInfo())
           
                     #look at it visually
                     fa.diagram(Child_Parasocial_2factors)
-                    
-                    # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
-                    # >> The root mean square error of approximation (RMSEA) is 0. This shows good model fit as it is below 0.05. 
-                    # >> The Tucker-Lewis Index (TLI) is 1.021. This is an acceptable value considering it’s over 0.9.
-                    
+                   
                     #naming factors
                     # >> Factor 1 holding items 1, 4, and 5 => anthropomorphism
                     # >> Factor 2 holding items 2 and 3 => parasocial relationship
@@ -973,18 +930,7 @@ print(sessionInfo())
           
           ### PMMS >> 6 items #########################
           
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+          #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
                 boxplot(rosie$PMMS_1) 
@@ -1081,18 +1027,7 @@ print(sessionInfo())
         
           ### TAM_PEoU >> 4 items #########################
           
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+          #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
                 boxplot(rosie$TAM_PEoU_1)
@@ -1250,18 +1185,7 @@ print(sessionInfo())
           
           ### TAM_E >> 4 items #########################
           
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+          #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
                 boxplot(rosie$TAM_E_1)
@@ -1347,23 +1271,12 @@ print(sessionInfo())
           m1g  <- ' TAM_E_f  =~ TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4'
           onefac4items_TAM_E <- cfa(m1g, data=rosie,std.lv=TRUE) 
           summary(onefac4items_TAM_E, fit.measures=TRUE, standardized=TRUE)
-          # >> fit index criteria: Chi-Square = .058 > .05, CFI = .993 > 0.95, TLI = .979 > 0.90 and RMSEA = .100 < 0.10 >> NICE
+          # >> fit index criteria: Chi-Square = .058 > .05, CFI = .993 > 0.95, TLI = .979 > 0.90 and RMSEA = .100 NOT < 0.10 but exactly that >> NICE
           
           
           ### TAM_SI >> 3 items #########################
           
-          #Prep: Check for normality and outliers
-          ### Criterion for judgement on skewness:
-          ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          
-          ### Criterion for judgment on kurtosis:
-          ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          
-            #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
+          #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
                 #visually
                 library(lattice)
                 boxplot(rosie$TAM_SI_1)
@@ -1388,16 +1301,16 @@ print(sessionInfo())
           #The function cor specifies the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
           round(cor(rosie[,95:97]),2) 
           #          TAM_SI_1 TAM_SI_2 TAM_SI_3
-          # TAM_SI_1     1.00    -0.37    -0.27
-          # TAM_SI_2    -0.37     1.00     0.61
-          # TAM_SI_3    -0.27     0.61     1.00
+          # TAM_SI_1     1.00     0.83     0.65
+          # TAM_SI_2     0.83     1.00     0.61
+          # TAM_SI_3     0.65     0.61     1.00
           
           #Step 2: variance-covariance matrix
           round(cov(rosie[,95:97]),2) 
           #          TAM_SI_1 TAM_SI_2 TAM_SI_3
-          # TAM_SI_1     3.60    -1.19    -0.94
-          # TAM_SI_2    -1.19     2.86     1.88
-          # TAM_SI_3    -0.94     1.88     3.31
+          # TAM_SI_1     2.69     2.32     1.94
+          # TAM_SI_2     2.32     2.86     1.88
+          # TAM_SI_3     1.94     1.88     3.31
           
           #Step 3: one-factor CFA
           #one factor three items, default marker method
@@ -1423,18 +1336,6 @@ print(sessionInfo())
               
               
           # ### (TAM_UI >> 3 items) #########################
-          # 
-          # #Prep: Check for normality and outliers
-          # ### Criterion for judgement on skewness:
-          # ### If the skewness is between -0.5 and 0.5, the data are fairly symmetrical.
-          # ### If the skewness is between -1 and -0.5 (negatively skewed) or between 0.5 and 1(positively skewed), the data are moderately skewed.
-          # ### If the skewness is less than -1 (negatively skewed) or greater than 1 (positively skewed), the data are highly skewed.
-          # 
-          # ### Criterion for judgment on kurtosis:
-          # ### A normal distribution has a kurtosis of 3, which follows from the fact that a normal distribution does have some of its mass in its tails. 
-          # ### A distribution with a kurtosis greater than 3 has more returns out in its tails than the normal.
-          # ### A distribution with kurtosis less than 3 has fewer returns in its tails than the normal.
-          # 
           #   #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
           #     #visually
           #     library(lattice)
@@ -1550,9 +1451,10 @@ print(sessionInfo())
           #             #and instead represents a separate DV each --> yet: it supports the correlation results for the UI levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
           #             
           # 
-          #-------------------------------------------#
-          ####---- 2) Extracting factors scores----####
-          #-------------------------------------------#
+              
+#-------------------------------------------#
+####---- 2) Extracting factors scores----####
+#-------------------------------------------#
                 
             #Journal of Computers in human Behaviour usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
                 
@@ -1586,9 +1488,9 @@ print(sessionInfo())
                 View(rosie_fscores)
                 
         
-        #--------------------------------------#
-        ####---- 3) Reliability analysis----####
-        #--------------------------------------#
+#--------------------------------------#
+####---- 3) Reliability analysis----####
+#--------------------------------------#
                 
         #https://rpubs.com/hauselin/reliabilityanalysis
         #raw_alpha: Cronbach’s α (values ≥ .7 or .8 indicate good reliability; Kline (1999))
@@ -1690,30 +1592,24 @@ print(sessionInfo())
    # 4   3.83
    # Sum 100.00
    
+   #checking household numbers
    crosstab(rosie_fscores, row.vars = "PERSONEN", type = "row.pct")
    # PERSONEN      %
-   # 1   3.83
+   # 1   3.83 >> This is concerning!
    # 2   7.65
    # 3  16.94
    # 4  53.55
    # 5  14.21
    # 6   3.83
    # Sum 100.00
-                
-   #specific descriptives regarding the different DV-levels
-   hist(rosie$UI_togetherwithchild)
-   mean(rosie$UI_togetherwithchild) # 3.34153
-   describe(rosie$UI_togetherwithchild)
-   #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
-   #X1    1 183 3.34 1.45      4    3.35 1.48   1   6     5 -0.18     -0.9 0.11
-                
-   hist(rosie$UI_childindividually)
-   mean(rosie$UI_childindividually, na.rm=T) # 3.214286
-   describe(rosie$UI_childindividually, na.rm=T)
-   #   vars   n mean   sd median trimmed  mad min max range  skew kurtosis   se
-   #X1    1 182 3.21 1.62    3.5    3.18 2.22   1   6     5 -0.07    -1.22 0.12
-  
-   #check for ceiling effect on DV-levels
+ 
+         #assign all 1s in the variable PERSONEN to the 2s because there cannot be a 1-person household for a parent+young child (mistake by survey company/participants)
+         rosie_fscores$PERSONEN[rosie_fscores$PERSONEN == 1] <- 2
+         #check if this worked
+         crosstab(rosie_fscores, row.vars = "PERSONEN", type = "f")
+             
+            
+   #check for potential ceiling effect on DV-levels
    describe(rosie_fscores$TAM_UI_1)
    hist(rosie_fscores$TAM_UI_1)
    
@@ -1724,9 +1620,8 @@ print(sessionInfo())
    describe(rosie_fscores$TAM_UI_3)
    hist(rosie_fscores$TAM_UI_3)
    densityplot(rosie_fscores$TAM_UI_3)
+   ##>> no reason to believe in a ceiling effect
    
-   # describe(rosie_fscores$TAM_UI_f)
-   # hist(rosie_fscores$TAM_UI_f)
    
    #taking a visual look
    
@@ -1773,7 +1668,7 @@ print(sessionInfo())
    hist(rosie$SHL)
   
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(140:143,94, 98:100)]),2)
+   round(cor(rosie_fscores[,c(139:142,94, 98:100)]),2)
    #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SI_f TAM_SS TAM_UI_1 TAM_UI_2 TAM_UI_3
    # TAM_PEoU_f       1.00     0.44    0.63     0.15  -0.02     0.06     0.36     0.29
    # TAM_PU_f         0.44     1.00    0.58     0.40   0.21     0.13     0.45     0.36
@@ -1786,34 +1681,20 @@ print(sessionInfo())
    
          #pairwise correlations all in one scatterplot matrix
          library(car)
-         scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SI_f+TAM_SS+TAM_UI_f, data = rosie_fscores)
+         scatterplotMatrix(~TAM_PEoU_f+TAM_PU_f+TAM_E_f+TAM_SI_f+TAM_SS+TAM_UI_1+TAM_UI_2+TAM_UI_3, data = rosie_fscores)
          
          #for better visual overview 
          library(devtools)
          #devtools::install_github("laresbernardo/lares")
          library(lares)
 
-         corr_cross(rosie_fscores[,c(139:143)], # name of dataset
-                    max_pvalue = 0.05, # display only significant correlations (at 5% level)
-                    top = 20 # display top 20 couples of variables (by correlation coefficient)
+         corr_cross(rosie_fscores[,c(139:142,94, 98:100)], 
+                    max_pvalue = 0.05, 
+                    top = 20 
          )
   
          
-   #checking household numbers
-   crosstab(rosie_fscores, row.vars = "PERSONEN", type = "f")
-   # PERSONEN Count
-   # 1     7 >> This is concerning!
-   # 2    14
-   # 3    31
-   # 4    98
-   # 5    26
-   # 6     7
-   # Sum   183
-        
-         #assign all 1s in the variable PERSONEN to the 2s because there cannot be a 1-person household for a parent+young child (mistake by survey company/participants)
-         rosie_fscores$PERSONEN[rosie_fscores$PERSONEN == 1] <- 2
-         #check if this worked
-         crosstab(rosie_fscores, row.vars = "PERSONEN", type = "f")
+   
       
 ###----------------------------------------------------------------------------------------------------------------###   
    
@@ -2020,19 +1901,10 @@ print(sessionInfo())
    #check if all new factors are included in the dataset
    View(rosie_fscores)
    names(rosie_fscores)
-   # "TT_avgsum"                                         
-   # [145] "TT_LCAcategory_orig"                                "IL_navigation_avgsum"                              
-   # [147] "IL_navigation_LCAcategory_orig"                     "IL_information_avgsum"                             
-   # [149] "IL_information_LCAcategory_orig"                    "FoPersU_f"                                         
-   # [151] "Temp_Extraversion_f"                                "Temp_Negative_Affectivity_f"                       
-   # [153] "Temp_Effortful_Control_f"                           "Child_Parasocial_anthropomorphism_avgsum"          
-   # [155] "Child_Parasocial_anthropomorphism_LCAcategory_orig" "Child_Parasocial_pararela_avgsum"                  
-   # [157] "Child_Parasocial_pararela_LCAcategory_orig"         "LFT_f"                                             
-   # [159] "Child_Age_f"                                        "PMMS_restrMed_avgsum"                              
-   # [161] "PMMS_restrMed_LCAcategory_orig"                     "PMMS_negacMed_avgsum"                              
-   # [163] "PMMS_negacMed_LCAcategory_orig"                     "PMMS_posacMed_avgsum"                              
-   # [165] "PMMS_posacMed_LCAcategory_orig"                     "Child_Nr_f"                                        
-   # [167] "PERSONEN_f"                                         "SHL_f" 
+   
+   #make sure all new factors are really factors
+   rosie_fscores[, 143:167] <- sapply(rosie_fscores[, 143:167], as.factor)
+
    
    #--------------------------------------------#
    ### running the LCA ##########################
@@ -2061,16 +1933,21 @@ print(sessionInfo())
                         PERSONEN_f,
                         SHL_f)~1
 
+
+   set.seed(123)
+   LCAmodel2 <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
    
-   LCAmodel2 <- poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
-   
-   LCAmodel3 <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   set.seed(123)
+   LCAmodel3 <- poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
   
-   LCAmodel4 <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   set.seed(123)
+   LCAmodel4 <- poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
    
-   LCAmodel5 <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+   set.seed(123)
+   LCAmodel5 <- poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
    
-   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE) 
+   set.seed(123)
+   LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE) 
  
    summary(LCAmodel3)
    
@@ -2081,184 +1958,203 @@ print(sessionInfo())
    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
    
    # getting fit indices in a table
-       tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
-       names(tab.modfit)<-c("log-likelihood",
-                              "resid. df","BIC",
-                              "aBIC","cAIC","likelihood-ratio")
-       
-       tab.modfit
-       
-       set.seed(123)
-       for(i in 2:6){
-       tab.modfit<-rbind(tab.modfit,
-                           c(get(paste("LCAmodel",i,sep=""))$llik,
-                             get(paste("LCAmodel",i,sep=""))$resid.df,
-                             get(paste("LCAmodel",i,sep=""))$bic,
-                             (-2*get(paste("LCAmodel",i,sep=""))$llik) +
-                               ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *  
-                                  get(paste("LCAmodel",i,sep=""))$npar),
-                             (-2*get(paste("LCAmodel",i,sep=""))$llik) +
-                               get(paste("LCAmodel",i,sep=""))$npar *
-                               (1 + log(get(paste("LCAmodel",i,sep=""))$N)),
-                             get(paste("LCAmodel",i,sep=""))$Gsq
-                           ))
-       }
-       tab.modfit<-round(tab.modfit[-1,],2)
-       tab.modfit$Nclass<-2:6
-      
-       
-       tab.modfit
-       # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
-       # 2       -2568.87       124 5445.10 5258.24 5504.10          3231.07      2
-       # 3       -2528.79        94 5521.23 5239.35 5610.23          3150.92      3
-       # 4       -2487.66        64 5595.25 5218.35 5714.25          3068.64      4
-       # 5       -2454.14        34 5684.49 5212.58 5833.49          3001.61      5
-       # 6       -2437.22         4 5806.93 5240.00 5985.93          2967.76      6
+             tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
+             names(tab.modfit)<-c("log-likelihood",
+                                    "resid. df","BIC",
+                                    "aBIC","cAIC","likelihood-ratio")
+             
+             tab.modfit
+             
+             set.seed(123)
+             for(i in 2:6){
+             tab.modfit<-rbind(tab.modfit,
+                                 c(get(paste("LCAmodel",i,sep=""))$llik,
+                                   get(paste("LCAmodel",i,sep=""))$resid.df,
+                                   get(paste("LCAmodel",i,sep=""))$bic,
+                                   (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                                     ((log((get(paste("LCAmodel",i,sep=""))$N + 2)/24)) *  
+                                        get(paste("LCAmodel",i,sep=""))$npar),
+                                   (-2*get(paste("LCAmodel",i,sep=""))$llik) +
+                                     get(paste("LCAmodel",i,sep=""))$npar *
+                                     (1 + log(get(paste("LCAmodel",i,sep=""))$N)),
+                                   get(paste("LCAmodel",i,sep=""))$Gsq
+                                 ))
+             }
+             tab.modfit<-round(tab.modfit[-1,],2)
+             tab.modfit$Nclass<-2:6
+            
+             
+             tab.modfit
+             # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+             # 2       -2625.15       154 5401.37 5309.52 5430.37          3343.62      2
+             # 3       -2523.70        94 5511.04 5229.16 5600.04          3140.73      3
+             # 4       -2487.66        64 5595.25 5218.35 5714.25          3068.64      4
+             # 5       -2462.09        34 5700.40 5228.49 5849.40          3017.51      5
+             # 6       -2423.63         4 5779.76 5212.83 5958.76          2940.59      6
    
-   #visualize model fit 
-         # convert table into long format
-         library("forcats")
-         tab.modfit$Nclass <-as.factor(tab.modfit$Nclass)
-         tab.modfit
-         results2<-tidyr::gather(tab.modfit,label,value,1:6)
-         results2
-   
-         # pass long-format table on to ggplot
-         library(ggplot2)
-         fit.plot<-ggplot(results2) +
-           geom_point(aes(x=Nclass,y=value),size=1) +
-           geom_line(aes(Nclass, value, group = 1)) +
-           theme_bw()+
-           labs(x = "Number of classes", y="Index values", title = "") +
-           facet_grid(label ~. ,scales = "free") +
-           theme_bw(base_size = 8, base_family = "") +
-           theme(panel.grid.major.x = element_blank() ,
-                 panel.grid.major.y = element_line(colour="grey",
-                                                   size=0.3),
-                 legend.title = element_text(size = 8, face = 'bold'),
-                 axis.text = element_text(size = 8),
-                 axis.title = element_text(size = 8),
-                 legend.text= element_text(size=8),
-                 axis.line = element_line(colour = "black"))
-         fit.plot
+   # visualize fit indices per LCA model 
+               # convert table into long format
+               library("forcats")
+               tab.modfit$Nclass <-as.factor(tab.modfit$Nclass)
+               tab.modfit
+               results2<-tidyr::gather(tab.modfit,label,value,1:6)
+               results2
          
-         
-         # https://statistics.ohlsen-web.de/latent-class-analysis-polca/ 
-         # Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
-         # we take an exploratory approach and compare multiple models (2-6 classes) against each other. 
-         # If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
-         # Additionally one could compare the different solutions by BIC or AIC information criteria. 
-         # BIC is preferred over AIC in latent class models. 
-         # A smaller BIC is better than a bigger BIC. 
-         
-         # >> 2-class model has lowest BIC
-         
-         # https://www.tandfonline.com/doi/full/10.1080/10705510701575396
-         
-         # >> 5-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
-         
-         
-         #make a graph of probabilities
-         install.packages("ggplot2")
-         library(ggplot2)
-               #2-class model
-               lcmodel2 <- reshape2::melt(LCAmodel2$probs, level=2)
-               zp1 <- ggplot(lcmodel2,aes(x = L2, y = value, fill = Var2))
-               zp1 <- zp1 + geom_bar(stat = "identity", position = "stack")
-               zp1 <- zp1 + facet_grid(Var1 ~ .) 
-               zp1 <- zp1 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
-               zp1 <- zp1 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
-               zp1 <- zp1 + theme( axis.text.y=element_blank(),
-                                   axis.text.x=element_text(angle=90, vjust=0.5, hjust=0.2),
-                                   axis.ticks.y=element_blank(),                    
-                                   panel.grid.major.y=element_blank())
-               zp1 <- zp1 + guides(fill = guide_legend(reverse=TRUE))
-               print(zp1)
-         
+               # pass long-format table on to ggplot
+               library(ggplot2)
+               fit.plot<-ggplot(results2) +
+                 geom_point(aes(x=Nclass,y=value),size=1) +
+                 geom_line(aes(Nclass, value, group = 1)) +
+                 theme_bw()+
+                 labs(x = "Number of classes", y="Index values", title = "") +
+                 facet_grid(label ~. ,scales = "free") +
+                 theme_bw(base_size = 8, base_family = "") +
+                 theme(panel.grid.major.x = element_blank() ,
+                       panel.grid.major.y = element_line(colour="grey",
+                                                         size=0.3),
+                       legend.title = element_text(size = 8, face = 'bold'),
+                       axis.text = element_text(size = 8),
+                       axis.title = element_text(size = 8),
+                       legend.text= element_text(size=8),
+                       axis.line = element_line(colour = "black"))
+               fit.plot
                
-               #3-class model
-               lcmodel3 <- reshape2::melt(LCAmodel3$probs, level=2)
-               zp2 <- ggplot(lcmodel3,aes(x = L2, y = value, fill = Var2))
-               zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
-               zp2 <- zp2 + facet_grid(Var1 ~ .) 
-               zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
-               zp2 <- zp2 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
-               zp2 <- zp2 + theme( axis.text.y=element_blank(),
-                                   axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
-                                   axis.ticks.y=element_blank(),                    
-                                   panel.grid.major.y=element_blank())
-               zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
-               print(zp2)
+   # enumeration judgement      
+               # https://statistics.ohlsen-web.de/latent-class-analysis-polca/ 
+               # Since we do not have a solid theoretical assumption of the number of unobserved sub-populations (aka family types)
+               # we take an exploratory approach and compare multiple models (2-6 classes) against each other. 
+               # If choosing this approach, one can decide to take the model that has the most plausible interpretation. 
+               # Additionally one could compare the different solutions by BIC or AIC information criteria. 
+               # BIC is preferred over AIC in latent class models. 
+               # A smaller BIC is better than a bigger BIC. 
                
-               #4-class model
-               lcmodel4 <- reshape2::melt(LCAmodel4$probs, level=2)
-               zp3 <- ggplot(lcmodel4,aes(x = L2, y = value, fill = Var2))
-               zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
-               zp3 <- zp3 + facet_grid(Var1 ~ .) 
-               zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
-               zp3 <- zp3 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
-               zp3 <- zp3 + theme( axis.text.y=element_blank(),
-                                   axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
-                                   axis.ticks.y=element_blank(),                    
-                                   panel.grid.major.y=element_blank())
-               zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
-               print(zp3)
+               # >> 2-class model has lowest BIC
                
+               # https://www.tandfonline.com/doi/full/10.1080/10705510701575396
                
-               #5-class model
-               lcmodel5 <- reshape2::melt(LCAmodel5$probs, level=2)
-               zp4 <- ggplot(lcmodel5,aes(x = L2, y = value, fill = Var2))
-               zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
-               zp4 <- zp4 + facet_grid(Var1 ~ .) 
-               zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
-               zp4 <- zp4 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
-               zp4 <- zp4 + theme( axis.text.y=element_blank(),
-                                   axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
-                                   axis.ticks.y=element_blank(),                    
-                                   panel.grid.major.y=element_blank())
-               zp4 <- zp4 + guides(fill = guide_legend(reverse=TRUE))
-               print(zp4)
-         
+               # >> 5-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
                
-     #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
-       set.seed(123)
-       twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
-       
-       #output predicted classes from selected model so that we can use it in subsequent analyses:
-       rosie_fscores$fam_class2=twoclass$predclass
-       
-       View(rosie_fscores)
-       
-       rosie_fscores$fam_class2 <- factor(rosie_fscores$fam_class2, ordered = TRUE)
-       
-       #name the levels of the class factor using the response probabilities plot
-       # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="1"] <- "XXX"
-       # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="2"] <- "YYY"
-       
-           #load function for crosstabs to see whether classes relate to the urban/rural areas
-           source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
-           crosstab(rosie_fscores, row.vars = "GEMGROOTTE", col.vars = "fam_class2", type = "f")
-           #             fam_class2   1   2 Sum
-           # GEMGROOTTE                       
-           # 4                      22  42  64
-           # 1                       4   9  13
-           # 2                      27  32  59
-           # 3                      17  25  42
-           # 5                       1   4   5
-           # Sum                    71 112 183
-       
+       # taking closer look at each model solution 
+               #make a graph of probabilities (https://statistics.ohlsen-web.de/latent-class-analysis-polca/)
+               library(ggplot2)
+                     #2-class model
+                     lcmodel2 <- reshape2::melt(LCAmodel2$probs, level=2)
+                     zp1 <- ggplot(lcmodel2,aes(x = L2, y = value, fill = Var2))
+                     zp1 <- zp1 + geom_bar(stat = "identity", position = "stack")
+                     zp1 <- zp1 + facet_grid(Var1 ~ .) 
+                     zp1 <- zp1 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+                     zp1 <- zp1 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+                     zp1 <- zp1 + theme( axis.text.y=element_blank(),
+                                         axis.text.x=element_text(angle=90, vjust=0.5, hjust=0.2),
+                                         axis.ticks.y=element_blank(),                    
+                                         panel.grid.major.y=element_blank())
+                     zp1 <- zp1 + guides(fill = guide_legend(reverse=TRUE))
+                     print(zp1)
+               
+                     
+                     #3-class model
+                     lcmodel3 <- reshape2::melt(LCAmodel3$probs, level=2)
+                     zp2 <- ggplot(lcmodel3,aes(x = L2, y = value, fill = Var2))
+                     zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
+                     zp2 <- zp2 + facet_grid(Var1 ~ .) 
+                     zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+                     zp2 <- zp2 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+                     zp2 <- zp2 + theme( axis.text.y=element_blank(),
+                                         axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                         axis.ticks.y=element_blank(),                    
+                                         panel.grid.major.y=element_blank())
+                     zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
+                     print(zp2)
+                     
+                     #4-class model
+                     lcmodel4 <- reshape2::melt(LCAmodel4$probs, level=2)
+                     zp3 <- ggplot(lcmodel4,aes(x = L2, y = value, fill = Var2))
+                     zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
+                     zp3 <- zp3 + facet_grid(Var1 ~ .) 
+                     zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+                     zp3 <- zp3 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+                     zp3 <- zp3 + theme( axis.text.y=element_blank(),
+                                         axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                         axis.ticks.y=element_blank(),                    
+                                         panel.grid.major.y=element_blank())
+                     zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
+                     print(zp3)
+                     
+                     
+                     #5-class model
+                     lcmodel5 <- reshape2::melt(LCAmodel5$probs, level=2)
+                     zp4 <- ggplot(lcmodel5,aes(x = L2, y = value, fill = Var2))
+                     zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
+                     zp4 <- zp4 + facet_grid(Var1 ~ .) 
+                     zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+                     zp4 <- zp4 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+                     zp4 <- zp4 + theme( axis.text.y=element_blank(),
+                                         axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                         axis.ticks.y=element_blank(),                    
+                                         panel.grid.major.y=element_blank())
+                     zp4 <- zp4 + guides(fill = guide_legend(reverse=TRUE))
+                     print(zp4)
+               
+                     
+                     #6-class model
+                     lcmodel6 <- reshape2::melt(LCAmodel6$probs, level=2)
+                     zp5 <- ggplot(lcmodel6,aes(x = L2, y = value, fill = Var2))
+                     zp5 <- zp5 + geom_bar(stat = "identity", position = "stack")
+                     zp5 <- zp5 + facet_grid(Var1 ~ .) 
+                     zp5 <- zp5 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
+                     zp5 <- zp5 + labs(x = "LCA Indicators",y="Class probability", fill ="Categories")
+                     zp5 <- zp5 + theme( axis.text.y=element_blank(),
+                                         axis.text.x=element_text(angle=90, vjust=1, hjust=0.2),
+                                         axis.ticks.y=element_blank(),                    
+                                         panel.grid.major.y=element_blank())
+                     zp5 <- zp5 + guides(fill = guide_legend(reverse=TRUE))
+                     print(zp5)
+                    
+                # >>> Generally, the same handful indicators seem to be most responsible for 
+                #     discriminating between classes: literacy, household size, PMMS, and negative affective termperaement.
+                #     In some also parent age and SES.
+                     
+                     
+  #We proceed by extracting the LCA solutions, creating a new fam_class variable for each model
+               
+         #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
+           set.seed(123)
+           twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
+           
+           #output predicted classes from selected model so that we can use it in subsequent analyses:
+           rosie_fscores$fam_class2=twoclass$predclass
+           
+           #View(rosie_fscores)
+           
+           rosie_fscores$fam_class2 <- as.factor(rosie_fscores$fam_class2)
+           
+           #name the levels of the class factor using the response probabilities plot
+           # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="1"] <- "XXX"
+           # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="2"] <- "YYY"
+           
+               #load function for crosstabs to see whether classes relate to the urban/rural areas
+               source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+               crosstab(rosie_fscores, row.vars = "GEMGROOTTE", col.vars = "fam_class2", type = "f")
+               #             fam_class2   1   2 Sum
+               # GEMGROOTTE                       
+               # 4                      22  42  64
+               # 1                       4   9  13
+               # 2                      27  32  59
+               # 3                      17  25  42
+               # 5                       1   4   5
+               # Sum                    71 112 183
+           
            
     #extract 3-class solution and save in twoclass object (https://osf.io/vec6s/)
        set.seed(123)
-       threeclass=poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       threeclass=poLCA(LCAmodel, data=rosie_fscores, nclass=3, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
        
        #output predicted classes from selected model so that we can use it in subsequent analyses:
        rosie_fscores$fam_class3=threeclass$predclass
        
+       #View(rosie_fscores)
        
-       View(rosie_fscores)
-       
-       rosie_fscores$fam_class3 <- factor(rosie_fscores$fam_class3, ordered = TRUE)
+       rosie_fscores$fam_class3 <- as.factor(rosie_fscores$fam_class3)
        
        #name the levels of the class factor using the response probabilities plot
        # levels(rosie_fscores$fam_class3)[levels(rosie_fscores$fam_class3)=="1"] <- "XXX"
@@ -2268,42 +2164,370 @@ print(sessionInfo())
        
     #extract 4-class solution and save in fourclass object (https://osf.io/vec6s/)
        set.seed(123)
-       fourclass=poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 5, graphs=TRUE, na.rm=TRUE)
+       fourclass=poLCA(LCAmodel, data=rosie_fscores, nclass=4, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
        
        #output predicted classes from selected model so that we can use it in subsequent analyses:
        rosie_fscores$fam_class4=fourclass$predclass
        
-       View(rosie_fscores)
+       #View(rosie_fscores)
        
-       rosie_fscores$fam_class4 <- factor(rosie_fscores$fam_class4, ordered = TRUE)
+       rosie_fscores$fam_class4 <- as.factor(rosie_fscores$fam_class4)
        
        
+    #extract 5-class solution and save in fiveclass object (https://osf.io/vec6s/)
+       set.seed(123)
+       fiveclass=poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
+       
+       #output predicted classes from selected model so that we can use it in subsequent analyses:
+       rosie_fscores$fam_class5=fiveclass$predclass
+       
+       #View(rosie_fscores)
+       
+       rosie_fscores$fam_class5 <- as.factor(rosie_fscores$fam_class5) 
     
-    #running logistic regression to see which indicators are likely to not discriminate between class
-       log_reg <- glm(fam_class4 ~ GSL+
-                      SOCIALEKLASSE2016+
-                      TT_LCAcategory_orig+
-                      IL_navigation_LCAcategory_orig+
-                      IL_information_LCAcategory_orig+
-                      FoPersU_f_LCA+
-                      Child_Gender+
-                      Temp_Extraversion_f+
-                      Temp_Negative_Affectivity_f+
-                      Temp_Effortful_Control_f+
-                      Child_Parasocial_anthropomorphism_LCAcategory_orig+
-                      Child_Parasocial_pararela_LCAcategory_orig+
-                      LFT_f+
-                      Child_Age_f+
-                      PMMS_restrMed_LCAcategory_orig+
-                      PMMS_negacMed_LCAcategory_orig+
-                      PMMS_posacMed_LCAcategory_orig+
-                      current_usage+
-                      Child_Nr_f+
-                      PERSONEN_f+
-                      SHL_f,
-                      data = rosie_fscores, family = "binomial")
-       summary(log_reg)
        
+    #extract 6-class solution and save in sixclass object (https://osf.io/vec6s/)
+       set.seed(123)
+       sixclass=poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
+       
+       #output predicted classes from selected model so that we can use it in subsequent analyses:
+       rosie_fscores$fam_class6=sixclass$predclass
+       
+       #View(rosie_fscores)
+       
+       rosie_fscores$fam_class6 <- as.factor(rosie_fscores$fam_class6) 
+     
+         
+ #We now run a logistic regression for each dummy variable to see which indicators overall discriminating between classes
+       #2-class model
+       #reference is class 2 due to higher estimated class population
+       rosie_fscores$fam_class2_relevel <- relevel(as.factor(rosie_fscores$fam_class2), ref=1)
+       table(rosie_fscores$fam_class2, rosie_fscores$fam_class2_relevel)
+       
+       library(nnet)
+       logreg1 <- multinom(fam_class2 ~ GSL+
+                           SOCIALEKLASSE2016+
+                           TT_LCAcategory_orig+
+                           IL_navigation_LCAcategory_orig+
+                           IL_information_LCAcategory_orig+
+                           FoPersU_f_LCA+
+                           Child_Gender+
+                           Temp_Extraversion_f+
+                           Temp_Negative_Affectivity_f+
+                           Temp_Effortful_Control_f+
+                           Child_Parasocial_anthropomorphism_LCAcategory_orig+
+                           Child_Parasocial_pararela_LCAcategory_orig+
+                           LFT_f+
+                           Child_Age_f+
+                           PMMS_restrMed_LCAcategory_orig+
+                           PMMS_negacMed_LCAcategory_orig+
+                           PMMS_posacMed_LCAcategory_orig+
+                           current_usage+
+                           Child_Nr_f+
+                           PERSONEN_f+
+                           SHL_f, data=rosie_fscores)
+       summary(logreg1)
+       
+       # to obtain odds ratio 
+       coef(logreg1)
+       
+       # to obtain 95% CIs for OR
+       confint(logreg1)
+      
+       
+       #3-class model
+       #reference is class 3 due to highest estimated class population
+       rosie_fscores$fam_class3_relevel <- relevel(as.factor(rosie_fscores$fam_class3), ref=3)
+       table(rosie_fscores$fam_class3, rosie_fscores$fam_class3_relevel)
+       logreg2 <- multinom(fam_class3 ~ GSL+
+                             SOCIALEKLASSE2016+
+                             TT_LCAcategory_orig+
+                             IL_navigation_LCAcategory_orig+
+                             IL_information_LCAcategory_orig+
+                             FoPersU_f_LCA+
+                             Child_Gender+
+                             Temp_Extraversion_f+
+                             Temp_Negative_Affectivity_f+
+                             Temp_Effortful_Control_f+
+                             Child_Parasocial_anthropomorphism_LCAcategory_orig+
+                             Child_Parasocial_pararela_LCAcategory_orig+
+                             LFT_f+
+                             Child_Age_f+
+                             PMMS_restrMed_LCAcategory_orig+
+                             PMMS_negacMed_LCAcategory_orig+
+                             PMMS_posacMed_LCAcategory_orig+
+                             current_usage+
+                             Child_Nr_f+
+                             PERSONEN_f+
+                             SHL_f, data=rosie_fscores)
+       summary(logreg2)
+       
+       # to obtain 95% CIs for OR
+       confint(logreg1)
+       
+       
+       #TRY-OUTS
+       exp(logreg1$coefficients)
+       exp(confint(model.10k))
+       
+       predict(logreg1)
+       predict(logreg1, type='response')
+       logreg1$fitted.values
+       
+       plot(rosie_fscores$majority, model.10k$fitted.values, ylab='Probability(Expenses problem)', xlab='Majority')
+       
+       logreg1.rrr = exp(coef(logreg1))
+       logreg1.rrr
+
+       library(stargazer)
+       stargazer(logreg1, type='text', out="/Users/rebeccawald/Desktop/ROSIE_surfdrive/Project ROSIE/Study_1/Analysis/R_Scripts/Results_KANTAR_analysis/visualizations/LCA/new/logreg1_output_logodds.tex")
+       stargazer(m2, type='text', coef=list(m2.rrr), out="/Users/marieke/surfdrive/Study1/tables/m2_output_rrr.tex")
+       
+           
+ #We now recode the created fam_class variables for each model into dummy coded variables, since we need them for the SEM
+       #for 2class solution
+       rosie_fscores$fam_class2_1 <- ifelse(rosie_fscores$fam_class2 == "1", 1, 0) 
+       rosie_fscores$fam_class2_2 <- ifelse(rosie_fscores$fam_class2 == "2", 1, 0) 
+       
+       rosie_fscores$fam_class2_1 <- as.factor(rosie_fscores$fam_class2_1)   
+       rosie_fscores$fam_class2_2 <- as.factor(rosie_fscores$fam_class2_2)
+       
+       
+       #for 3class solution
+       rosie_fscores$fam_class3_1 <- ifelse(rosie_fscores$fam_class3 == "1", 1, 0) 
+       rosie_fscores$fam_class3_2 <- ifelse(rosie_fscores$fam_class3 == "2", 1, 0) 
+       rosie_fscores$fam_class3_3 <- ifelse(rosie_fscores$fam_class3 == "3", 1, 0)
+       
+       rosie_fscores$fam_class3_1 <- as.factor(rosie_fscores$fam_class3_1)   
+       rosie_fscores$fam_class3_2 <- as.factor(rosie_fscores$fam_class3_2)
+       rosie_fscores$fam_class3_2 <- as.factor(rosie_fscores$fam_class3_2)
+       
+       #for 4class solution
+       rosie_fscores$fam_class4_1 <- ifelse(rosie_fscores$fam_class4 == "1", 1, 0) 
+       rosie_fscores$fam_class4_2 <- ifelse(rosie_fscores$fam_class4 == "2", 1, 0)
+       rosie_fscores$fam_class4_3 <- ifelse(rosie_fscores$fam_class4 == "3", 1, 0) 
+       rosie_fscores$fam_class4_4 <- ifelse(rosie_fscores$fam_class4 == "4", 1, 0) 
+       
+       rosie_fscores$fam_class4_1 <- as.factor(rosie_fscores$fam_class4_1)   
+       rosie_fscores$fam_class4_2 <- as.factor(rosie_fscores$fam_class4_2)
+       rosie_fscores$fam_class4_3 <- as.factor(rosie_fscores$fam_class4_3)
+       rosie_fscores$fam_class4_4 <- as.factor(rosie_fscores$fam_class4_4)
+       
+       
+       #for 5class solution
+       rosie_fscores$fam_class5_1 <- ifelse(rosie_fscores$fam_class5 == "1", 1, 0) 
+       rosie_fscores$fam_class5_2 <- ifelse(rosie_fscores$fam_class5 == "2", 1, 0)
+       rosie_fscores$fam_class5_3 <- ifelse(rosie_fscores$fam_class5 == "3", 1, 0) 
+       rosie_fscores$fam_class5_4 <- ifelse(rosie_fscores$fam_class5 == "4", 1, 0)
+       rosie_fscores$fam_class5_5 <- ifelse(rosie_fscores$fam_class5 == "5", 1, 0)
+       
+       rosie_fscores$fam_class5_1 <- as.factor(rosie_fscores$fam_class5_1)   
+       rosie_fscores$fam_class5_2 <- as.factor(rosie_fscores$fam_class5_2)
+       rosie_fscores$fam_class5_3 <- as.factor(rosie_fscores$fam_class5_3)
+       rosie_fscores$fam_class5_4 <- as.factor(rosie_fscores$fam_class5_4)
+       rosie_fscores$fam_class5_5 <- as.factor(rosie_fscores$fam_class5_5)
+       
+       #for 6class solution
+       rosie_fscores$fam_class6_1 <- ifelse(rosie_fscores$fam_class6 == "1", 1, 0) 
+       rosie_fscores$fam_class6_2 <- ifelse(rosie_fscores$fam_class6 == "2", 1, 0)
+       rosie_fscores$fam_class6_3 <- ifelse(rosie_fscores$fam_class6 == "3", 1, 0) 
+       rosie_fscores$fam_class6_4 <- ifelse(rosie_fscores$fam_class6 == "4", 1, 0)
+       rosie_fscores$fam_class6_5 <- ifelse(rosie_fscores$fam_class6 == "5", 1, 0)
+       rosie_fscores$fam_class6_6 <- ifelse(rosie_fscores$fam_class6 == "6", 1, 0)
+       
+       rosie_fscores$fam_class6_1 <- as.factor(rosie_fscores$fam_class6_1)   
+       rosie_fscores$fam_class6_2 <- as.factor(rosie_fscores$fam_class6_2)
+       rosie_fscores$fam_class6_3 <- as.factor(rosie_fscores$fam_class6_3)
+       rosie_fscores$fam_class6_4 <- as.factor(rosie_fscores$fam_class6_4)
+       rosie_fscores$fam_class6_5 <- as.factor(rosie_fscores$fam_class6_5)
+       rosie_fscores$fam_class6_6 <- as.factor(rosie_fscores$fam_class6_6)
+       
+ #We now run a logistic regression for each dummy variable to see which indicators overall discriminating between classes
+       
+    #logreg for 2class solution --> significant indicators are: 
+            #TT
+            #IL navigation
+            #FoPersU
+            #Temperament Negative Affectivity
+            #Parent Age
+            #PMMS (all styles)
+            #current usage
+            #SES
+            #Household size (PERSONEN)
+       
+       TT_log_reg_2_1 <- glm(fam_class2_1 ~ TT_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(TT_log_reg_2_1)
+       
+       IL_info_log_reg_2_1 <- glm(fam_class2_1 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_info_log_reg_2_1) #not significant
+
+       IL_nav_log_reg_2_1 <- glm(fam_class2_1 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_nav_log_reg_2_1)
+
+       FoPersU_log_reg_2_1 <- glm(fam_class2_1 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
+       summary(FoPersU_log_reg_2_1)
+       
+       TNeAf_log_reg_2_1 <- glm(fam_class2_1 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
+       summary(TNeAf_log_reg_2_1)
+       
+       PAge_log_reg_2_1 <- glm(fam_class2_1 ~ LFT_f, data = rosie_fscores, family = "binomial")
+       summary(PAge_log_reg_2_1)
+
+       PMMS_rM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_restrMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(PMMS_rM_log_reg_2_1)
+       
+       PMMS_nM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_negacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(PMMS_nM_log_reg_2_1)
+       
+       PMMS_pM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_posacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(PMMS_pM_log_reg_2_1)
+
+       cu_log_reg_2_1 <- glm(fam_class2_1 ~ current_usage, data = rosie_fscores, family = "binomial")
+       summary(cu_log_reg_2_1)
+       
+       SES_log_reg_2_1 <- glm(fam_class2_1 ~ SOCIALEKLASSE2016, data = rosie_fscores, family = "binomial")
+       summary(SES_log_reg_2_1)
+       drop1(SES_log_reg_2_1, test="Chisq")
+       
+       PERSONEN_log_reg_2_1 <- glm(fam_class2_1 ~ PERSONEN_f, data = rosie_fscores, family = "binomial")
+       summary(PERSONEN_log_reg_2_1)
+       drop1(PERSONEN_log_reg_2_1, test="Chisq")
+       
+     
+ 
+    #logreg for 3class solution --> significant indicators are: 
+         #SES
+         #TT but not for class 1
+         #IL_navigation
+         #IL_information but not for class 3
+         #Temp_Negative_Affectivity but not for class 2
+         #Child_Parasocial_anthropomorphism but not for class 1
+         #Child_PArasocial_pararela but only for class 2
+         #Parent Age but not for class 2
+       
+       SES_log_reg_3_1 <- glm(fam_class3_1 ~ SOCIALEKLASSE2016+fam_class3_2, data = rosie_fscores, family = "binomial")
+       summary(SES_log_reg_3_1)
+       drop1(SES_log_reg_3_1, test="Chisq")
+       
+       TT_log_reg_3_1 <- glm(fam_class3_1 ~ TT_LCAcategory_orig+fam_class3_2, data = rosie_fscores, family = "binomial")
+       summary(TT_log_reg_3_1) #not significant
+       TT_log_reg_3_2 <- glm(fam_class3_2 ~ TT_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(TT_log_reg_3_2)
+       TT_log_reg_3_3 <- glm(fam_class3_3 ~ TT_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(TT_log_reg_3_3)
+       
+       IL_info_log_reg_3_1 <- glm(fam_class3_1 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_info_log_reg_3_1) 
+       IL_info_log_reg_3_2 <- glm(fam_class3_2 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_info_log_reg_3_2)
+       IL_info_log_reg_3_3 <- glm(fam_class3_3 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_info_log_reg_3_3) #not significant
+       
+       IL_nav_log_reg_3_1 <- glm(fam_class3_1 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_nav_log_reg_3_1)
+       IL_nav_log_reg_3_2 <- glm(fam_class3_2 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_nav_log_reg_3_2)
+       IL_nav_log_reg_3_3 <- glm(fam_class3_2 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(IL_nav_log_reg_3_3)
+       
+       # FoPersU_log_reg_3_1 <- glm(fam_class3_1 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
+       # summary(FoPersU_log_reg_3_1) 
+       # FoPersU_log_reg_3_2 <- glm(fam_class3_2 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
+       # summary(FoPersU_log_reg_3_2)
+       # FoPersU_log_reg_3_3 <- glm(fam_class3_3 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
+       # summary(FoPersU_log_reg_3_3)
+       
+       # CGender_log_reg_3_1 <- glm(fam_class3_1 ~ Child_Gender, data = rosie_fscores, family = "binomial")
+       # summary(CGender_log_reg_3_1)
+       # CGender_log_reg_3_2 <- glm(fam_class3_2 ~ Child_Gender, data = rosie_fscores, family = "binomial")
+       # summary(CGender_log_reg_3_2)
+       # CGender_log_reg_3_3 <- glm(fam_class3_3 ~ Child_Gender, data = rosie_fscores, family = "binomial")
+       # summary(CGender_log_reg_3_3)
+       
+       # Temp_Extraversion_f_log_reg_3_1 <- glm(fam_class3_1 ~ Temp_Extraversion_f, data = rosie_fscores, family = "binomial")
+       # summary(Temp_Extraversion_f_log_reg_3_1)
+       # Temp_Extraversion_f_log_reg_3_2 <- glm(fam_class3_2 ~ Temp_Extraversion_f, data = rosie_fscores, family = "binomial")
+       # summary(Temp_Extraversion_f_log_reg_3_2)
+       # Temp_Extraversion_f_log_reg_3_3 <- glm(fam_class3_3 ~ Temp_Extraversion_f, data = rosie_fscores, family = "binomial")
+       # summary(Temp_Extraversion_f_log_reg_3_3)
+       
+       Temp_Negative_Affectivity_f_log_reg_3_1 <- glm(fam_class3_1 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
+       summary(Temp_Negative_Affectivity_f_log_reg_3_1)
+       Temp_Negative_Affectivity_f_log_reg_3_2 <- glm(fam_class3_2 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
+       summary(Temp_Negative_Affectivity_f_log_reg_3_2) #not significant
+       Temp_Negative_Affectivity_f_log_reg_3_3 <- glm(fam_class3_3 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
+       summary(Temp_Negative_Affectivity_f_log_reg_3_3)
+       
+       # Temp_Effortful_Control_f_log_reg_3_1 <- glm(fam_class3_1 ~ Temp_Effortful_Control_f, data = rosie_fscores, family = "binomial")
+       # summary(Temp_Effortful_Control_f_log_reg_3_1)
+       # Temp_Effortful_Control_f_log_reg_3_2 <- glm(fam_class3_2 ~ Temp_Effortful_Control_f, data = rosie_fscores, family = "binomial")
+       # summary(Temp_Effortful_Control_f_log_reg_3_2)
+       # Temp_Effortful_Control_f_log_reg_3_3 <- glm(fam_class3_3 ~ Temp_Effortful_Control_f, data = rosie_fscores, family = "binomial")
+       # summary(Temp_Effortful_Control_f_log_reg_3_3)
+       
+       Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_1 <- glm(fam_class3_1 ~ Child_Parasocial_anthropomorphism_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_1) #not significant
+       Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_2 <- glm(fam_class3_2 ~ Child_Parasocial_anthropomorphism_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_2) 
+       Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_3 <- glm(fam_class3_3 ~ Child_Parasocial_anthropomorphism_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_3)
+       
+       
+       Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_1 <- glm(fam_class3_1 ~ Child_Parasocial_pararela_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_1) #not significant
+       Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_2 <- glm(fam_class3_2 ~ Child_Parasocial_pararela_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_2) 
+       Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_3 <- glm(fam_class3_3 ~ Child_Parasocial_pararela_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_3) #not significant
+       
+       LFT_f_log_reg_3_1 <- glm(fam_class3_1 ~ LFT_f, data = rosie_fscores, family = "binomial")
+       summary(LFT_f_log_reg_3_1) 
+       LFT_f_log_reg_3_2 <- glm(fam_class3_2 ~ LFT_f, data = rosie_fscores, family = "binomial")
+       summary(LFT_f_log_reg_3_2) #not significant
+       LFT_f_log_reg_3_3 <- glm(fam_class3_3 ~ LFT_f, data = rosie_fscores, family = "binomial")
+       summary(LFT_f_log_reg_3_3)
+       
+       PMMS_rM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_restrMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(PMMS_rM_log_reg_2_1)
+       
+       PMMS_nM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_negacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(PMMS_nM_log_reg_2_1)
+       
+       PMMS_pM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_posacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
+       summary(PMMS_pM_log_reg_2_1)
+       
+       cu_log_reg_2_1 <- glm(fam_class2_1 ~ current_usage, data = rosie_fscores, family = "binomial")
+       summary(cu_log_reg_2_1)
+       
+       SES_log_reg_2_1 <- glm(fam_class2_1 ~ SOCIALEKLASSE2016, data = rosie_fscores, family = "binomial")
+       summary(SES_log_reg_2_1)
+       drop1(SES_log_reg_2_1, test="Chisq")
+       
+       PERSONEN_log_reg_2_1 <- glm(fam_class2_1 ~ PERSONEN_f, data = rosie_fscores, family = "binomial")
+       summary(PERSONEN_log_reg_2_1)
+       drop1(PERSONEN_log_reg_2_1, test="Chisq")
+       
+       GSL,
+       SOCIALEKLASSE2016,
+       TT_LCAcategory_orig,
+       IL_navigation_LCAcategory_orig,
+       IL_information_LCAcategory_orig,
+       FoPersU_f_LCA,
+       Child_Gender,
+       Temp_Extraversion_f,
+       Temp_Negative_Affectivity_f,
+       Temp_Effortful_Control_f,
+       Child_Parasocial_anthropomorphism_LCAcategory_orig,
+       Child_Parasocial_pararela_LCAcategory_orig,
+       LFT_f,
+       Child_Age_f,
+       PMMS_restrMed_LCAcategory_orig,
+       PMMS_negacMed_LCAcategory_orig,
+       PMMS_posacMed_LCAcategory_orig,
+       current_usage,
+       Child_Nr_f,
+       PERSONEN_f,
+       SHL_f
   #-------------------------------------------------------#
   ### descriptives along classes ##########################
   #-------------------------------------------------------#
@@ -2314,12 +2538,37 @@ print(sessionInfo())
              psych::describeBy(rosie_fscores, group = "fam_class2")
              # 1 = IUS, 2 = LSB
              
-             #visualization (for all indicators that seem to be distinct according to first glance at LCA output and graph of probabilities:
+             #visualization (for all indicators that seem to be discriminating between classes:
              #literacy, parent age, household size, PMMS, SES, technology trust)
              
-             library("ggplot2")
-
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, IL_information_avgsum, FUN=mean), y=IL_information_avgsum)) + 
+             library(ggplot2)
+             is.factor(rosie_fscores$GSL)
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=GSL)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Parent Gender (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             rosie_fscores$SES_num <- as.numeric(rosie_fscores$SOCIALEKLASSE2016)
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=SES_num)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="SES (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1))
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=TT_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=IL_information_avgsum)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
@@ -2327,11 +2576,35 @@ print(sessionInfo())
                theme_bw() +
                theme(axis.text.x=element_text(angle=45, hjust=1)) 
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, IL_navigation_avgsum, FUN=mean), y=IL_navigation_avgsum)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=IL_navigation_avgsum)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=FoPersU)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Frequency of Personal Use (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=Child_Gender)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Gender (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+             
+             ggplot(rosie_fscores, aes(x=reorder(fam_class2, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
                theme_bw() +
                theme(axis.text.x=element_text(angle=45, hjust=1)) 
              
@@ -2374,30 +2647,9 @@ print(sessionInfo())
                labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
                theme_bw() +
                theme(axis.text.x=element_text(angle=45, hjust=1)) 
+            
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, SOCIALEKLASSE2016, FUN=mean), y=SOCIALEKLASSE2016)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="SES (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, TT_avgsum, FUN=mean), y=TT_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
              
        
        #3-class model
@@ -2732,6 +2984,10 @@ print(sessionInfo())
        
        
       # ### 2-class model with 3DVs ########################## 
+      #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
+       rosie_fscores$fam_class2_1_num <- as.numeric(rosie_fscores$fam_class2_1)
+       rosie_fscores$fam_class2_2_num <- as.numeric(rosie_fscores$fam_class2_2)
+       
       rosiesTAM_3DVs <- '
 
       #measurement model
@@ -2740,11 +2996,11 @@ print(sessionInfo())
         E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
         SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
-        PEoU ~ fam_class2
-        PU ~ fam_class2 + PEoU
-        E ~ fam_class2
-        TAM_SS ~ fam_class2
-        SI ~ fam_class2
+        PEoU ~ fam_class2_1_num + fam_class2_2_num
+        PU ~ fam_class2_1_num + fam_class2_2_num + PEoU
+        E ~ fam_class2_1_num + fam_class2_2_num
+        TAM_SS ~ fam_class2_1_num + fam_class2_2_num
+        SI ~ fam_class2_1_num + fam_class2_2_num
         TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
@@ -2775,12 +3031,15 @@ print(sessionInfo())
         TAM_UI_1 ~~ TAM_UI_2
         TAM_UI_1 ~~ TAM_UI_3
         TAM_UI_2 ~~ TAM_UI_3
-        fam_class2 ~~ fam_class2
+        fam_class2_1_num ~~ fam_class2_1_num
+        fam_class2_2_num ~~ fam_class2_2_num
 
       '
 
       #fit the model
-      rosiesTAM_3DVs_fit <- lavaan(rosiesTAM_3DVs, data = rosie_fscores, estimator = "WLSMV")
+      rosiesTAM_3DVs_fit <- lavaan(rosiesTAM_3DVs, data = rosie_fscores) 
+      # Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]],  : 
+      #                                 lavaan ERROR: sample covariance matrix is not positive-definite
 
       #print summary
       summary(rosiesTAM_3DVs_fit, standardized = T, fit.measures = T)
@@ -2880,9 +3139,86 @@ print(sessionInfo())
       #   
       #   
        
+              #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
+              rosie_fscores$fam_class3_1_num <- as.numeric(rosie_fscores$fam_class3_1)
+              rosie_fscores$fam_class3_2_num <- as.numeric(rosie_fscores$fam_class3_2)
+              rosie_fscores$fam_class3_3_num <- as.numeric(rosie_fscores$fam_class3_3)
        
-       
+              rosiesTAM_3DVs_fam_class3 <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class3_1_num + fam_class3_2_num + fam_class3_3_num
+        PU ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num + PEoU
+        E ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num
+        TAM_SS ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num
+        SI ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        TAM_UI_1 ~~ TAM_UI_2
+        TAM_UI_1 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        fam_class3_1_num ~~ fam_class3_1_num
+        fam_class3_2_num ~~ fam_class3_2_num
+        fam_class3_3_num ~~ fam_class3_3_num
+
+      '
+              
+              #fit the model
+              rosiesTAM_3DVs_fam_class3_fit <- lavaan(rosiesTAM_3DVs_fam_class3, data = rosie_fscores) 
+                                              
+              #print summary
+              summary(rosiesTAM_3DVs_fam_class3_fit, standardized = T, fit.measures = T)
+              
+              modindices(rosiesTAM_3DVs_fam_class3_fit, sort = TRUE)
+              
+              #bootstrap model
+              rosiesTAM_3DVs_fit_boostrapped_se <- sem(rosiesTAM_3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000, estimator = "WLS")
+              summary(rosiesTAM_3DVs_fit_boostrapped_se, fit.measures = TRUE)
+              parameterEstimates(rosiesTAM_3DVs_fit_boostrapped_se,
+                                 se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                                 standardized = FALSE,
+                                 fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                                 cov.std = TRUE, fmi.options = list(),
+                                 rsquare = FALSE,
+                                 remove.system.eq = TRUE, remove.eq = TRUE,
+                                 remove.ineq = TRUE, remove.def = FALSE,
+                                 remove.nonfree = FALSE,
+                                 add.attributes = FALSE,
+                                 output = "data.frame", header = FALSE)
+              
+              
         ### 3-class model with 3DVs ##########################
+              
         rosiesTAM_3classes3DVs <- '
 
         #measurement model
@@ -3172,9 +3508,9 @@ print(sessionInfo())
     summary(rosiesTAM_only_fit, standardized = T, fit.measures = T)
     
     #bootstrap model
-    rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores, se = "bootstrap", bootstrap = 1000, estimator = "WLS") 
-    summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
-    parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
+    rosiesTAM_only_fit_boostrapped_se <- sem(rosiesTAM_only, data = rosie_fscores, se = "bootstrap", bootstrap = 1000) 
+    summary(rosiesTAM_only_fit_boostrapped_se, fit.measures = TRUE) 
+    parameterEstimates(rosiesTAM_only_fit_boostrapped_se, 
                        se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
                        standardized = FALSE, 
                        fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
@@ -3185,6 +3521,7 @@ print(sessionInfo())
                        remove.nonfree = FALSE, 
                        add.attributes = FALSE, 
                        output = "data.frame", header = FALSE)
+    
 ###----------------------------------------------------------------------------------------------------------------###  
     
 #----------------------------------------------------------#
