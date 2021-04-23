@@ -29,7 +29,8 @@
  citation("psych") #Revelle, W. (2020) psych: Procedures for Personality and Psychological Research, Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 2.0.12,.
  citation("poLCA") #Drew A. Linzer, Jeffrey B. Lewis (2011). poLCA: An R Package for Polytomous Variable Latent Class Analysis. Journal of Statistical Software, 42(10), 1-29. URL http://www.jstatsoft.org/v42/i10/.
  citation("semPlot") #Sacha Epskamp (2019). semPlot: Path Diagrams and Visual Analysis of Various SEM Packages' Output. R package version 1.1.2. https://CRAN.R-project.org/package=semPlot
-
+ citation("QuantPsyc") #Thomas D. Fletcher (2012). QuantPsyc: Quantitative Psychology Tools. R package version 1.5. https://CRAN.R-project.org/package=QuantPsyc
+ 
  #get loaded versions of packages
 print(sessionInfo())
  
@@ -237,7 +238,7 @@ print(sessionInfo())
    library(dplyr)
    ?dplyr::filter
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Gender != 0 & STATUS == 1)
-   # View(rosie_dataset_renamed_families_complete)
+   #View(rosie_dataset_renamed_families_complete)
    
 #----------------------------------------------------------------------#
 #       CONTINUE WITH FILTERED DATASET
@@ -1023,7 +1024,9 @@ print(sessionInfo())
           summary(threefac2items_PMMS, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .028 NOT > .05, CFI = .974 > 0.95, TLI = .934 > 0.90 and RMSEA = .086 < 0.10 >> Much better fit
           
-        #TAM: 
+        
+          
+      #TAM: 
         
           ### TAM_PEoU >> 4 items #########################
           
@@ -1114,6 +1117,7 @@ print(sessionInfo())
           onefac4items_TAM_PEoU <- cfa(m1e, data=rosie, std.lv=TRUE) 
           summary(onefac4items_TAM_PEoU, fit.measures=TRUE, standardized=TRUE)
           # >> fit index criteria: Chi-Square = .861 > .05, CFI = 1 > 0.95, TLI = 1.012 > 0.90 and RMSEA  = 0 < 0.10 >> VERY NICE
+          
           
           ### TAM_PU >> 4 items #########################
           
@@ -1333,124 +1337,7 @@ print(sessionInfo())
               #parallel analysis to get number of factors
               parallel4 <- fa.parallel(SI_EFA_df, fm = 'minres', fa = 'fa') #suggests 1 factor, so we'll stick with CFA
           
-              
-              
-          # ### (TAM_UI >> 3 items) #########################
-          #   #checking for univariate outliers (+/- 3 SDs from the mean) for each of the three variables showing the reading assessments 
-          #     #visually
-          #     library(lattice)
-          #     boxplot(rosie$TAM_UI_1)
-          #     boxplot(rosie$TAM_UI_2) 
-          #     boxplot(rosie$TAM_UI_3)
-          #     hist(rosie$TAM_UI_1) 
-          #     hist(rosie$TAM_UI_2)
-          #     hist(rosie$TAM_UI_3) 
-          #     densityplot(rosie$TAM_UI_1)
-          #     densityplot(rosie$TAM_UI_2)
-          #     densityplot(rosie$TAM_UI_3)
-          #     
-          #     #numerically 
-          #     #standardize a variable and count the number of cases with values greater or less than 3
-          #     standardized_TAM_UI <- scale(rosie[,c(98:100)]) 
-          #     outliers_TAM_UI <- colSums(abs(standardized_TAM_UI)>=3, na.rm = T) 
-          #     outliers_TAM_UI
-          #     #TAM_UI_1 TAM_UI_2 TAM_UI_3 
-          #     #0         5         0
-          #     
-          #     #For TAM_UI_2: Where are those outliers exactly? In what rows?
-          #     ??scores
-          #     library(outliers)
-          #     outlier_scores_TAM_UI_2 <- scores(rosie$TAM_UI_2)
-          #     is_outlier_TAM_UI_2 <- outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3
-          #     #add a column with info whether the refund_value is an outlier
-          #     rosie$is_outlier_TAM_UI_2 <- is_outlier_TAM_UI_2
-          #     #look at plot
-          #     library(ggplot2)
-          #     ggplot(rosie, aes(TAM_UI_2) +
-          #       geom_boxplot() +
-          #       coord_flip() +
-          #       facet_wrap(~is_outlier_TAM_UI_2)
-          #     #create a dataframe with only outliers
-          #     outlier_TAM_UI_2_df <- rosie[outlier_scores_TAM_UI_2 > 3 | outlier_scores_TAM_UI_2 < -3, ]
-          #     #take a peek
-          #     head(outlier_TAM_UI_2_df) # >> outliers lay in observations 37, 68, 90, 159, 170
-          #     
-          #     # >> TAM_UI_1 = fairly summetrical (skew), fewer returns in its tail than normal (kurtosis), no outliers
-          #     # >> TAM_UI_2 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), 5 outliers
-          #     # >> TAM_UI_3 = moderately negatively skewed, fewer returns in its tail than normal (kurtosis), no outliers
-          # 
-          # #Step 1: correlations
-          # #The function cor specifies a the correlation and round with the option 2 specifies that we want to round the numbers to the second digit.
-          # round(cor(rosie[,98:100]), 2) 
-          # #          TAM_UI_1 TAM_UI_2 TAM_UI_3
-          # #TAM_UI_1      1.00     -0.02      0.07
-          # #TAM_UI_2     -0.02      1.00      0.58
-          # #TAM_UI_3      0.07      0.58      1.00
-          # 
-          # #Step 2: variance-covariance matrix
-          # round(cov(rosie[,98:100]), 2) 
-          # #          TAM_UI_1 TAM_UI_2 TAM_UI_3
-          # #TAM_UI_1      2.97     -0.05      0.22
-          # #TAM_UI_2     -0.05      1.89      1.42
-          # #TAM_UI_3      0.22      1.42      3.17
-          # 
-          # #Step 3: one-factor CFA
-          # #one factor three items, default marker method
-          # m1r  <- ' TAM_UI_f  =~ TAM_UI_1 + TAM_UI_2 + TAM_UI_3'
-          # onefac3items_TAM_UI <- cfa(m1r, data=rosie, std.lv=TRUE) 
-          # summary(onefac3items_TAM_UI, fit.measures=TRUE, standardized=TRUE)
-          # # >> fit index criteria: Chi-Square = .091 > .05, CFI = .999 > 0.95, TLI = 1.00 > 0.90 and RMSEA = 0 < 0.10 >> VERY NICE BUT I HAVE A WEIRD GUT FEELING BECAUSE OF THE NAs FOR SEs
-          # 
-          #       #to double check this structure let's run an EFA
-          # 
-          #       library(psych)
-          #       library(GPArotation)
-          #       
-          #       #creating a subset with the variables relevant for this EFA
-          #       UI <- c("TAM_UI_1", "TAM_UI_2", "TAM_UI_3")
-          #       UI
-          #       UI_EFA_df <- rosie[UI]
-          #       # View(UI_EFA_df)
-          #       
-          #       #parallel analysis to get number of factors
-          #       parallel3 <- fa.parallel(UI_EFA_df, fm = 'minres', fa = 'fa') #suggests 2 factors 
-          #       
-          #       #factor analysis for rotation (first using oblique rotation to check whether factors correlate with each other)
-          #       UI_2factors <- fa(UI_EFA_df,nfactors = 2,rotate = 'oblimin',fm='minres') #factors do not seem to correlate with each other, so orthogonal rotation is better here
-          #       UI_2factors
-          #       print(UI_2factors)
-          #       
-          #             UI_2factors_var <- fa(UI_EFA_df,nfactors = 2,rotate = 'varimax',fm='minres') 
-          #             UI_2factors_var
-          #             print(UI_2factors_var)
-          #       
-          #             #determine cut-off value of loadings .3
-          #             print(UI_2factors_var$loadings,cutoff = 0.3)
-          #             #Loadings:
-          #             #  MR1    MR2   
-          #             #TAM_UI_1         0.337
-          #             #TAM_UI_2  0.776       
-          #             #TAM_UI_3  0.770       
-          #             
-          #             #MR1   MR2
-          #             #SS loadings    1.196 0.156
-          #             #Proportion Var 0.399 0.052
-          #             #Cumulative Var 0.399 0.450
-          #             
-          #             #look at it visually
-          #             fa.diagram(UI_2factors_var)
-          #             
-          #             # >> The root means the square of residuals (RMSR) is 0. This is acceptable as this value should be closer to 0. 
-          #             # >> The Tucker-Lewis Index (TLI) is 1.041. This is an acceptable value considering it’s over 0.9.
-          #             
-          #             #the two emerging factors:
-          #             # >> Factor 1 holding item 1 => parent only usage
-          #             # >> Factor 2 holding items 2 and 3 => child (co)usage
-          #             
-          #             #confirming this with a CFA is problematic because one factor is defined by just one item and, thus, the model will not be identified; also this scale does not represent an existing multiple-item scale
-          #             #and instead represents a separate DV each --> yet: it supports the correlation results for the UI levels and the fact that we distinguish between used by parents only vs. used by child in any way (variable: current usage)
-          #             
-          # 
+          
               
 #-------------------------------------------#
 ####---- 2) Extracting factors scores----####
@@ -1484,7 +1371,7 @@ print(sessionInfo())
                 #adding to rosie-dataset
                 rosie_fscores <- cbind(rosie, onefac3items_TTfitPredict, twofac5items_ILfitPredict, twofac5items_Child_ParasocialfitPredict,
                                        threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
-                                       onefac3items_TAM_SIfitPredict) # ,onefac3items_TAM_UIfitPredict)
+                                       onefac3items_TAM_SIfitPredict) 
                 View(rosie_fscores)
                 
         
@@ -1607,8 +1494,31 @@ print(sessionInfo())
          rosie_fscores$PERSONEN[rosie_fscores$PERSONEN == 1] <- 2
          #check if this worked
          crosstab(rosie_fscores, row.vars = "PERSONEN", type = "f")
-             
-            
+         # PERSONEN Count
+         # 2    21
+         # 3    31
+         # 4    98
+         # 5    26
+         # 6     7
+         # Sum   183
+         crosstab(rosie_fscores, row.vars = "PERSONEN", type = "row.pct")
+         # PERSONEN      %
+         # 2  11.48
+         # 3  16.94
+         # 4  53.55
+         # 5  14.21
+         # 6   3.83
+         # Sum 100.00
+         
+   crosstab(rosie_fscores, row.vars = "Child_Nr", type = "row.pct")
+   # Child_Nr      %
+   # 2  67.76
+   # 3  29.51
+   # 4   2.19
+   # 5   0.55
+   # Sum 100.00
+   
+   
    #check for potential ceiling effect on DV-levels
    describe(rosie_fscores$TAM_UI_1)
    hist(rosie_fscores$TAM_UI_1)
@@ -1622,51 +1532,8 @@ print(sessionInfo())
    densityplot(rosie_fscores$TAM_UI_3)
    ##>> no reason to believe in a ceiling effect
    
+
    
-   #taking a visual look
-   
-   hist(rosie$TT_1) 
-   hist(rosie$TT_2)
-   hist(rosie$TT_3)
-   hist(rosie_fscores$TT_f) #fairly normally distributed
-                
-   hist(rosie$FoPersU)
-   
-   hist(rosie$Child_Temp_Extraversion)
-   hist(rosie$Child_Temp_Negative_Affectivity)
-   hist(rosie$Child_Temp_Effortful_Control)
-                
-   hist(rosie$Child_Parasocial_1) 
-   hist(rosie$Child_Parasocial_2)
-   hist(rosie$Child_Parasocial_3)
-   hist(rosie$Child_Parasocial_4)
-   hist(rosie$Child_Parasocial_5)
-   hist(rosie_fscores$anthropomorphism) #strongly positively skewed
-   hist(rosie_fscores$parasocial_relationship) #positively skewed
-                
-   hist(rosie$PMMS_1)
-   hist(rosie$PMMS_2)
-   hist(rosie$PMMS_3)
-   hist(rosie$PMMS_4)
-   hist(rosie$PMMS_5)
-   hist(rosie$PMMS_6)
-   hist(rosie_fscores$restrMed) #negatively skewed
-   hist(rosie_fscores$negacMed) #negatively skewed
-   hist(rosie_fscores$posacMed) #negatively skewed
-                
-   hist(rosie$LFT) #most parents between 30-50, only very few between 60 - 80
-   hist(rosie$Child_Age) #almost equally distributed, most 8-year olds
-   
-   hist(rosie$IL_1)
-   hist(rosie$IL_2)
-   hist(rosie$IL_3)
-   hist(rosie$IL_4)
-   hist(rosie$IL_5)
-   hist(rosie_fscores$navigation)
-   hist(rosie_fscores$information)
-   
-   hist(rosie$SHL)
-  
    #getting correlations matrix for TAM-variables
    round(cor(rosie_fscores[,c(139:142,94, 98:100)]),2)
    #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SI_f TAM_SS TAM_UI_1 TAM_UI_2 TAM_UI_3
@@ -1724,6 +1591,7 @@ print(sessionInfo())
        # LFT
        # Child_Age
 
+         
        #Social: 
        # PMMS >> 6 items
            # restr
@@ -1741,12 +1609,15 @@ print(sessionInfo())
    #How to meaningfully categorize?
    
        #Dispositional: 
-       # GSL >> already categorical
-       # SOCIALEKLASSE2016 >> already categorical
+       # GSL >> as.factor
+         rosie_fscores$PGender_f <- as.factor(rosie_fscores$GSL)
+       # SOCIALEKLASSE2016 >> as.factor
+         rosie_fscores$SES_f <- as.factor(rosie_fscores$SOCIALEKLASSE2016)
        # TT >> 3 items >> median split method because of conceptual understanding of the scale
        # IL >> 5 items (information + navigation) >> median split method because conceptual understanding of the scale
        # FoPersU >> convert into irregular vs. regular (based on weekly answer option as the cut-off)
-       # Child_Gender > already categorical
+       # Child_Gender > as.factor
+         rosie_fscores$CGender_f <- as.factor(rosie_fscores$Child_Gender)
        # Child_Temp (Extraversion, Negative_Affectivity, Effortful_Control) >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
        # Child_Parasocial >> 5 items two factors (anthropomorphism & parasocial_relationship) >> median split method because conceptual understanding of the scale
        
@@ -1757,7 +1628,10 @@ print(sessionInfo())
        #Social: 
        # PMMS >> 6 items (restsMed & negacMed & posacMed) >> modal split method because of conceptual understanding of the scale
        # current usage >> already categorical (from data cleaning)
+         rosie_fscores$current_usage_f <- as.factor(rosie_fscores$current_usage)
        # household composition >> built up of Child_Nr and PERSONEN >> convert both items into factors
+         rosie_fscores$Child_Nr_f <- as.factor(rosie_fscores$Child_Nr)
+         rosie_fscores$HS_f <- as.factor(rosie_fscores$PERSONEN)
        # smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
    
    #------------------------------------------------------#
@@ -1774,6 +1648,7 @@ print(sessionInfo())
        #median split method
        rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum<=median(rosie_fscores$TT_avgsum)] = 1
        rosie_fscores$TT_LCAcategory_orig[rosie_fscores$TT_avgsum>median(rosie_fscores$TT_avgsum)] = 2
+       rosie_fscores$TT_f <- as.factor(rosie_fscores$TT_LCAcategory_orig)
        
    
    # - IL
@@ -1787,6 +1662,7 @@ print(sessionInfo())
            #median split method !!! Note: Since items were formulated negatively, lower scores indicate higher literacy, so numbers for categories are switched
            rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum<=median(rosie_fscores$IL_navigation_avgsum)] = 2
            rosie_fscores$IL_navigation_LCAcategory_orig[rosie_fscores$IL_navigation_avgsum>median(rosie_fscores$IL_navigation_avgsum)] = 1
+           rosie_fscores$IL_nav_f <- as.factor(rosie_fscores$IL_navigation_LCAcategory_orig)
            
            #information (items 1 + 3)
            rosie_fscores$IL_information_avgsum <- rowMeans(rosie_fscores[, c(101, 103)], na.rm = T)
@@ -1796,23 +1672,26 @@ print(sessionInfo())
            #median split method !!! Note: Since items were formulated negatively, lower scores indicate higher literacy, so numbers for categories are switched
            rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum<=median(rosie_fscores$IL_information_avgsum)] = 2
            rosie_fscores$IL_information_LCAcategory_orig[rosie_fscores$IL_information_avgsum>median(rosie_fscores$IL_information_avgsum)] = 1
+           rosie_fscores$IL_info_f <- as.factor(rosie_fscores$IL_information_LCAcategory_orig)
        
            
    # - FoPersU
    rosie_fscores$FoPersU_f_LCA[rosie_fscores$FoPersU<=2] = 1
    rosie_fscores$FoPersU_f_LCA[rosie_fscores$FoPersU>2] = 2
-   rosie_fscores$FoPersU_f_LCA <-  as.factor(rosie_fscores$FoPersU_f_LCA)
-   is.factor(rosie_fscores$FoPersU_f_LCA)
+   rosie_fscores$FoPersU_f <-  as.factor(rosie_fscores$FoPersU_f_LCA)
            
    # - Child_Temp
    rosie_fscores$Temp_Extraversion_f[rosie_fscores$Child_Temp_Extraversion<=3] = 1
    rosie_fscores$Temp_Extraversion_f[rosie_fscores$Child_Temp_Extraversion>=4] = 2
+   rosie_fscores$Temp_Ex_f <- as.factor(rosie_fscores$Temp_Extraversion_f)
    
    rosie_fscores$Temp_Negative_Affectivity_f[rosie_fscores$Child_Temp_Negative_Affectivity<=3] = 1
    rosie_fscores$Temp_Negative_Affectivity_f[rosie_fscores$Child_Temp_Negative_Affectivity>=4] = 2
+   rosie_fscores$Temp_NegAf_f <- as.factor(rosie_fscores$Temp_Negative_Affectivity_f)
    
    rosie_fscores$Temp_Effortful_Control_f[rosie_fscores$Child_Temp_Effortful_Control<=3] = 1
    rosie_fscores$Temp_Effortful_Control_f[rosie_fscores$Child_Temp_Effortful_Control>=4] = 2
+   rosie_fscores$Temp_EfCon_f <- as.factor(rosie_fscores$Temp_Effortful_Control_f)
    
    # - Child_Parasocial
        #original scale using average sum scores
@@ -1825,6 +1704,8 @@ print(sessionInfo())
            #median split method
            rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum<=median(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)] = 1
            rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig[rosie_fscores$Child_Parasocial_anthropomorphism_avgsum>median(rosie_fscores$Child_Parasocial_anthropomorphism_avgsum)] = 2
+           rosie_fscores$Child_Parasocial_anthro_f <- as.factor(rosie_fscores$Child_Parasocial_anthropomorphism_LCAcategory_orig)
+           
            
            #parasocial relationship (items 2 + 3)
            rosie_fscores$Child_Parasocial_pararela_avgsum <- rowMeans(rosie_fscores[, c(74:75)], na.rm = T)
@@ -1834,15 +1715,18 @@ print(sessionInfo())
            #median split method
            rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum<=median(rosie_fscores$Child_Parasocial_pararela_avgsum)] = 1
            rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig[rosie_fscores$Child_Parasocial_pararela_avgsum>median(rosie_fscores$Child_Parasocial_pararela_avgsum)] = 2
+           rosie_fscores$Child_Parasocial_pararela_f <- as.factor(rosie_fscores$Child_Parasocial_pararela_LCAcategory_orig)
        
    
    # - LFT
    rosie_fscores$LFT_f[rosie_fscores$LFT<=mean(rosie$LFT)] = 1
    rosie_fscores$LFT_f[rosie_fscores$LFT>mean(rosie$LFT)] = 2
+   rosie_fscores$PAge_f <- as.factor(rosie_fscores$LFT_f)
            
    # - Child_Age
    rosie_fscores$Child_Age_f[rosie_fscores$Child_Age<=3] = 1 
    rosie_fscores$Child_Age_f[rosie_fscores$Child_Age>=4] = 2
+   rosie_fscores$CAge_f <- as.factor(rosie_fscores$Child_Age_f)
    
    # - PMMS
        #creating mode function
@@ -1864,6 +1748,7 @@ print(sessionInfo())
            #modal split method
            rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum<=getmode(rosie_fscores$PMMS_restrMed_avgsum)] = 1
            rosie_fscores$PMMS_restrMed_LCAcategory_orig[rosie_fscores$PMMS_restrMed_avgsum>getmode(rosie_fscores$PMMS_restrMed_avgsum)] = 2
+           rosie_fscores$PMMS_restrMed_f <- as.factor(rosie_fscores$PMMS_restrMed_LCAcategory_orig)
            
            
            #negacMed (items 3+5)
@@ -1874,6 +1759,7 @@ print(sessionInfo())
            #modal split method
            rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum<=getmode(rosie_fscores$PMMS_negacMed_avgsum)] = 1
            rosie_fscores$PMMS_negacMed_LCAcategory_orig[rosie_fscores$PMMS_negacMed_avgsum>getmode(rosie_fscores$PMMS_negacMed_avgsum)] = 2
+           rosie_fscores$PMMS_negacMed_f <- as.factor(rosie_fscores$PMMS_negacMed_LCAcategory_orig)
            
            
            #posacMed (items 4+6)
@@ -1884,54 +1770,69 @@ print(sessionInfo())
            #modal split method
            rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum<=getmode(rosie_fscores$PMMS_posacMed_avgsum)] = 1
            rosie_fscores$PMMS_posacMed_LCAcategory_orig[rosie_fscores$PMMS_posacMed_avgsum>getmode(rosie_fscores$PMMS_posacMed_avgsum)] = 2
+           rosie_fscores$PMMS_posacMed_f <- as.factor(rosie_fscores$PMMS_posacMed_LCAcategory_orig)
+   
            
-                
-   # - household composition
-   rosie_fscores$Child_Nr_f <- as.factor(rosie_fscores$Child_Nr)
-   
-   rosie_fscores$PERSONEN_f <- as.factor(rosie_fscores$PERSONEN)
-   
-
-   
    # - smart-household-level
    rosie_fscores$SHL_f[rosie_fscores$SHL<=median(rosie_fscores$SHL)] = 1
    rosie_fscores$SHL_f[rosie_fscores$SHL>median(rosie_fscores$SHL)] = 2
+   rosie_fscores$smHouse_f <- as.factor(rosie_fscores$SHL_f)
    
    
    #check if all new factors are included in the dataset
    View(rosie_fscores)
    names(rosie_fscores)
-   
-   #make sure all new factors are really factors
-   rosie_fscores[, 143:167] <- sapply(rosie_fscores[, 143:167], as.factor)
-
+  
+   #make sure all LCA-indicators are really factors
+   is.factor(rosie_fscores$PGender_f)
+   is.factor(rosie_fscores$SES_f)
+   is.factor(rosie_fscores$CGender_f)
+   is.factor(rosie_fscores$current_usage_f)
+   is.factor(rosie_fscores$Child_Nr_f)
+   is.factor(rosie_fscores$HS_f)
+   is.factor(rosie_fscores$TT_f)
+   is.factor(rosie_fscores$IL_nav_f)
+   is.factor(rosie_fscores$IL_info_f)
+   is.factor(rosie_fscores$FoPersU_f)
+   is.factor(rosie_fscores$Temp_Ex_f)
+   is.factor(rosie_fscores$Temp_NegAf_f)
+   is.factor(rosie_fscores$Temp_EfCon_f)
+   is.factor(rosie_fscores$Child_Parasocial_anthro_f)
+   is.factor(rosie_fscores$Child_Parasocial_pararela_f)
+   is.factor(rosie_fscores$PAge_f)
+   is.factor(rosie_fscores$CAge_f)
+   is.factor(rosie_fscores$PMMS_restrMed_f)
+   is.factor(rosie_fscores$PMMS_negacMed_f)
+   is.factor(rosie_fscores$PMMS_posacMed_f)
+   is.factor(rosie_fscores$smHouse_f)
+             
    
    #--------------------------------------------#
    ### running the LCA ##########################
    #--------------------------------------------#
    
    library(poLCA) 
-   LCAmodel <- cbind(GSL,
-                        SOCIALEKLASSE2016,
-                        TT_LCAcategory_orig,
-                        IL_navigation_LCAcategory_orig,
-                        IL_information_LCAcategory_orig,
-                        FoPersU_f_LCA,
-                        Child_Gender,
-                        Temp_Extraversion_f,
-                        Temp_Negative_Affectivity_f,
-                        Temp_Effortful_Control_f,
-                        Child_Parasocial_anthropomorphism_LCAcategory_orig,
-                        Child_Parasocial_pararela_LCAcategory_orig,
-                        LFT_f,
-                        Child_Age_f,
-                        PMMS_restrMed_LCAcategory_orig,
-                        PMMS_negacMed_LCAcategory_orig,
-                        PMMS_posacMed_LCAcategory_orig,
-                        current_usage,
-                        Child_Nr_f,
-                        PERSONEN_f,
-                        SHL_f)~1
+   LCAmodel <- cbind(PGender_f,
+                     SES_f,
+                     CGender_f,
+                     current_usage_f,
+                     Child_Nr_f,
+                     HS_f,
+                     TT_f,
+                     IL_nav_f,
+                     IL_info_f,
+                     FoPersU_f,
+                     Temp_Ex_f,
+                     Temp_NegAf_f,
+                     Temp_EfCon_f,
+                     Child_Parasocial_anthro_f,
+                     Child_Parasocial_pararela_f,
+                     PAge_f,
+                     CAge_f,
+                     PMMS_restrMed_f,
+                     PMMS_negacMed_f,
+                     PMMS_posacMed_f,
+                     smHouse_f)~1
 
 
    set.seed(123)
@@ -1949,7 +1850,13 @@ print(sessionInfo())
    set.seed(123)
    LCAmodel6 <- poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE) 
  
-   summary(LCAmodel3)
+   set.seed(123)
+   LCAmodel7 <- poLCA(LCAmodel, data=rosie_fscores, nclass=7, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE) 
+   #>> negative degrees of freedom 
+   # --> ALERT: number of parameters estimated ( 209 ) exceeds number of observations ( 183 ) 
+   #--> ALERT: negative degrees of freedom; respecify model 
+   ### >> We will more thoroughly look into models 2-6!
+  
    
    #-------------------------------------------#
    ### evaluating LCA ##########################
@@ -1958,6 +1865,8 @@ print(sessionInfo())
    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
    
    # getting fit indices in a table
+   summary(LCAmodel3)
+   
              tab.modfit<-data.frame(matrix(rep(999,6),nrow=1))
              names(tab.modfit)<-c("log-likelihood",
                                     "resid. df","BIC",
@@ -1985,13 +1894,13 @@ print(sessionInfo())
             
              
              tab.modfit
-             # log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
-             # 2       -2625.15       154 5401.37 5309.52 5430.37          3343.62      2
+             #   log-likelihood resid. df     BIC    aBIC    cAIC likelihood-ratio Nclass
+             # 2       -2568.87       124 5445.10 5258.24 5504.10          3231.07      2
              # 3       -2523.70        94 5511.04 5229.16 5600.04          3140.73      3
              # 4       -2487.66        64 5595.25 5218.35 5714.25          3068.64      4
-             # 5       -2462.09        34 5700.40 5228.49 5849.40          3017.51      5
-             # 6       -2423.63         4 5779.76 5212.83 5958.76          2940.59      6
-   
+             # 5       -2455.47        34 5687.16 5215.25 5836.16          3004.28      5
+             # 6       -2420.92         4 5774.34 5207.41 5953.34          2935.17      6
+             
    # visualize fit indices per LCA model 
                # convert table into long format
                library("forcats")
@@ -2032,14 +1941,16 @@ print(sessionInfo())
                
                # https://www.tandfonline.com/doi/full/10.1080/10705510701575396
                
-               # >> 5-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes)
+               # >> 6-class model has lowest aBIC (which is preferred for categorical variables and small sample sizes).
+               # >> But it is not the first "dip" in the plot, the first "dip" is the 3-class model.
+               # >> However, the 4-class model has an even lower aBIC than the 3-class model... 
                
-       # taking closer look at each model solution 
-               #make a graph of probabilities (https://statistics.ohlsen-web.de/latent-class-analysis-polca/)
+               
+       # taking closer look at each model solution by looking at the class probabilities (https://statistics.ohlsen-web.de/latent-class-analysis-polca/)
                library(ggplot2)
                      #2-class model
                      lcmodel2 <- reshape2::melt(LCAmodel2$probs, level=2)
-                     zp1 <- ggplot(lcmodel2,aes(x = L2, y = value, fill = Var2))
+                     zp1 <- ggplot(lcmodel2,aes(x = L2, y = value, fill = as.factor(Var2)))
                      zp1 <- zp1 + geom_bar(stat = "identity", position = "stack")
                      zp1 <- zp1 + facet_grid(Var1 ~ .) 
                      zp1 <- zp1 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
@@ -2054,7 +1965,7 @@ print(sessionInfo())
                      
                      #3-class model
                      lcmodel3 <- reshape2::melt(LCAmodel3$probs, level=2)
-                     zp2 <- ggplot(lcmodel3,aes(x = L2, y = value, fill = Var2))
+                     zp2 <- ggplot(lcmodel3,aes(x = L2, y = value, fill = as.factor(Var2)))
                      zp2 <- zp2 + geom_bar(stat = "identity", position = "stack")
                      zp2 <- zp2 + facet_grid(Var1 ~ .) 
                      zp2 <- zp2 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
@@ -2066,9 +1977,10 @@ print(sessionInfo())
                      zp2 <- zp2 + guides(fill = guide_legend(reverse=TRUE))
                      print(zp2)
                      
+                     
                      #4-class model
                      lcmodel4 <- reshape2::melt(LCAmodel4$probs, level=2)
-                     zp3 <- ggplot(lcmodel4,aes(x = L2, y = value, fill = Var2))
+                     zp3 <- ggplot(lcmodel4,aes(x = L2, y = value, fill = as.factor(Var2)))
                      zp3 <- zp3 + geom_bar(stat = "identity", position = "stack")
                      zp3 <- zp3 + facet_grid(Var1 ~ .) 
                      zp3 <- zp3 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
@@ -2083,7 +1995,7 @@ print(sessionInfo())
                      
                      #5-class model
                      lcmodel5 <- reshape2::melt(LCAmodel5$probs, level=2)
-                     zp4 <- ggplot(lcmodel5,aes(x = L2, y = value, fill = Var2))
+                     zp4 <- ggplot(lcmodel5,aes(x = L2, y = value, fill = as.factor(Var2)))
                      zp4 <- zp4 + geom_bar(stat = "identity", position = "stack")
                      zp4 <- zp4 + facet_grid(Var1 ~ .) 
                      zp4 <- zp4 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
@@ -2098,7 +2010,7 @@ print(sessionInfo())
                      
                      #6-class model
                      lcmodel6 <- reshape2::melt(LCAmodel6$probs, level=2)
-                     zp5 <- ggplot(lcmodel6,aes(x = L2, y = value, fill = Var2))
+                     zp5 <- ggplot(lcmodel6,aes(x = L2, y = value, fill = as.factor(Var2)))
                      zp5 <- zp5 + geom_bar(stat = "identity", position = "stack")
                      zp5 <- zp5 + facet_grid(Var1 ~ .) 
                      zp5 <- zp5 + scale_fill_brewer(type="seq", palette="Greys") +theme_bw()
@@ -2110,39 +2022,9 @@ print(sessionInfo())
                      zp5 <- zp5 + guides(fill = guide_legend(reverse=TRUE))
                      print(zp5)
                     
-                # >>> Generally, the same handful indicators seem to be most responsible for 
-                #     discriminating between classes: literacy, household size, PMMS, and negative affective termperaement.
-                #     In some also parent age and SES.
+
                      
-                     
-  #We proceed by extracting the LCA solutions, creating a new fam_class variable for each model
-               
-         #extract 2-class solution and save in twoclass object (https://osf.io/vec6s/)
-           set.seed(123)
-           twoclass=poLCA(LCAmodel, data=rosie_fscores, nclass=2, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
-           
-           #output predicted classes from selected model so that we can use it in subsequent analyses:
-           rosie_fscores$fam_class2=twoclass$predclass
-           
-           #View(rosie_fscores)
-           
-           rosie_fscores$fam_class2 <- as.factor(rosie_fscores$fam_class2)
-           
-           #name the levels of the class factor using the response probabilities plot
-           # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="1"] <- "XXX"
-           # levels(rosie_fscores$fam_class2)[levels(rosie_fscores$fam_class2)=="2"] <- "YYY"
-           
-               #load function for crosstabs to see whether classes relate to the urban/rural areas
-               source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
-               crosstab(rosie_fscores, row.vars = "GEMGROOTTE", col.vars = "fam_class2", type = "f")
-               #             fam_class2   1   2 Sum
-               # GEMGROOTTE                       
-               # 4                      22  42  64
-               # 1                       4   9  13
-               # 2                      27  32  59
-               # 3                      17  25  42
-               # 5                       1   4   5
-               # Sum                    71 112 183
+  #We proceed by extracting the LCA solutions for the 3- and 4-class model 
            
            
     #extract 3-class solution and save in twoclass object (https://osf.io/vec6s/)
@@ -2173,125 +2055,9 @@ print(sessionInfo())
        
        rosie_fscores$fam_class4 <- as.factor(rosie_fscores$fam_class4)
        
-       
-    #extract 5-class solution and save in fiveclass object (https://osf.io/vec6s/)
-       set.seed(123)
-       fiveclass=poLCA(LCAmodel, data=rosie_fscores, nclass=5, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
-       
-       #output predicted classes from selected model so that we can use it in subsequent analyses:
-       rosie_fscores$fam_class5=fiveclass$predclass
-       
-       #View(rosie_fscores)
-       
-       rosie_fscores$fam_class5 <- as.factor(rosie_fscores$fam_class5) 
     
-       
-    #extract 6-class solution and save in sixclass object (https://osf.io/vec6s/)
-       set.seed(123)
-       sixclass=poLCA(LCAmodel, data=rosie_fscores, nclass=6, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE)
-       
-       #output predicted classes from selected model so that we can use it in subsequent analyses:
-       rosie_fscores$fam_class6=sixclass$predclass
-       
-       #View(rosie_fscores)
-       
-       rosie_fscores$fam_class6 <- as.factor(rosie_fscores$fam_class6) 
-     
-         
- #We now run a logistic regression for each dummy variable to see which indicators overall discriminating between classes
-       #2-class model
-       #reference is class 2 due to higher estimated class population
-       rosie_fscores$fam_class2_relevel <- relevel(as.factor(rosie_fscores$fam_class2), ref=1)
-       table(rosie_fscores$fam_class2, rosie_fscores$fam_class2_relevel)
-       
-       library(nnet)
-       logreg1 <- multinom(fam_class2 ~ GSL+
-                           SOCIALEKLASSE2016+
-                           TT_LCAcategory_orig+
-                           IL_navigation_LCAcategory_orig+
-                           IL_information_LCAcategory_orig+
-                           FoPersU_f_LCA+
-                           Child_Gender+
-                           Temp_Extraversion_f+
-                           Temp_Negative_Affectivity_f+
-                           Temp_Effortful_Control_f+
-                           Child_Parasocial_anthropomorphism_LCAcategory_orig+
-                           Child_Parasocial_pararela_LCAcategory_orig+
-                           LFT_f+
-                           Child_Age_f+
-                           PMMS_restrMed_LCAcategory_orig+
-                           PMMS_negacMed_LCAcategory_orig+
-                           PMMS_posacMed_LCAcategory_orig+
-                           current_usage+
-                           Child_Nr_f+
-                           PERSONEN_f+
-                           SHL_f, data=rosie_fscores)
-       summary(logreg1)
-       
-       # to obtain odds ratio 
-       coef(logreg1)
-       
-       # to obtain 95% CIs for OR
-       confint(logreg1)
-      
-       
-       #3-class model
-       #reference is class 3 due to highest estimated class population
-       rosie_fscores$fam_class3_relevel <- relevel(as.factor(rosie_fscores$fam_class3), ref=3)
-       table(rosie_fscores$fam_class3, rosie_fscores$fam_class3_relevel)
-       logreg2 <- multinom(fam_class3 ~ GSL+
-                             SOCIALEKLASSE2016+
-                             TT_LCAcategory_orig+
-                             IL_navigation_LCAcategory_orig+
-                             IL_information_LCAcategory_orig+
-                             FoPersU_f_LCA+
-                             Child_Gender+
-                             Temp_Extraversion_f+
-                             Temp_Negative_Affectivity_f+
-                             Temp_Effortful_Control_f+
-                             Child_Parasocial_anthropomorphism_LCAcategory_orig+
-                             Child_Parasocial_pararela_LCAcategory_orig+
-                             LFT_f+
-                             Child_Age_f+
-                             PMMS_restrMed_LCAcategory_orig+
-                             PMMS_negacMed_LCAcategory_orig+
-                             PMMS_posacMed_LCAcategory_orig+
-                             current_usage+
-                             Child_Nr_f+
-                             PERSONEN_f+
-                             SHL_f, data=rosie_fscores)
-       summary(logreg2)
-       
-       # to obtain 95% CIs for OR
-       confint(logreg1)
-       
-       
-       #TRY-OUTS
-       exp(logreg1$coefficients)
-       exp(confint(model.10k))
-       
-       predict(logreg1)
-       predict(logreg1, type='response')
-       logreg1$fitted.values
-       
-       plot(rosie_fscores$majority, model.10k$fitted.values, ylab='Probability(Expenses problem)', xlab='Majority')
-       
-       logreg1.rrr = exp(coef(logreg1))
-       logreg1.rrr
-
-       library(stargazer)
-       stargazer(logreg1, type='text', out="/Users/rebeccawald/Desktop/ROSIE_surfdrive/Project ROSIE/Study_1/Analysis/R_Scripts/Results_KANTAR_analysis/visualizations/LCA/new/logreg1_output_logodds.tex")
-       stargazer(m2, type='text', coef=list(m2.rrr), out="/Users/marieke/surfdrive/Study1/tables/m2_output_rrr.tex")
-       
            
- #We now recode the created fam_class variables for each model into dummy coded variables, since we need them for the SEM
-       #for 2class solution
-       rosie_fscores$fam_class2_1 <- ifelse(rosie_fscores$fam_class2 == "1", 1, 0) 
-       rosie_fscores$fam_class2_2 <- ifelse(rosie_fscores$fam_class2 == "2", 1, 0) 
-       
-       rosie_fscores$fam_class2_1 <- as.factor(rosie_fscores$fam_class2_1)   
-       rosie_fscores$fam_class2_2 <- as.factor(rosie_fscores$fam_class2_2)
-       
+  #We now recode the created fam_class variables for each model into dummy coded variables, since we need them for the SEM
        
        #for 3class solution
        rosie_fscores$fam_class3_1 <- ifelse(rosie_fscores$fam_class3 == "1", 1, 0) 
@@ -2313,537 +2079,735 @@ print(sessionInfo())
        rosie_fscores$fam_class4_3 <- as.factor(rosie_fscores$fam_class4_3)
        rosie_fscores$fam_class4_4 <- as.factor(rosie_fscores$fam_class4_4)
        
+       View(rosie_fscores)
        
-       #for 5class solution
-       rosie_fscores$fam_class5_1 <- ifelse(rosie_fscores$fam_class5 == "1", 1, 0) 
-       rosie_fscores$fam_class5_2 <- ifelse(rosie_fscores$fam_class5 == "2", 1, 0)
-       rosie_fscores$fam_class5_3 <- ifelse(rosie_fscores$fam_class5 == "3", 1, 0) 
-       rosie_fscores$fam_class5_4 <- ifelse(rosie_fscores$fam_class5 == "4", 1, 0)
-       rosie_fscores$fam_class5_5 <- ifelse(rosie_fscores$fam_class5 == "5", 1, 0)
-       
-       rosie_fscores$fam_class5_1 <- as.factor(rosie_fscores$fam_class5_1)   
-       rosie_fscores$fam_class5_2 <- as.factor(rosie_fscores$fam_class5_2)
-       rosie_fscores$fam_class5_3 <- as.factor(rosie_fscores$fam_class5_3)
-       rosie_fscores$fam_class5_4 <- as.factor(rosie_fscores$fam_class5_4)
-       rosie_fscores$fam_class5_5 <- as.factor(rosie_fscores$fam_class5_5)
-       
-       #for 6class solution
-       rosie_fscores$fam_class6_1 <- ifelse(rosie_fscores$fam_class6 == "1", 1, 0) 
-       rosie_fscores$fam_class6_2 <- ifelse(rosie_fscores$fam_class6 == "2", 1, 0)
-       rosie_fscores$fam_class6_3 <- ifelse(rosie_fscores$fam_class6 == "3", 1, 0) 
-       rosie_fscores$fam_class6_4 <- ifelse(rosie_fscores$fam_class6 == "4", 1, 0)
-       rosie_fscores$fam_class6_5 <- ifelse(rosie_fscores$fam_class6 == "5", 1, 0)
-       rosie_fscores$fam_class6_6 <- ifelse(rosie_fscores$fam_class6 == "6", 1, 0)
-       
-       rosie_fscores$fam_class6_1 <- as.factor(rosie_fscores$fam_class6_1)   
-       rosie_fscores$fam_class6_2 <- as.factor(rosie_fscores$fam_class6_2)
-       rosie_fscores$fam_class6_3 <- as.factor(rosie_fscores$fam_class6_3)
-       rosie_fscores$fam_class6_4 <- as.factor(rosie_fscores$fam_class6_4)
-       rosie_fscores$fam_class6_5 <- as.factor(rosie_fscores$fam_class6_5)
-       rosie_fscores$fam_class6_6 <- as.factor(rosie_fscores$fam_class6_6)
-       
- #We now run a logistic regression for each dummy variable to see which indicators overall discriminating between classes
-       
-    #logreg for 2class solution --> significant indicators are: 
-            #TT
-            #IL navigation
-            #FoPersU
-            #Temperament Negative Affectivity
-            #Parent Age
-            #PMMS (all styles)
-            #current usage
-            #SES
-            #Household size (PERSONEN)
-       
-       TT_log_reg_2_1 <- glm(fam_class2_1 ~ TT_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(TT_log_reg_2_1)
-       
-       IL_info_log_reg_2_1 <- glm(fam_class2_1 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_info_log_reg_2_1) #not significant
-
-       IL_nav_log_reg_2_1 <- glm(fam_class2_1 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_nav_log_reg_2_1)
-
-       FoPersU_log_reg_2_1 <- glm(fam_class2_1 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
-       summary(FoPersU_log_reg_2_1)
-       
-       TNeAf_log_reg_2_1 <- glm(fam_class2_1 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
-       summary(TNeAf_log_reg_2_1)
-       
-       PAge_log_reg_2_1 <- glm(fam_class2_1 ~ LFT_f, data = rosie_fscores, family = "binomial")
-       summary(PAge_log_reg_2_1)
-
-       PMMS_rM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_restrMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(PMMS_rM_log_reg_2_1)
-       
-       PMMS_nM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_negacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(PMMS_nM_log_reg_2_1)
-       
-       PMMS_pM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_posacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(PMMS_pM_log_reg_2_1)
-
-       cu_log_reg_2_1 <- glm(fam_class2_1 ~ current_usage, data = rosie_fscores, family = "binomial")
-       summary(cu_log_reg_2_1)
-       
-       SES_log_reg_2_1 <- glm(fam_class2_1 ~ SOCIALEKLASSE2016, data = rosie_fscores, family = "binomial")
-       summary(SES_log_reg_2_1)
-       drop1(SES_log_reg_2_1, test="Chisq")
-       
-       PERSONEN_log_reg_2_1 <- glm(fam_class2_1 ~ PERSONEN_f, data = rosie_fscores, family = "binomial")
-       summary(PERSONEN_log_reg_2_1)
-       drop1(PERSONEN_log_reg_2_1, test="Chisq")
-       
-     
- 
-    #logreg for 3class solution --> significant indicators are: 
-         #SES
-         #TT but not for class 1
-         #IL_navigation
-         #IL_information but not for class 3
-         #Temp_Negative_Affectivity but not for class 2
-         #Child_Parasocial_anthropomorphism but not for class 1
-         #Child_PArasocial_pararela but only for class 2
-         #Parent Age but not for class 2
-       
-       SES_log_reg_3_1 <- glm(fam_class3_1 ~ SOCIALEKLASSE2016+fam_class3_2, data = rosie_fscores, family = "binomial")
-       summary(SES_log_reg_3_1)
-       drop1(SES_log_reg_3_1, test="Chisq")
-       
-       TT_log_reg_3_1 <- glm(fam_class3_1 ~ TT_LCAcategory_orig+fam_class3_2, data = rosie_fscores, family = "binomial")
-       summary(TT_log_reg_3_1) #not significant
-       TT_log_reg_3_2 <- glm(fam_class3_2 ~ TT_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(TT_log_reg_3_2)
-       TT_log_reg_3_3 <- glm(fam_class3_3 ~ TT_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(TT_log_reg_3_3)
-       
-       IL_info_log_reg_3_1 <- glm(fam_class3_1 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_info_log_reg_3_1) 
-       IL_info_log_reg_3_2 <- glm(fam_class3_2 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_info_log_reg_3_2)
-       IL_info_log_reg_3_3 <- glm(fam_class3_3 ~ IL_information_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_info_log_reg_3_3) #not significant
-       
-       IL_nav_log_reg_3_1 <- glm(fam_class3_1 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_nav_log_reg_3_1)
-       IL_nav_log_reg_3_2 <- glm(fam_class3_2 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_nav_log_reg_3_2)
-       IL_nav_log_reg_3_3 <- glm(fam_class3_2 ~ IL_navigation_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(IL_nav_log_reg_3_3)
-       
-       # FoPersU_log_reg_3_1 <- glm(fam_class3_1 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
-       # summary(FoPersU_log_reg_3_1) 
-       # FoPersU_log_reg_3_2 <- glm(fam_class3_2 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
-       # summary(FoPersU_log_reg_3_2)
-       # FoPersU_log_reg_3_3 <- glm(fam_class3_3 ~ FoPersU_f_LCA, data = rosie_fscores, family = "binomial")
-       # summary(FoPersU_log_reg_3_3)
-       
-       # CGender_log_reg_3_1 <- glm(fam_class3_1 ~ Child_Gender, data = rosie_fscores, family = "binomial")
-       # summary(CGender_log_reg_3_1)
-       # CGender_log_reg_3_2 <- glm(fam_class3_2 ~ Child_Gender, data = rosie_fscores, family = "binomial")
-       # summary(CGender_log_reg_3_2)
-       # CGender_log_reg_3_3 <- glm(fam_class3_3 ~ Child_Gender, data = rosie_fscores, family = "binomial")
-       # summary(CGender_log_reg_3_3)
-       
-       # Temp_Extraversion_f_log_reg_3_1 <- glm(fam_class3_1 ~ Temp_Extraversion_f, data = rosie_fscores, family = "binomial")
-       # summary(Temp_Extraversion_f_log_reg_3_1)
-       # Temp_Extraversion_f_log_reg_3_2 <- glm(fam_class3_2 ~ Temp_Extraversion_f, data = rosie_fscores, family = "binomial")
-       # summary(Temp_Extraversion_f_log_reg_3_2)
-       # Temp_Extraversion_f_log_reg_3_3 <- glm(fam_class3_3 ~ Temp_Extraversion_f, data = rosie_fscores, family = "binomial")
-       # summary(Temp_Extraversion_f_log_reg_3_3)
-       
-       Temp_Negative_Affectivity_f_log_reg_3_1 <- glm(fam_class3_1 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
-       summary(Temp_Negative_Affectivity_f_log_reg_3_1)
-       Temp_Negative_Affectivity_f_log_reg_3_2 <- glm(fam_class3_2 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
-       summary(Temp_Negative_Affectivity_f_log_reg_3_2) #not significant
-       Temp_Negative_Affectivity_f_log_reg_3_3 <- glm(fam_class3_3 ~ Temp_Negative_Affectivity_f, data = rosie_fscores, family = "binomial")
-       summary(Temp_Negative_Affectivity_f_log_reg_3_3)
-       
-       # Temp_Effortful_Control_f_log_reg_3_1 <- glm(fam_class3_1 ~ Temp_Effortful_Control_f, data = rosie_fscores, family = "binomial")
-       # summary(Temp_Effortful_Control_f_log_reg_3_1)
-       # Temp_Effortful_Control_f_log_reg_3_2 <- glm(fam_class3_2 ~ Temp_Effortful_Control_f, data = rosie_fscores, family = "binomial")
-       # summary(Temp_Effortful_Control_f_log_reg_3_2)
-       # Temp_Effortful_Control_f_log_reg_3_3 <- glm(fam_class3_3 ~ Temp_Effortful_Control_f, data = rosie_fscores, family = "binomial")
-       # summary(Temp_Effortful_Control_f_log_reg_3_3)
-       
-       Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_1 <- glm(fam_class3_1 ~ Child_Parasocial_anthropomorphism_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_1) #not significant
-       Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_2 <- glm(fam_class3_2 ~ Child_Parasocial_anthropomorphism_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_2) 
-       Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_3 <- glm(fam_class3_3 ~ Child_Parasocial_anthropomorphism_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(Child_Parasocial_anthropomorphism_LCAcategory_orig_log_reg_3_3)
-       
-       
-       Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_1 <- glm(fam_class3_1 ~ Child_Parasocial_pararela_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_1) #not significant
-       Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_2 <- glm(fam_class3_2 ~ Child_Parasocial_pararela_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_2) 
-       Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_3 <- glm(fam_class3_3 ~ Child_Parasocial_pararela_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(Child_Parasocial_pararela_LCAcategory_orig_log_reg_3_3) #not significant
-       
-       LFT_f_log_reg_3_1 <- glm(fam_class3_1 ~ LFT_f, data = rosie_fscores, family = "binomial")
-       summary(LFT_f_log_reg_3_1) 
-       LFT_f_log_reg_3_2 <- glm(fam_class3_2 ~ LFT_f, data = rosie_fscores, family = "binomial")
-       summary(LFT_f_log_reg_3_2) #not significant
-       LFT_f_log_reg_3_3 <- glm(fam_class3_3 ~ LFT_f, data = rosie_fscores, family = "binomial")
-       summary(LFT_f_log_reg_3_3)
-       
-       PMMS_rM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_restrMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(PMMS_rM_log_reg_2_1)
-       
-       PMMS_nM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_negacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(PMMS_nM_log_reg_2_1)
-       
-       PMMS_pM_log_reg_2_1 <- glm(fam_class2_1 ~ PMMS_posacMed_LCAcategory_orig, data = rosie_fscores, family = "binomial")
-       summary(PMMS_pM_log_reg_2_1)
-       
-       cu_log_reg_2_1 <- glm(fam_class2_1 ~ current_usage, data = rosie_fscores, family = "binomial")
-       summary(cu_log_reg_2_1)
-       
-       SES_log_reg_2_1 <- glm(fam_class2_1 ~ SOCIALEKLASSE2016, data = rosie_fscores, family = "binomial")
-       summary(SES_log_reg_2_1)
-       drop1(SES_log_reg_2_1, test="Chisq")
-       
-       PERSONEN_log_reg_2_1 <- glm(fam_class2_1 ~ PERSONEN_f, data = rosie_fscores, family = "binomial")
-       summary(PERSONEN_log_reg_2_1)
-       drop1(PERSONEN_log_reg_2_1, test="Chisq")
-       
-       GSL,
-       SOCIALEKLASSE2016,
-       TT_LCAcategory_orig,
-       IL_navigation_LCAcategory_orig,
-       IL_information_LCAcategory_orig,
-       FoPersU_f_LCA,
-       Child_Gender,
-       Temp_Extraversion_f,
-       Temp_Negative_Affectivity_f,
-       Temp_Effortful_Control_f,
-       Child_Parasocial_anthropomorphism_LCAcategory_orig,
-       Child_Parasocial_pararela_LCAcategory_orig,
-       LFT_f,
-       Child_Age_f,
-       PMMS_restrMed_LCAcategory_orig,
-       PMMS_negacMed_LCAcategory_orig,
-       PMMS_posacMed_LCAcategory_orig,
-       current_usage,
-       Child_Nr_f,
-       PERSONEN_f,
-       SHL_f
   #-------------------------------------------------------#
   ### descriptives along classes ##########################
   #-------------------------------------------------------#
-       
-       #2-class model
+      
+        #4-class model
              #numbers
              library(psych)
-             psych::describeBy(rosie_fscores, group = "fam_class2")
-             # 1 = IUS, 2 = LSB
+             psych::describeBy(rosie_fscores, group = "fam_class4")
+
              
-             #visualization (for all indicators that seem to be discriminating between classes:
-             #literacy, parent age, household size, PMMS, SES, technology trust)
-             
-             library(ggplot2)
-             is.factor(rosie_fscores$GSL)
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=GSL)) + 
+             #visualization (converting factors into numeric variables if original scale was not numeric already)
+             library("ggplot2")
+             rosie_fscores$PGender_num <- as.numeric(rosie_fscores$PGender_f)
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=PGender_num)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Parent Gender (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
              
-             rosie_fscores$SES_num <- as.numeric(rosie_fscores$SOCIALEKLASSE2016)
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=SES_num)) + 
+             rosie_fscores$SES_num <- as.numeric(rosie_fscores$SES_f)
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=SES_num)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="SES (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1))
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
              
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=TT_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=IL_information_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=IL_navigation_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=FoPersU)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Frequency of Personal Use (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=factor(fam_class2), y=Child_Gender)) + 
+             rosie_fscores$CGender_num <- as.numeric(rosie_fscores$CGender_f)
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=CGender_num)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Child Gender (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=current_usage)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
+               labs(x="Family Types", y="Current Usage (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, LFT, FUN=mean), y=LFT)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Nr)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
+               labs(x="Family Types", y="Number of Children (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PERSONEN, FUN=mean), y=PERSONEN)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=PERSONEN)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Household Size (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 4 is different from all, class 2 is different from 3
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PMMS_restrMed_avgsum, FUN=mean), y=PMMS_restrMed_avgsum)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=TT_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 3 is different from class 1 and from class 4
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=IL_information_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 2 is different from all, class 1 is different from 3 and 4, 
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=IL_navigation_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 3 is different from all, class 1 & 2 are different from class 4
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=FoPersU)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Frequency of Personal Use (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 1 is different from class 2 and 4
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Temp_Extraversion)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Extraversion (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Temp_Negative_Affectivity)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 2 and 3 are different
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Temp_Effortful_Control)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Temperament Effortful Control (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 2 is different from 1 and 3
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Parasocial_anthropomorphism_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Anthropomorphism (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Parasocial_pararela_avgsum)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Parasocial Relationship (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 1 is different from 2
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=LFT)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 2 is different from class 1 & 3
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=Child_Age)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Child Age (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #no differences
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=PMMS_restrMed_avgsum)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Restrictive Mediation (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 4 is different from all
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PMMS_negacMed_avgsum, FUN=mean), y=PMMS_negacMed_avgsum)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=PMMS_negacMed_avgsum)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Negative Active Mediation (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 3 and 4 are different from all
              
-             ggplot(rosie_fscores, aes(x=reorder(fam_class2, PMMS_posacMed_avgsum, FUN=mean), y=PMMS_posacMed_avgsum)) + 
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=PMMS_posacMed_avgsum)) + 
                geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
                geom_point(stat="summary", fun.y="mean") + 
                geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
                labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
                theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 4 is different from all
+             
+             ggplot(rosie_fscores, aes(x=factor(fam_class4), y=SHL)) + 
+               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+               geom_point(stat="summary", fun.y="mean") + 
+               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+               labs(x="Family Types", y="Smart-Household-Level (mean + 95%CI)") +
+               theme_bw() +
+               theme(axis.text.x=element_text(angle=45, hjust=1)) #class 1 is different from all
+          
+  
+   #------------------------------------#
+   ### ANOVAs ##########################
+   #------------------------------------#             
+  #We now run analyses of variances for all indicators using its original scale to see whether the family types significantly differ between each other.
+             
+        #for 4-class model
+             
+             # Compute the analysis of variance
+             anova_PGender <- aov(PGender_num ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PGender) # not significant
+             # Alternative non-parametric test
+             kruskal.test(PGender_num ~ fam_class4, data = rosie_fscores) #not significant
+             
+             
+             # Compute the analysis of variance
+             anova_SES <- aov(SES_num ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_SES) #significant
+             # Alternative non-parametric test
+             kruskal.test(SES_num ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_SES)
+                   # $fam_class4
+                   #            diff         lwr        upr     p adj
+                   # 2-1 -0.15274725 -0.71322246 0.40772796 0.8943141
+                   # 3-1 -0.47792208 -1.01394971 0.05810555 0.0990675
+                   # 4-1  0.05238095 -0.58543372 0.69019563 0.9965752
+                   # 3-2 -0.32517483 -0.80050988 0.15016023 0.2892257
+                   # 4-2  0.20512821 -0.38260077 0.79285718 0.8021301
+                   # 4-3  0.53030303 -0.03415999 1.09476606 0.0739852
+                   # >> No significant differences between classes according to adjusted p-values.
+                   
+             
+                   
+             # Compute the analysis of variance
+             anova_TT <- aov(TT_avgsum ~ fam_class4, data = rosie_fscores)
+             # Summary of the analysis
+             summary(anova_TT) #significant
+             # Alternative non-parametric test
+             kruskal.test(TT_avgsum ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_TT)
+                   # $fam_class4
+                   # diff         lwr         upr     p adj
+                   # 2-1  0.4706960 -0.15024886  1.09164080 0.2048941
+                   # 3-1  0.6789322  0.08507258  1.27279177 0.0179336
+                   # 4-1 -0.2079365 -0.91456494  0.49869193 0.8709055
+                   # 3-2  0.2082362 -0.31838270  0.73485511 0.7347614
+                   # 4-2 -0.6786325 -1.32977148 -0.02749348 0.0374821
+                   # 4-3 -0.8868687 -1.51223157 -0.26150580 0.0017546
+                   # >> Significant differences between class 3-1, 4-2, and 4-3
+             
+                   
+                   
+             # Compute the analysis of variance
+             anova_IL_info <- aov(IL_information_avgsum ~ fam_class4, data = rosie_fscores)
+             # Summary of the analysis
+             summary(anova_IL_info) #significant
+             # Alternative non-parametric test
+             kruskal.test(IL_information_avgsum ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_IL_info)
+                   # $fam_class4
+                   # diff        lwr        upr     p adj
+                   # 2-1  1.00467033  0.4868705  1.5224702 0.0000070
+                   # 3-1 -1.06147186 -1.5566856 -0.5662581 0.0000006
+                   # 4-1 -1.03571429 -1.6249648 -0.4464637 0.0000560
+                   # 3-2 -2.06614219 -2.5052846 -1.6269998 0.0000000
+                   # 4-2 -2.04038462 -2.5833631 -1.4974062 0.0000000
+                   # 4-3  0.02575758 -0.4957264  0.5472416 0.9992467
+                   # >> Significant differences between all classes except between 3 and 4.
+             
+             # Compute the analysis of variance
+             anova_IL_nav <- aov(IL_navigation_avgsum ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_IL_nav) #significant
+             # Alternative non-parametric test
+             kruskal.test(IL_navigation_avgsum ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_IL_nav)
+                   # $fam_class4
+                   # diff         lwr        upr     p adj
+                   # 2-1  0.6183150  0.07741566  1.1592144 0.0179513
+                   # 3-1 -1.5825397 -2.09984534 -1.0652340 0.0000000
+                   # 4-1 -0.9825397 -1.59807724 -0.3670021 0.0003102
+                   # 3-2 -2.2008547 -2.65958761 -1.7421218 0.0000000
+                   # 4-2 -1.6008547 -2.16805592 -1.0336535 0.0000000
+                   # 4-3  0.6000000  0.05525212  1.1447479 0.0245301
+                   # >> Significant differences between all classes.
+             
+               
+                   
+             # Compute the analysis of variance
+             anova_FoPersU <- aov(FoPersU ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_FoPersU) #significant
+             # Alternative non-parametric test
+             kruskal.test(FoPersU ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_FoPersU)
+                   # $fam_class4
+                   # diff         lwr       upr     p adj
+                   # 2-1  0.92701465  0.19022649 1.6638028 0.0071679
+                   # 3-1  0.66623377 -0.03841615 1.3708837 0.0712467
+                   # 4-1  1.02380952  0.18535264 1.8622664 0.0097247
+                   # 3-2 -0.26078089 -0.88564570 0.3640839 0.7007894
+                   # 4-2  0.09679487 -0.67582048 0.8694102 0.9881161
+                   # 4-3  0.35757576 -0.38445469 1.0996062 0.5961293
+                   # >> Significant differences between class 1 and the rest
+                       
+                   
+                   
+             # Compute the analysis of variance
+             anova_CGender <- aov(CGender_num ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_CGender) # not significant
+             # Alternative non-parametric test
+             kruskal.test(CGender_num ~ fam_class4, data = rosie_fscores) #not significant
+                   
+             
+             
+             # Compute the analysis of variance
+             anova_CTE <- aov(Child_Temp_Extraversion ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_CTE) # not significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Temp_Extraversion ~ fam_class4, data = rosie_fscores) #not significant
+             
+             
+             # Compute the analysis of variance
+             anova_CTNA <- aov(Child_Temp_Negative_Affectivity ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_CTNA) # significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Temp_Negative_Affectivity ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_CTNA)
+                   # $fam_class4
+                   # diff        lwr         upr     p adj
+                   # 2-1  0.3593407 -0.6220042  1.34068549 0.7780585
+                   # 3-1 -0.5683983 -1.5069374  0.37014090 0.3980565
+                   # 4-1  0.1952381 -0.9215216  1.31199780 0.9688992
+                   # 3-2 -0.9277389 -1.7600105 -0.09546734 0.0222350
+                   # 4-2 -0.1641026 -1.1931664  0.86496131 0.9760889
+                   # 4-3  0.7636364 -0.2246908  1.75196352 0.1904477
+                   # >> Only significant differences between class 2 and 3
+                   
+             
+             # Compute the analysis of variance
+             anova_CTEC <- aov(Child_Temp_Effortful_Control ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_CTEC) # significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Temp_Effortful_Control ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_CTEC)
+                   # $fam_class4
+                   # diff          lwr        upr     p adj
+                   # 2-1  1.7098901  0.845156978  2.5746232 0.0000045
+                   # 3-1  0.8229437 -0.004070282  1.6499577 0.0516675
+                   # 4-1  1.0380952  0.054038372  2.0221521 0.0342925
+                   # 3-2 -0.8869464 -1.620320424 -0.1535723 0.0106841
+                   # 4-2 -0.6717949 -1.578576670  0.2349869 0.2228063
+                   # 4-3  0.2151515 -0.655734243  1.0860373 0.9186645
+                   # >> Significant differences between class 1 and 2 + 4 as well as between 2 and 3 
+                   
+             
+                   
+             # Compute the analysis of variance
+             anova_PA_Anthro <- aov(Child_Parasocial_anthropomorphism_avgsum ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PA_Anthro) # significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Parasocial_anthropomorphism_avgsum ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_PA_Anthro)   
+                   # $fam_class4
+                   # diff         lwr       upr     p adj
+                   # 2-1  0.1483516 -0.40057235 0.6972756 0.8966236
+                   # 3-1 -0.1861472 -0.71112745 0.3388331 0.7944440
+                   # 4-1  0.3936508 -0.23101872 1.0183203 0.3620849
+                   # 3-2 -0.3344988 -0.80003738 0.1310397 0.2476285
+                   # 4-2  0.2452991 -0.33031692 0.8209152 0.6868387
+                   # 4-3  0.5797980  0.02696836 1.1326276 0.0358030
+                   # >> Only significant difference between class 3 and 4
+                   
+                   
+             # Compute the analysis of variance
+             anova_PA_ParaRela <- aov(Child_Parasocial_pararela_avgsum ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PA_ParaRela) # significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Parasocial_pararela_avgsum ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_PA_ParaRela) 
+                   # $fam_class4
+                   # diff          lwr         upr     p adj
+                   # 2-1  0.70961538  0.159567116  1.25966365 0.0054780
+                   # 3-1  0.19242424 -0.333631259  0.71847974 0.7786099
+                   # 4-1  0.63333333  0.007384407  1.25928226 0.0461880
+                   # 3-2 -0.51719114 -0.983683178 -0.05069911 0.0232517
+                   # 4-2 -0.07628205 -0.653077064  0.50051296 0.9860840
+                   # 4-3  0.44090909 -0.113052803  0.99487098 0.1689749
+                   # >> Only significant differences between class 1 and 2 + 4 and between class 2 and 3
+                   
+                   
+    
+                   
+             # Compute the analysis of variance
+             anova_PAge <- aov(LFT ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PAge) #significant
+             # Alternative non-parametric test
+             kruskal.test(LFT ~ fam_class4, data = rosie_fscores) #not significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_PAge)
+                   # $fam_class4
+                   # diff          lwr       upr     p adj
+                   # 2-1  4.2752747 -0.009451531  8.560001 0.0507416
+                   # 3-1 -0.3709957 -4.468824801  3.726833 0.9954288
+                   # 4-1  2.4714286 -2.404543139  7.347400 0.5549516
+                   # 3-2 -4.6462704 -8.280116348 -1.012424 0.0060389
+                   # 4-2 -1.8038462 -6.296922265  2.689230 0.7254977
+                   # 4-3  2.8424242 -1.472788086  7.157637 0.3224246
+                   # >> Significant differences only between class 2 and 3, but non-parametric test was not significant, so most likely do not trust those ANOVA results
+                   
+                   
+                   
+             # Compute the analysis of variance
+             anova_CAge <- aov(Child_Age ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_CAge) #not significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Age ~ fam_class4, data = rosie_fscores) #not significant
+             
+             
+             
+                   
+             # Compute the analysis of variance
+             anova_PMMSrestr <- aov(PMMS_restrMed_avgsum ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PMMSrestr) #significant
+             # Alternative non-parametric test
+             kruskal.test(PMMS_restrMed_avgsum ~ fam_class4, data = rosie_fscores) #significant
+             
+                   #Where are the differences? 
+                   TukeyHSD(anova_PMMSrestr)
+                   # $fam_class4
+                   # diff        lwr        upr     p adj
+                   # 2-1  0.2771978 -0.1111465  0.6655421 0.2531014
+                   # 3-1 -0.1240260 -0.4954310  0.2473790 0.8223666
+                   # 4-1  0.8880952  0.4461636  1.3300268 0.0000030
+                   # 3-2 -0.4012238 -0.7305758 -0.0718717 0.0099511
+                   # 4-2  0.6108974  0.2036694  1.0181255 0.0008069
+                   # 4-3  1.0121212  0.6210138  1.4032286 0.0000000
+                   # >> Significant differences between all classes except between 1 and 2 + 3
+                   
+           
+                   
+                   
+             # Compute the analysis of variance
+             anova_PMMSnegac <- aov(PMMS_negacMed_avgsum ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PMMSnegac) #significant
+             # Alternative non-parametric test
+             kruskal.test(PMMS_negacMed_avgsum ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_PMMSnegac) 
+                   # $fam_class4
+                   # diff        lwr        upr     p adj
+                   # 2-1 -0.1060440 -0.5095470  0.2974591 0.9040072
+                   # 3-1 -0.6153680 -1.0012705 -0.2294654 0.0003153
+                   # 4-1  0.5452381  0.0860560  1.0044202 0.0127301
+                   # 3-2 -0.5093240 -0.8515321 -0.1671159 0.0009043
+                   # 4-2  0.6512821  0.2281582  1.0744059 0.0005501
+                   # 4-3  1.1606061  0.7542320  1.5669801 0.0000000
+                   # >> Significant differences between all classes except between class 1 and 2
+                   
+              
+                   
+             # Compute the analysis of variance
+             anova_PMMSposac <- aov(PMMS_posacMed_avgsum ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_PMMSposac) #significant
+             # Alternative non-parametric test
+             kruskal.test(PMMS_posacMed_avgsum ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_PMMSposac) 
+                   # $fam_class4
+                   # diff         lwr        upr     p adj
+                   # 2-1  0.3972527  0.04317840 0.75132709 0.0210654
+                   # 3-1  0.1099567 -0.22867313 0.44858655 0.8342851
+                   # 4-1  0.8190476  0.41611488 1.22198036 0.0000023
+                   # 3-2 -0.2872960 -0.58758398 0.01299191 0.0663359
+                   # 4-2  0.4217949  0.05050324 0.79308650 0.0189469
+                   # 4-3  0.7090909  0.35249730 1.06568452 0.0000039
+                   # >> Significant differences between all classes except between class 3 and 1 + 2 
+              
+                   
+                   
+             # Compute the analysis of variance
+             anova_currentU <- aov(current_usage ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_currentU) #significant
+             # Alternative non-parametric test
+             kruskal.test(current_usage ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_currentU)  
+                   # $fam_class4
+                   # diff           lwr         upr     p adj
+                   # 2-1  0.34285714  0.1585235341  0.52719075 0.0000178
+                   # 3-1  0.17619048 -0.0001026138  0.35248357 0.0501948
+                   # 4-1  0.27619048  0.0664208415  0.48596011 0.0043604
+                   # 3-2 -0.16666667 -0.3229986930 -0.01033464 0.0316773
+                   # 4-2 -0.06666667 -0.2599637140  0.12663038 0.8077565
+                   # 4-3  0.10000000 -0.0856451529  0.28564515 0.5029214
+                   # >> Significant differences between class 1 and all others, as well as between class 2 and 3
+                
+                   
+                   
+             # Compute the analysis of variance
+             anova_CNumber <- aov(Child_Nr ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_CNumber) #not significant
+             # Alternative non-parametric test
+             kruskal.test(Child_Nr ~ fam_class4, data = rosie_fscores) #not significant
+             
+             
+             
+             # Compute the analysis of variance
+             anova_HS <- aov(PERSONEN ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_HS) #significant
+             # Alternative non-parametric test
+             kruskal.test(PERSONEN ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_HS) 
+                   # $fam_class4
+                   # diff        lwr         upr     p adj
+                   # 2-1  0.2752747 -0.2128942  0.76344362 0.4624507
+                   # 3-1  0.5835498  0.1166745  1.05042506 0.0076780
+                   # 4-1 -0.5952381 -1.1507690 -0.03970722 0.0304856
+                   # 3-2  0.3082751 -0.1057375  0.72228764 0.2188115
+                   # 4-2 -0.8705128 -1.3824195 -0.35860613 0.0001042
+                   # 4-3 -1.1787879 -1.6704301 -0.68714563 0.0000000
+                   # >> Significant differences between all classes except between class 2 and 1 + 3
+                   
+                   
+                   
+             # Compute the analysis of variance
+             anova_SHL <- aov(SHL ~ fam_class4, data = rosie_fscores) 
+             # Summary of the analysis
+             summary(anova_SHL) #significant
+             # Alternative non-parametric test
+             kruskal.test(SHL ~ fam_class4, data = rosie_fscores) #significant
+                   
+                   #Where are the differences? 
+                   TukeyHSD(anova_SHL) 
+                   # $fam_class4
+                   # diff        lwr       upr     p adj
+                   # 2-1  2.2478022  1.1612090 3.3343953 0.0000015
+                   # 3-1  2.1982684  1.1590718 3.2374650 0.0000008
+                   # 4-1  1.9285714  0.6920403 3.1651026 0.0004488
+                   # 3-2 -0.0495338 -0.9710657 0.8719981 0.9990303
+                   # 4-2 -0.3192308 -1.4586608 0.8201993 0.8863612
+                   # 4-3 -0.2696970 -1.3640213 0.8246274 0.9191951
+                   # >> Significant differences between class 1 and the rest
+                   
+                   
+  #LOG REG DOES NOT WORK!                 
+  #We now run a logistic regression for each indicator where the plots show possible differences between the classes.
+  #For this, we use the dummycoded variables.
+           
+        #for 4-class model 
+             
+             logreg_PGender_4class1<- glm(fam_class4_1 ~ PGender_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PGender_4class1) #significant
+             logreg_PGender_4class2<- glm(fam_class4_2 ~ PGender_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PGender_4class2) #not significant
+             logreg_PGender_4class3<- glm(fam_class4_3 ~ PGender_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PGender_4class3) #not significant
+             logreg_PGender_4class4<- glm(fam_class4_4 ~ PGender_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PGender_4class4) #not significant
+             
+             
+             logreg_SES_4class1<- glm(fam_class4_1 ~ SES_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_SES_4class1)
+             drop1(logreg_SES_4class1, test="Chisq") #significant
+             logreg_SES_4class2<- glm(fam_class4_2 ~ SES_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_SES_4class2)
+             drop1(logreg_SES_4class2, test="Chisq") #significant
+             logreg_SES_4class3<- glm(fam_class4_3 ~ SES_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_SES_4class3)
+             drop1(logreg_SES_4class3, test="Chisq") #significant
+             logreg_SES_4class4<- glm(fam_class4_4 ~ SES_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_SES_4class4)
+             drop1(logreg_SES_4class4, test="Chisq") #not significant
+             
+             
+             logreg_TT_4class1<- glm(fam_class4_1 ~ TT_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_TT_4class1) #significant
+             logreg_TT_4class2<- glm(fam_class4_2 ~ TT_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_TT_4class2) #not significant
+             logreg_TT_4class3<- glm(fam_class4_3 ~ TT_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_TT_4class3) #significant
+             logreg_TT_4class4<- glm(fam_class4_4 ~ TT_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_TT_4class4) #significant
+             
+             
+             logreg_ILinfo_4class1 <- glm(fam_class4_1 ~ IL_info_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILinfo_4class1) # not significant
+             logreg_ILinfo_4class2 <- glm(fam_class4_2 ~ IL_info_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILinfo_4class2) #significant
+             logreg_ILinfo_4class3 <- glm(fam_class4_3 ~ IL_info_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILinfo_4class3) # not significant
+             logreg_ILinfo_4class4 <- glm(fam_class4_4 ~ IL_info_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILinfo_4class4) #not significant
+             
+             logreg_ILnav_4class1 <- glm(fam_class4_1 ~ IL_nav_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILnav_4class1) #significant
+             logreg_ILnav_4class2 <- glm(fam_class4_2 ~ IL_nav_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILnav_4class2) #significant
+             logreg_ILnav_4class3 <- glm(fam_class4_3 ~ IL_nav_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILnav_4class3) # not significant
+             logreg_ILnav_4class4 <- glm(fam_class4_4 ~ IL_nav_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_ILnav_4class4) #not significant
+             
+             
+             logreg_FoPersU_4class1 <- glm(fam_class4_1 ~ FoPersU_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_FoPersU_4class1) #significant
+             logreg_FoPersU_4class2 <- glm(fam_class4_2 ~ FoPersU_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_FoPersU_4class2) #not significant
+             logreg_FoPersU_4class3 <- glm(fam_class4_3 ~ FoPersU_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_FoPersU_4class3) # not significant
+             logreg_FoPersU_4class4 <- glm(fam_class4_4 ~ FoPersU_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_FoPersU_4class4) #not significant
+             
+             
+             logreg_Temp_EfCon_4class1 <- glm(fam_class4_1 ~ Temp_EfCon_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Temp_EfCon_4class1) #significant
+             logreg_Temp_EfCon_4class2 <- glm(fam_class4_2 ~ Temp_EfCon_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Temp_EfCon_4class2) #not significant
+             logreg_Temp_EfCon_4class3 <- glm(fam_class4_3 ~ Temp_EfCon_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Temp_EfCon_4class3) #not significant
+             logreg_Temp_EfCon_4class4 <- glm(fam_class4_4 ~ Temp_EfCon_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Temp_EfCon_4class4) #not significant
+             
+             
+             logreg_Child_Parasocial_pararela_4class1 <- glm(fam_class4_1 ~ Child_Parasocial_pararela_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Child_Parasocial_pararela_4class1) #significant
+             logreg_Child_Parasocial_pararela_4class2 <- glm(fam_class4_2 ~ Child_Parasocial_pararela_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Child_Parasocial_pararela_4class2) #not significant
+             logreg_Child_Parasocial_pararela_4class3 <- glm(fam_class4_3 ~ Child_Parasocial_pararela_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Child_Parasocial_pararela_4class3) #not significant
+             logreg_Child_Parasocial_pararela_4class4 <- glm(fam_class4_4 ~ Child_Parasocial_pararela_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_Child_Parasocial_pararela_4class4) #not significant
+             
+             
+             logreg_PMMSrestr_4class1 <- glm(fam_class4_1 ~ PMMS_restrMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSrestr_4class1) #significant
+             logreg_PMMSrestr_4class2 <- glm(fam_class4_2 ~ PMMS_restrMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSrestr_4class2) # not significant
+             logreg_PMMSrestr_4class3 <- glm(fam_class4_3 ~ PMMS_restrMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSrestr_4class3) #significant
+             logreg_PMMSrestr_4class4 <- glm(fam_class4_4 ~ PMMS_restrMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSrestr_4class4) #not significant
+             
+             logreg_PMMSnegac_4class1 <- glm(fam_class4_1 ~ PMMS_negacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSnegac_4class1) #significant
+             logreg_PMMSnegac_3class2 <- glm(fam_class3_2 ~ PMMS_negacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSnegac_3class2) # not significant
+             logreg_PMMSnegac_4class3 <- glm(fam_class4_3 ~ PMMS_negacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSnegac_4class3) #significant
+             logreg_PMMSnegac_4class4 <- glm(fam_class4_4 ~ PMMS_negacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSnegac_4class4) #significant
+             
+             logreg_PMMSposac_4class1 <- glm(fam_class4_1 ~ PMMS_posacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSposac_4class1) #significant
+             logreg_PMMSposac_4class2 <- glm(fam_class4_2 ~ PMMS_posacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSposac_4class2) #not significant
+             logreg_PMMSposac_4class3 <- glm(fam_class4_3 ~ PMMS_posacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSposac_4class3) #significant
+             logreg_PMMSposac_4class4 <- glm(fam_class4_4 ~ PMMS_posacMed_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_PMMSposac_4class4) #significant
+             
+             
+             logreg_currentU_4class1 <- glm(fam_class4_1 ~ current_usage_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_currentU_4class1) #significant
+             logreg_currentU_4class2 <- glm(fam_class4_2 ~ current_usage_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_currentU_4class2) #not significant
+             logreg_currentU_4class3 <- glm(fam_class4_3 ~ current_usage_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_currentU_4class3) #not significant
+             logreg_currentU_4class4 <- glm(fam_class4_4 ~ current_usage_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_currentU_4class4) #not significant
+             
+             
+             logreg_HS_4class1 <- glm(fam_class4_1 ~ HS_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_HS_4class1)
+             drop1(logreg_HS_4class1, test="Chisq") #significant
+             logreg_HS_4class2 <- glm(fam_class4_2 ~ HS_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_HS_4class2)
+             drop1(logreg_HS_4class2, test="Chisq") #not significant
+             logreg_HS_4class3 <- glm(fam_class4_3 ~ HS_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_HS_4class3)
+             drop1(logreg_HS_4class3, test="Chisq") #significant
+             logreg_HS_4class4 <- glm(fam_class4_4 ~ HS_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_HS_4class4)
+             drop1(logreg_HS_4class4, test="Chisq") #significant
+             
+             
+             logreg_smHouse_4class1 <- glm(fam_class4_1 ~ smHouse_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_smHouse_4class1) #not significant
+             logreg_smHouse_4class2 <- glm(fam_class4_2 ~ smHouse_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_smHouse_4class2) #significant
+             logreg_smHouse_4class3 <- glm(fam_class4_3 ~ smHouse_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_smHouse_4class3) #not significant
+             logreg_smHouse_4class4 <- glm(fam_class4_4 ~ smHouse_f, data = rosie_fscores, family = "binomial")
+             summary(logreg_smHouse_4class4) #not significant
+             
+             
+             ### >>> The 4-class model is distinguished between Parent Gender (for class 1), SES, Technology Trust, 
+             ###     Internet Literacy (info only for class 2, nav only for class 1 and 2), Frequency of Personal Use (only for class 1), 
+             ###     Child Temperament Effortful Control (only for class 1), Child Parasocial relationship (only for class 1),
+             ###     PMMS (negac & posac not for class 2), current use (only for class 1), 
+             ###     Household Size (not for class 2), and Smart-Household_level (only for class 2).
+             
             
              
-             
-             
-       
-       #3-class model
-             #numbers
-             library(psych)
-             psych::describeBy(rosie_fscores, group = "fam_class3")
-             # 1 = LSM, 2 = ILS, 3 = LLY
-             
-             #visualization (for all indicators that seem to be distinct according to first glance at LCA output and graph of probabilities:
-             #literacy, parent age, household size, PMMS, SES, technology trust, child temperament negative affectivity)
-             
-             library("ggplot2")
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, IL_information_avgsum, FUN=mean), y=IL_information_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, IL_navigation_avgsum, FUN=mean), y=IL_navigation_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, LFT, FUN=mean), y=LFT)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PERSONEN, FUN=mean), y=PERSONEN)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Household Size (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PMMS_restrMed_avgsum, FUN=mean), y=PMMS_restrMed_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Restrictive Mediation (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PMMS_negacMed_avgsum, FUN=mean), y=PMMS_negacMed_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Negative Active Mediation (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, PMMS_posacMed_avgsum, FUN=mean), y=PMMS_posacMed_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, SOCIALEKLASSE2016, FUN=mean), y=SOCIALEKLASSE2016)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="SES (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, TT_avgsum, FUN=mean), y=TT_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class3, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-       
-             
-        #4-class model
-             #numbers
-             library(psych)
-             psych::describeBy(rosie_fscores, group = "fam_class4")
-             # 1 = SMYC, 2 = MSMS, 3 = LYLB, 4 = ILA
-             
-             #visualization (for all indicators that seem to be distinct according to first glance at LCA output and graph of probabilities:
-             #parent gender, literacy, parent age, household size, PMMS, SES, technology trust, child temperament negative affectivity)
-             
-             library("ggplot2")
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, GSL, FUN=mean), y=GSL)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Parent Gender (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, IL_information_avgsum, FUN=mean), y=IL_information_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Information Internet Literacy (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, IL_navigation_avgsum, FUN=mean), y=IL_navigation_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Navigation Internet Literacy (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, LFT, FUN=mean), y=LFT)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Parent Age (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PERSONEN, FUN=mean), y=PERSONEN)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Household Size (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PMMS_restrMed_avgsum, FUN=mean), y=PMMS_restrMed_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Restrictive Mediation (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PMMS_negacMed_avgsum, FUN=mean), y=PMMS_negacMed_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Negative Active Mediation (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, PMMS_posacMed_avgsum, FUN=mean), y=PMMS_posacMed_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Positive Active Mediation (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, SOCIALEKLASSE2016, FUN=mean), y=SOCIALEKLASSE2016)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="SES (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, TT_avgsum, FUN=mean), y=TT_avgsum)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Technology Trust (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-             
-             ggplot(rosie_fscores, aes(x=reorder(fam_class4, Child_Temp_Negative_Affectivity, FUN=mean), y=Child_Temp_Negative_Affectivity)) + 
-               geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
-               geom_point(stat="summary", fun.y="mean") + 
-               geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
-               labs(x="Family Types", y="Child Temperament Negative Affectivity (mean + 95%CI)") +
-               theme_bw() +
-               theme(axis.text.x=element_text(angle=45, hjust=1)) 
-     
-       
 ###----------------------------------------------------------------------------------------------------------------###      
       
 #----------------------------------------------------------#
@@ -2882,9 +2846,10 @@ print(sessionInfo())
        #Thus, we have evidence to say that the SEM-variables in our dataset do not follow a multivariate distribution.
        # >> Together with the non-normality detected earlier, we will run our SEM analyses using bottstrapping.
        
-   #--------------------------------#
-   ### SEM ##########################
-   #--------------------------------#
+       
+   #------------------------------------------------------#
+   ### Testing measurement model ##########################
+   #------------------------------------------------------#
    
 
       #install.packages("lavaan", dependencies = T)
@@ -2900,95 +2865,59 @@ print(sessionInfo())
         #growth() #for latent growth curve modeling
         #lavaan() #for all models (without default parameters)
       
-        ### Higher Order Model in Lavaan ###
        
-      # ### 2-class model with 1DV ########################## 
-      #         rosiesTAM_1DV <- '
-      #         
-      #         #measurement model
-      #           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4 
-      #           PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4 
-      #           E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4 
-      #           SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3 
-      #           UI =~ 1*TAM_UI_1 + TAM_UI_2 + TAM_UI_3 
-      #         #regressions  
-      #           PEoU ~ fam_class2  
-      #           PU ~ fam_class2 + PEoU  
-      #           E ~ fam_class2 
-      #           TAM_SS ~ fam_class2 
-      #           SI ~ fam_class2 
-      #           UI ~ PEoU + PU + E + TAM_SS + SI 
-      #         #residual variances 
-      #           TAM_PEoU_1 ~~ TAM_PEoU_1
-      #           TAM_PEoU_2 ~~ TAM_PEoU_2
-      #           TAM_PEoU_3 ~~ TAM_PEoU_3
-      #           TAM_PEoU_4 ~~ TAM_PEoU_4
-      #           TAM_PU_1 ~~ TAM_PU_1
-      #           TAM_PU_2 ~~ TAM_PU_2
-      #           TAM_PU_3 ~~ TAM_PU_3
-      #           TAM_PU_4 ~~ TAM_PU_4
-      #           TAM_E_1 ~~ TAM_E_1
-      #           TAM_E_2 ~~ TAM_E_2
-      #           TAM_E_3 ~~ TAM_E_3
-      #           TAM_E_4 ~~ TAM_E_4
-      #           TAM_SI_1 ~~ TAM_SI_1
-      #           TAM_SI_2 ~~ TAM_SI_2
-      #           TAM_SI_3 ~~ TAM_SI_3
-      #           TAM_UI_1 ~~ TAM_UI_1
-      #           TAM_UI_2 ~~ TAM_UI_2
-      #           TAM_UI_3 ~~ TAM_UI_3
-      #           TAM_SS ~~ TAM_SS
-      #           PEoU ~~ PEoU
-      #           PU ~~ PU
-      #           E ~~ E
-      #           SI ~~ SI
-      #           UI ~~ UI
-      #           fam_class2 ~~ fam_class2
-      #         
-      #         '
-      #         
-      #         #fit the model
-      #         rosiesTAM_1DV_fit <- lavaan(rosiesTAM_1DV, data = rosie_fscores)
-      #         
-      #         #print summary  
-      #         summary(rosiesTAM_1DV_fit, standardized = T, fit.measures = T)
-      #       
-      #         #bootstrap model
-      #         rosiesTAM_1DV_fit_boostrapped_se <- sem(rosiesTAM_1DV, data = rosie_fscores,se = "bootstrap", bootstrap = 1000) 
-      #         summary(rosiesTAM_1DV_fit_boostrapped_se, fit.measures = TRUE) 
-      #         parameterEstimates(rosiesTAM_1DV_fit_boostrapped_se, 
-      #                            se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
-      #                            standardized = FALSE, 
-      #                            fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
-      #                            cov.std = TRUE, fmi.options = list(), 
-      #                            rsquare = FALSE, 
-      #                            remove.system.eq = TRUE, remove.eq = TRUE, 
-      #                            remove.ineq = TRUE, remove.def = FALSE, 
-      #                            remove.nonfree = FALSE, 
-      #                            add.attributes = FALSE, 
-      #                            output = "data.frame", header = FALSE)
-      #         #           lhs op        rhs    est     se      z pvalue ci.lower ci.upper
-      #         #          PEoU  ~ fam_class2 -0.135  0.187 -0.722  0.470   -0.484    0.250
-      #         # 20         PU  ~ fam_class2 -0.105  0.190 -0.556  0.578   -0.479    0.265
-      #         # 21         PU  ~       PEoU  0.601  0.109  5.500  0.000    0.398    0.826
-      #         # 22          E  ~ fam_class2 -0.322  0.207 -1.554  0.120   -0.716    0.097
-      #         # 23    TAM_SS  ~ fam_class2 -0.106  0.286 -0.371  0.710   -0.651    0.471
-      #         # 24         SI  ~ fam_class2 -0.781  0.225 -3.469  0.001   -1.239   -0.356
-      #         # 25        UI  ~       PEoU  0.001  0.023  0.037  0.971   -0.047    0.042
-      #         # 26        UI  ~         PU  0.005  0.028  0.183  0.854   -0.071    0.037
-      #         # 27        UI  ~          E  0.011  0.050  0.217  0.828   -0.132    0.064
-      #         # 28        UI  ~    TAM_SS  0.001  0.011  0.090  0.928   -0.026    0.017
-      #         # 29        UI  ~         SI  0.001  0.014  0.042  0.966   -0.029    0.025
-      #   
-      #         
+       rosiesTAM_measurement<- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #residual variances
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        TAM_SS ~~ PEoU
+        TAM_SS ~~ PU
+        TAM_SS ~~ E
+        TAM_SS ~~ SI
+        PEoU ~~ PU
+        PEoU ~~ E
+        PEoU ~~ SI
+        PU ~~ E
+        PU ~~ SI
+        E ~~ SI
+      '
        
+       #fit the model
+       rosiesTAM_measurement_fit <- cfa(rosiesTAM_measurement_fam_class4, data = rosie_fscores) 
        
-      # ### 2-class model with 3DVs ########################## 
+       #print summary
+       summary(rosiesTAM_measurement_fit, standardized = T, fit.measures = T)
+       
+       #visualize measurement model
+       semPaths(rosiesTAM_measurement_fit)
+       
+       #check modindices
+       modindices(rosiesTAM_measurement_fit, sort = TRUE)
+       modificationIndices(rosiesTAM_measurement_fit, sort.=TRUE, minimum.value=3)
+      
+              
+   #-----------------------------------------------------#
+   ### Testing regression model ##########################
+   #-----------------------------------------------------#
+              
       #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
-       rosie_fscores$fam_class2_1_num <- as.numeric(rosie_fscores$fam_class2_1)
-       rosie_fscores$fam_class2_2_num <- as.numeric(rosie_fscores$fam_class2_2)
-       
-      rosiesTAM_3DVs <- '
+      rosie_fscores$fam_class4_1_num <- as.numeric(rosie_fscores$fam_class4_1)
+      rosie_fscores$fam_class4_2_num <- as.numeric(rosie_fscores$fam_class4_2)
+      rosie_fscores$fam_class4_3_num <- as.numeric(rosie_fscores$fam_class4_3)
+      rosie_fscores$fam_class4_4_num <- as.numeric(rosie_fscores$fam_class4_4)
+      
+      
+      #then, we perform the SEM with the dummy/treatment coded family type variables: type 1 as reference level  
+      rosiesTAM_3DVs_fam_class4_1 <- '
 
       #measurement model
         PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
@@ -2996,11 +2925,11 @@ print(sessionInfo())
         E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
         SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
-        PEoU ~ fam_class2_1_num + fam_class2_2_num
-        PU ~ fam_class2_1_num + fam_class2_2_num + PEoU
-        E ~ fam_class2_1_num + fam_class2_2_num
-        TAM_SS ~ fam_class2_1_num + fam_class2_2_num
-        SI ~ fam_class2_1_num + fam_class2_2_num
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
         TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
@@ -3028,123 +2957,30 @@ print(sessionInfo())
         PU ~~ PU
         E ~~ E
         SI ~~ SI
-        TAM_UI_1 ~~ TAM_UI_2
-        TAM_UI_1 ~~ TAM_UI_3
-        TAM_UI_2 ~~ TAM_UI_3
-        fam_class2_1_num ~~ fam_class2_1_num
-        fam_class2_2_num ~~ fam_class2_2_num
-
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
       '
-
+      
       #fit the model
-      rosiesTAM_3DVs_fit <- lavaan(rosiesTAM_3DVs, data = rosie_fscores) 
-      # Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]],  : 
-      #                                 lavaan ERROR: sample covariance matrix is not positive-definite
-
+      rosiesTAM_3DVs_fam_class4_1_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1, data = rosie_fscores) 
+      
       #print summary
-      summary(rosiesTAM_3DVs_fit, standardized = T, fit.measures = T)
-
-              #bootstrap model
-              rosiesTAM_3DVs_fit_boostrapped_se <- sem(rosiesTAM_3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000, estimator = "WLS")
-              summary(rosiesTAM_3DVs_fit_boostrapped_se, fit.measures = TRUE)
-              parameterEstimates(rosiesTAM_3DVs_fit_boostrapped_se,
-                                 se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
-                                 standardized = FALSE,
-                                 fmi = FALSE, level = 0.95, boot.ci.type = "norm",
-                                 cov.std = TRUE, fmi.options = list(),
-                                 rsquare = FALSE,
-                                 remove.system.eq = TRUE, remove.eq = TRUE,
-                                 remove.ineq = TRUE, remove.def = FALSE,
-                                 remove.nonfree = FALSE,
-                                 add.attributes = FALSE,
-                                 output = "data.frame", header = FALSE)
-      #         
-      #         #           lhs op        rhs    est    se      z pvalue ci.lower ci.upper
-      #         # 16       PEoU  ~ fam_class2  0.136 0.180  0.752  0.452   -0.223    0.484
-      #         # 17         PU  ~ fam_class2  0.106 0.184  0.572  0.567   -0.270    0.453
-      #         # 18         PU  ~       PEoU  0.600 0.110  5.451  0.000    0.389    0.821
-      #         # 19          E  ~ fam_class2  0.321 0.196  1.634  0.102   -0.071    0.698
-      #         # 20    TAM_SS  ~ fam_class2  0.106 0.295  0.360  0.719   -0.465    0.692
-      #         # 21         SI  ~ fam_class2  0.778 0.235  3.317  0.001    0.334    1.253
-      #         # 22  TAM_UI_1  ~       PEoU  0.028 0.139  0.203  0.839   -0.251    0.292
-      #         # 23  TAM_UI_1  ~         PU -0.033 0.139 -0.235  0.814   -0.306    0.239
-      #         # 24  TAM_UI_1  ~          E  0.085 0.153  0.555  0.579   -0.209    0.391
-      #         # 25  TAM_UI_1  ~    TAM_SS  0.185 0.069  2.704  0.007    0.051    0.319
-      #         # 26  TAM_UI_1  ~         SI  0.185 0.100  1.841  0.066   -0.015    0.378
-      #         # 27  TAM_UI_2  ~       PEoU  0.012 0.142  0.082  0.934   -0.258    0.298
-      #         # 28  TAM_UI_2  ~         PU  0.186 0.115  1.614  0.106   -0.042    0.410
-      #         # 29  TAM_UI_2  ~          E  0.456 0.129  3.546  0.000    0.197    0.701
-      #         # 30  TAM_UI_2  ~    TAM_SS  0.041 0.058  0.708  0.479   -0.070    0.157
-      #         # 31  TAM_UI_2  ~         SI  0.014 0.081  0.169  0.866   -0.136    0.180
-      #         # 32  TAM_UI_3  ~       PEoU  0.158 0.172  0.920  0.358   -0.184    0.490
-      #         # 33  TAM_UI_3  ~         PU  0.266 0.168  1.585  0.113   -0.071    0.587
-      #         # 34  TAM_UI_3  ~          E  0.191 0.167  1.141  0.254   -0.128    0.527
-      #         # 35  TAM_UI_3  ~    TAM_SS  0.020 0.071  0.278  0.781   -0.115    0.163
-      #         # 36  TAM_UI_3  ~         SI  0.074 0.096  0.763  0.446   -0.107    0.271
-      #       
-      #         
-      #         
-      #   ### 3-class model with 1DV ##########################  
-      #         #this reveals many convergence warning and model did not end normally!
-      #         
-      #   rosiesTAM_3classes1DV <- '
-      # 
-      #   #measurement model
-      #     PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
-      #     PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
-      #     E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-      #     SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
-      #     UI =~ 1*TAM_UI_1 + TAM_UI_2 + TAM_UI_3
-      #   #regressions
-      #     PEoU ~ fam_class3
-      #     PU ~ fam_class3 + PEoU
-      #     E ~ fam_class3
-      #     TAM_SS ~ fam_class3
-      #     SI ~ fam_class3
-      #     UI ~ PEoU + PU + E + TAM_SS + SI
-      #   #residual variances
-      #     TAM_PEoU_1 ~~ TAM_PEoU_1
-      #     TAM_PEoU_2 ~~ TAM_PEoU_2
-      #     TAM_PEoU_3 ~~ TAM_PEoU_3
-      #     TAM_PEoU_4 ~~ TAM_PEoU_4
-      #     TAM_PU_1 ~~ TAM_PU_1
-      #     TAM_PU_2 ~~ TAM_PU_2
-      #     TAM_PU_3 ~~ TAM_PU_3
-      #     TAM_PU_4 ~~ TAM_PU_4
-      #     TAM_E_1 ~~ TAM_E_1
-      #     TAM_E_2 ~~ TAM_E_2
-      #     TAM_E_3 ~~ TAM_E_3
-      #     TAM_E_4 ~~ TAM_E_4
-      #     TAM_SI_1 ~~ TAM_SI_1
-      #     TAM_SI_2 ~~ TAM_SI_2
-      #     TAM_SI_3 ~~ TAM_SI_3
-      #     TAM_UI_1 ~~ TAM_UI_1
-      #     TAM_UI_2 ~~ TAM_UI_2
-      #     TAM_UI_3 ~~ TAM_UI_3
-      #     TAM_SS ~~ TAM_SS
-      #     PEoU ~~ PEoU
-      #     PU ~~ PU
-      #     E ~~ E
-      #     SI ~~ SI
-      #     UI ~~ UI
-      #     fam_class3 ~~ fam_class3
-      # 
-      #   '
-      # 
-      #   #fit the model
-      #   rosiesTAM_3classes1DV_fit <- lavaan(rosiesTAM_3classes1DV, data = rosie_fscores)
-      # 
-      #   #print summary
-      #   summary(rosiesTAM_3classes1DV_fit, standardized = T, fit.measures = T)
-      #   
-      #   
-       
-              #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
-              rosie_fscores$fam_class3_1_num <- as.numeric(rosie_fscores$fam_class3_1)
-              rosie_fscores$fam_class3_2_num <- as.numeric(rosie_fscores$fam_class3_2)
-              rosie_fscores$fam_class3_3_num <- as.numeric(rosie_fscores$fam_class3_3)
-       
-              rosiesTAM_3DVs_fam_class3 <- '
+      summary(rosiesTAM_3DVs_fam_class4_1_fit, standardized = T, fit.measures = T)
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_fit, sort = TRUE)
+      # selection of highest modindices:
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 350             PEoU ~~                E 76.508  1.001   0.702    0.702    0.702
+      # 368                E  ~             PEoU 76.508  0.766   0.682    0.682    0.682
+      # 356             PEoU  ~                E 76.507  0.643   0.722    0.722    0.722
+      # 360             PEoU  ~         TAM_UI_2 65.553  1.256   1.089    1.438    1.438
+      # 369                E  ~               PU 63.309  0.570   0.670    0.670    0.670
+      
+      
+      #adding regression path E  ~ PEoU to the model, since it is theoretically most logical that the if the PEoU is high that E is then also high
+      rosiesTAM_3DVs_fam_class4_1_changeI <- '
 
       #measurement model
         PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
@@ -3152,11 +2988,11 @@ print(sessionInfo())
         E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
         SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
-        PEoU ~ fam_class3_1_num + fam_class3_2_num + fam_class3_3_num
-        PU ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num + PEoU
-        E ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num
-        TAM_SS ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num
-        SI ~ fam_class3_1_num + fam_class3_2_num + fam_class3_1_num
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
         TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
@@ -3184,246 +3020,904 @@ print(sessionInfo())
         PU ~~ PU
         E ~~ E
         SI ~~ SI
-        TAM_UI_1 ~~ TAM_UI_2
-        TAM_UI_1 ~~ TAM_UI_3
-        TAM_UI_2 ~~ TAM_UI_3
-        fam_class3_1_num ~~ fam_class3_1_num
-        fam_class3_2_num ~~ fam_class3_2_num
-        fam_class3_3_num ~~ fam_class3_3_num
-
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
       '
-              
-              #fit the model
-              rosiesTAM_3DVs_fam_class3_fit <- lavaan(rosiesTAM_3DVs_fam_class3, data = rosie_fscores) 
-                                              
-              #print summary
-              summary(rosiesTAM_3DVs_fam_class3_fit, standardized = T, fit.measures = T)
-              
-              modindices(rosiesTAM_3DVs_fam_class3_fit, sort = TRUE)
-              
-              #bootstrap model
-              rosiesTAM_3DVs_fit_boostrapped_se <- sem(rosiesTAM_3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000, estimator = "WLS")
-              summary(rosiesTAM_3DVs_fit_boostrapped_se, fit.measures = TRUE)
-              parameterEstimates(rosiesTAM_3DVs_fit_boostrapped_se,
-                                 se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
-                                 standardized = FALSE,
-                                 fmi = FALSE, level = 0.95, boot.ci.type = "norm",
-                                 cov.std = TRUE, fmi.options = list(),
-                                 rsquare = FALSE,
-                                 remove.system.eq = TRUE, remove.eq = TRUE,
-                                 remove.ineq = TRUE, remove.def = FALSE,
-                                 remove.nonfree = FALSE,
-                                 add.attributes = FALSE,
-                                 output = "data.frame", header = FALSE)
-              
-              
-        ### 3-class model with 3DVs ##########################
-              
-        rosiesTAM_3classes3DVs <- '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_changeI_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_changeI, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_changeI_fit, standardized = T, fit.measures = T)
+      ### >> Already better model fit, but still not acceptable
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_changeI_fit, sort = TRUE)
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 418 fam_class4_3_num  ~               SI 61.017 -0.617  -0.950   -1.977   -1.977
+      # 415 fam_class4_3_num  ~               PU 61.014 -0.495  -0.753   -1.569   -1.569
+      # 417 fam_class4_3_num  ~           TAM_SS 59.580 -0.654  -0.654   -2.633   -2.633
+      # 416 fam_class4_3_num  ~                E 59.436 -0.804  -1.040   -2.167   -2.167
+      # 407 fam_class4_2_num  ~           TAM_SS 53.954 -0.853  -0.853   -3.659   -3.659
+      # 405 fam_class4_2_num  ~               PU 49.614 -0.510  -0.776   -1.721   -1.721
+      # 414 fam_class4_3_num  ~             PEoU 47.215 -1.674  -1.899   -3.955   -3.955
+      # 340         TAM_UI_2 ~~         TAM_UI_3 41.377  0.867   0.867    0.484    0.484
+      # 395         TAM_UI_2  ~         TAM_UI_3 41.377  0.334   0.334    0.433    0.433
+      # 400         TAM_UI_3  ~         TAM_UI_2 41.377  0.699   0.699    0.540    0.540
+      # 412 fam_class4_2_num  ~ fam_class4_3_num 40.977 -0.444  -0.444   -0.473   -0.473
+      # 347 fam_class4_2_num ~~ fam_class4_3_num 40.977 -0.102  -0.102   -0.473   -0.473
+      # 422 fam_class4_3_num  ~ fam_class4_2_num 40.977 -0.504  -0.504   -0.473   -0.473
+      # 95                PU =~         TAM_SI_3 38.353  0.423   0.644    0.355    0.355
+      # 425 fam_class4_4_num  ~               PU 32.016 -0.291  -0.443   -1.195   -1.195
+      # 427 fam_class4_4_num  ~           TAM_SS 30.627 -0.345  -0.345   -1.805   -1.805
+      # 369                E  ~               PU 27.968  0.348   0.409    0.409    0.409
+      # 353               PU ~~                E 27.968  0.486   0.470    0.470    0.470
+      # 363               PU  ~                E 27.968  0.635   0.540    0.540    0.540
+      
+      
+      #next, we add regression path PU  ~  E, since enjoyment can assumed to be especially determining the usefulness in the family environment
+      rosiesTAM_3DVs_fam_class4_1_changeII <- '
 
-        #measurement model
-          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
-          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
-          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-          SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
-        #regressions
-          PEoU ~ fam_class3
-          PU ~ fam_class3 + PEoU
-          E ~ fam_class3
-          TAM_SS ~ fam_class3
-          SI ~ fam_class3
-          TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
-          TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
-          TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
-         #residual variances 
-          TAM_PEoU_1 ~~ TAM_PEoU_1
-          TAM_PEoU_2 ~~ TAM_PEoU_2
-          TAM_PEoU_3 ~~ TAM_PEoU_3
-          TAM_PEoU_4 ~~ TAM_PEoU_4
-          TAM_PU_1 ~~ TAM_PU_1
-          TAM_PU_2 ~~ TAM_PU_2
-          TAM_PU_3 ~~ TAM_PU_3
-          TAM_PU_4 ~~ TAM_PU_4
-          TAM_E_1 ~~ TAM_E_1
-          TAM_E_2 ~~ TAM_E_2
-          TAM_E_3 ~~ TAM_E_3
-          TAM_E_4 ~~ TAM_E_4
-          TAM_SI_1 ~~ TAM_SI_1
-          TAM_SI_2 ~~ TAM_SI_2
-          TAM_SI_3 ~~ TAM_SI_3
-          TAM_UI_1 ~~ TAM_UI_1
-          TAM_UI_2 ~~ TAM_UI_2
-          TAM_UI_3 ~~ TAM_UI_3
-          TAM_SS ~~ TAM_SS
-          PEoU ~~ PEoU
-          PU ~~ PU
-          E ~~ E
-          SI ~~ SI
-          TAM_UI_1 ~~ TAM_UI_2
-          TAM_UI_1 ~~ TAM_UI_3
-          TAM_UI_2 ~~ TAM_UI_3
-          fam_class3 ~~ fam_class3
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_changeII_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_changeII, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_changeII_fit, standardized = T, fit.measures = T)
+      ### >> No real improvement compared to first change
+      
+      
+      #alternative change: adding covariance between TAM_UI_2 ~~ TAM_UI_3, since we already saw that child-only and co-use go hand-in-hand
+      rosiesTAM_3DVs_fam_class4_1_changeIII <- '
 
-        '
-        
-        #fit the model
-        rosiesTAM_3classes3DVs_fit <- lavaan(rosiesTAM_3classes3DVs, data = rosie_fscores)
-        
-        #print summary
-        summary(rosiesTAM_3classes3DVs_fit, standardized = T, fit.measures = T)
-        
-        #bootstrap model
-        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores,se = "bootstrap", bootstrap = 1000, estimator = "WLS") 
-        summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
-        parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
-                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
-                           standardized = FALSE, 
-                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
-                           cov.std = TRUE, fmi.options = list(), 
-                           rsquare = FALSE, 
-                           remove.system.eq = TRUE, remove.eq = TRUE, 
-                           remove.ineq = TRUE, remove.def = FALSE, 
-                           remove.nonfree = FALSE, 
-                           add.attributes = FALSE, 
-                           output = "data.frame", header = FALSE)
-        
-  
-        
-        #post-hoc test needed for significant regression path of SI ~ family type
-        library("ggpubr")
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_1", 
-                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-                  ylab = "Subjective norm 1", xlab = "Family Type")
-        
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_2", 
-                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-                  ylab = "Subjective norm 2", xlab = "Family Type")
-        
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_3", 
-                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-                  ylab = "Subjective norm 3", xlab = "Family Type")
-        
-        ggboxplot(rosie_fscores, x = "fam_class3", y = "TAM_SI_f", 
-                  color = "fam_class3", palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-                  ylab = "Subjective norm", xlab = "Family Type")
-        
-        # Compute the analysis of variance
-        rosie_fscores$fam_class3 <- as.factor(rosie_fscores$fam_class3)
-        anova <- aov(TAM_SI_f ~ fam_class3, data = rosie_fscores)
-        # Summary of the analysis
-        summary(anova)
-        # Which pairs of groups differ?
-        TukeyHSD(anova)
-        # Tukey multiple comparisons of means
-        # 95% family-wise confidence level
-        # 
-        # Fit: aov(formula = TAM_SI_f ~ fam_class3, data = rosie_fscores)
-        # 
-        # $fam_class3
-        #           diff        lwr       upr     p adj
-        # 2-1 0.82702193  0.2527527 1.4012912 0.0023548
-        # 3-1 0.87265195  0.2162131 1.5290908 0.0055509
-        # 3-2 0.04563002 -0.6143875 0.7056476 0.9853926
-        
-        ## >> There are significant group differences between family types 1 and 2 as well as between 1 and 3, with parents belonging
-        ## >> to type 1 perceiving lower social norms than parents belonging to family type 2 and 3.
-        
-        # Alternative non-parametric test
-        kruskal.test(TAM_SI_f ~ fam_class3, data = rosie_fscores)
-        # Kruskal-Wallis rank sum test
-        # 
-        # data:  TAM_SI_f by fam_class3
-        # Kruskal-Wallis chi-squared = 12.698, df = 2, p-value = 0.001749
-        
-        
-        
-        
-        
-        ### 4-class model with 3DVs ##########################
-        rosiesTAM_4classes3DVs <- '
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU 
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_changeIII_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_changeIII, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, standardized = T, fit.measures = T)
+      ### >> Model fit improved, but still not good enough!
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, sort = TRUE)
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 415 fam_class4_3_num  ~               PU 61.022 -0.497  -0.757   -1.576   -1.576
+      # 418 fam_class4_3_num  ~               SI 61.015 -0.617  -0.948   -1.975   -1.975
+      # 417 fam_class4_3_num  ~           TAM_SS 59.568 -0.653  -0.653   -2.633   -2.633
+      # 416 fam_class4_3_num  ~                E 59.422 -0.819  -1.055   -2.197   -2.197
+      # 407 fam_class4_2_num  ~           TAM_SS 53.963 -0.853  -0.853   -3.660   -3.660
+      # 405 fam_class4_2_num  ~               PU 49.665 -0.512  -0.780   -1.729   -1.729
+      # 414 fam_class4_3_num  ~             PEoU 47.369 -1.671  -1.900   -3.957   -3.957
+      # 348 fam_class4_2_num ~~ fam_class4_3_num 40.977 -0.102  -0.102   -0.473   -0.473
+      # 412 fam_class4_2_num  ~ fam_class4_3_num 40.977 -0.444  -0.444   -0.473   -0.473
+      # 422 fam_class4_3_num  ~ fam_class4_2_num 40.977 -0.504  -0.504   -0.473   -0.473
+      # 97                PU =~         TAM_SI_3 38.503  0.423   0.645    0.356    0.356
+      # 425 fam_class4_4_num  ~               PU 32.025 -0.292  -0.444   -1.199   -1.199
+      # 427 fam_class4_4_num  ~           TAM_SS 30.631 -0.345  -0.345   -1.805   -1.805
+      # 406 fam_class4_2_num  ~                E 27.642 -0.719  -0.926   -2.053   -2.053
+      # 424 fam_class4_4_num  ~             PEoU 27.265 -2.020  -2.297   -6.204   -6.204
+      # 383               SI  ~               PU 26.800  0.439   0.434    0.434    0.434
+      
+      
+      
+      #next change: adding regression path between SI  ~   PU, since it can be assumed that a higher PU can lead to a higher perceived social influence
+      rosiesTAM_3DVs_fam_class4_1_changeIV <- '
 
-        #measurement model
-          PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
-          PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
-          E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
-          SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
-        #regressions
-          PEoU ~ fam_class4
-          PU ~ fam_class4 + PEoU
-          E ~ fam_class4
-          TAM_SS ~ fam_class4
-          SI ~ fam_class4
-          TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
-          TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
-          TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
-         #residual variances 
-          TAM_PEoU_1 ~~ TAM_PEoU_1
-          TAM_PEoU_2 ~~ TAM_PEoU_2
-          TAM_PEoU_3 ~~ TAM_PEoU_3
-          TAM_PEoU_4 ~~ TAM_PEoU_4
-          TAM_PU_1 ~~ TAM_PU_1
-          TAM_PU_2 ~~ TAM_PU_2
-          TAM_PU_3 ~~ TAM_PU_3
-          TAM_PU_4 ~~ TAM_PU_4
-          TAM_E_1 ~~ TAM_E_1
-          TAM_E_2 ~~ TAM_E_2
-          TAM_E_3 ~~ TAM_E_3
-          TAM_E_4 ~~ TAM_E_4
-          TAM_SI_1 ~~ TAM_SI_1
-          TAM_SI_2 ~~ TAM_SI_2
-          TAM_SI_3 ~~ TAM_SI_3
-          TAM_UI_1 ~~ TAM_UI_1
-          TAM_UI_2 ~~ TAM_UI_2
-          TAM_UI_3 ~~ TAM_UI_3
-          TAM_SS ~~ TAM_SS
-          PEoU ~~ PEoU
-          PU ~~ PU
-          E ~~ E
-          SI ~~ SI
-          TAM_UI_1 ~~ TAM_UI_2
-          TAM_UI_1 ~~ TAM_UI_3
-          TAM_UI_2 ~~ TAM_UI_3
-          fam_class4 ~~ fam_class4
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU 
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PU
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_changeIV_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_changeIV, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, standardized = T, fit.measures = T)
+      ### >> Model fit improved, but still not good enough!
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, sort = TRUE)
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 418 fam_class4_3_num  ~               SI 61.106 -0.614  -0.928   -1.932   -1.932
+      # 415 fam_class4_3_num  ~               PU 61.006 -0.498  -0.757   -1.576   -1.576
+      # 417 fam_class4_3_num  ~           TAM_SS 59.582 -0.654  -0.654   -2.634   -2.634
+      # 416 fam_class4_3_num  ~                E 59.427 -0.818  -1.054   -2.196   -2.196
+      # 407 fam_class4_2_num  ~           TAM_SS 53.949 -0.853  -0.853   -3.659   -3.659
+      # 405 fam_class4_2_num  ~               PU 49.675 -0.512  -0.778   -1.725   -1.725
+      # 414 fam_class4_3_num  ~             PEoU 47.377 -1.672  -1.901   -3.958   -3.958
+      # 98                PU =~         TAM_SI_3 42.218  0.506   0.768    0.423    0.423
+      # 422 fam_class4_3_num  ~ fam_class4_2_num 40.977 -0.504  -0.504   -0.473   -0.473
+      # 412 fam_class4_2_num  ~ fam_class4_3_num 40.977 -0.444  -0.444   -0.473   -0.473
+      # 349 fam_class4_2_num ~~ fam_class4_3_num 40.977 -0.102  -0.102   -0.473   -0.473
+      # 308         TAM_SI_1 ~~         TAM_SI_2 37.713  1.786   1.786    3.769    3.769
+      # 425 fam_class4_4_num  ~               PU 32.064 -0.293  -0.444   -1.201   -1.201
+      # 427 fam_class4_4_num  ~           TAM_SS 30.629 -0.345  -0.345   -1.805   -1.805
+      # 406 fam_class4_2_num  ~                E 27.639 -0.718  -0.925   -2.052   -2.052
+      # 424 fam_class4_4_num  ~             PEoU 27.254 -2.020  -2.296   -6.203   -6.203
+      # 404 fam_class4_2_num  ~             PEoU 25.058 -1.249  -1.420   -3.148   -3.148
+      # 426 fam_class4_4_num  ~                E 22.842 -0.535  -0.690   -1.863   -1.863
+      # 95                PU =~          TAM_E_4 20.998  0.357   0.542    0.365    0.365
+      # 351 fam_class4_3_num ~~ fam_class4_4_num 20.241 -0.059  -0.059   -0.333   -0.333
+      # 433 fam_class4_4_num  ~ fam_class4_3_num 20.241 -0.256  -0.256   -0.333   -0.333
+      # 423 fam_class4_3_num  ~ fam_class4_4_num 20.241 -0.431  -0.431   -0.333   -0.333
+      # 109                E =~         TAM_SI_3 17.532  0.351   0.453    0.249    0.249
+      # 350 fam_class4_2_num ~~ fam_class4_4_num 14.243 -0.047  -0.047   -0.279   -0.279
+      # 432 fam_class4_4_num  ~ fam_class4_2_num 14.243 -0.229  -0.229   -0.279   -0.279
+      # 413 fam_class4_2_num  ~ fam_class4_4_num 14.243 -0.340  -0.340   -0.279   -0.279
+      # 121               SI =~          TAM_E_4 13.846  0.228   0.345    0.232    0.232
+      # 106                E =~         TAM_PU_4 13.771  0.293   0.377    0.253    0.253
+      # 222         TAM_PU_2 ~~          TAM_E_4 12.428  0.275   0.275    0.289    0.289
+      # 257         TAM_PU_4 ~~         TAM_UI_2 12.365  0.250   0.250    0.243    0.243
+      # 82              PEoU =~          TAM_E_2 11.733  0.251   0.285    0.210    0.210
+      # 379           TAM_SS  ~               SI 10.917  0.334   0.505    0.261    0.261
+      
+      
+      
+      #next change: adding regression path between TAM_SS  ~   SI, since it can be assumed that a higher social influence leads to a stronger perception of a VA being a social status symbol
+      rosiesTAM_3DVs_fam_class4_1_changeV <- '
 
-        '
-        
-        #fit the model
-        rosiesTAM_4classes3DVs_fit <- lavaan(rosiesTAM_4classes3DVs, data = rosie_fscores)
-        
-        #print summary
-        summary(rosiesTAM_4classes3DVs_fit, standardized = T, fit.measures = T)
-        
-        #bootstrap model
-        rosiesTAM_3classes3DVs_fit_boostrapped_se <- sem(rosiesTAM_3classes3DVs, data = rosie_fscores, se = "bootstrap", bootstrap = 1000, estimator = "WLS") 
-        summary(rosiesTAM_3classes3DVs_fit_boostrapped_se, fit.measures = TRUE) 
-        parameterEstimates(rosiesTAM_3classes3DVs_fit_boostrapped_se, 
-                           se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
-                           standardized = FALSE, 
-                           fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
-                           cov.std = TRUE, fmi.options = list(), 
-                           rsquare = FALSE, 
-                           remove.system.eq = TRUE, remove.eq = TRUE, 
-                           remove.ineq = TRUE, remove.def = FALSE, 
-                           remove.nonfree = FALSE, 
-                           add.attributes = FALSE, 
-                           output = "data.frame", header = FALSE)
-        
-        
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + SI
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PU
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_changeV_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_changeV, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_changeV_fit, standardized = T, fit.measures = T)
+      ### >> No real improvement compared to first change
+      
+      
+      
+      #bootstrap model
+      rosiesTAM_3DVs_fam_class4_1_fit_boostrapped_se <- sem(rosiesTAM_3DVs_fam_class4_1, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_3DVs_fam_class4_1_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_3DVs_fam_class4_1_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      
+      #                 lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.797 0.091  8.756  0.000    0.616    0.973
+      # 3              PEoU =~       TAM_PEoU_3  1.011 0.080 12.695  0.000    0.854    1.166
+      # 4              PEoU =~       TAM_PEoU_4  1.066 0.079 13.479  0.000    0.910    1.220
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.919 0.059 15.449  0.000    0.801    1.034
+      # 7                PU =~         TAM_PU_3  1.031 0.057 17.986  0.000    0.916    1.140
+      # 8                PU =~         TAM_PU_4  0.774 0.067 11.615  0.000    0.646    0.907
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.929 0.058 15.900  0.000    0.816    1.045
+      # 11                E =~          TAM_E_3  0.949 0.054 17.675  0.000    0.846    1.056
+      # 12                E =~          TAM_E_4  0.768 0.078  9.888  0.000    0.615    0.920
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.968 0.066 14.704  0.000    0.837    1.095
+      # 15               SI =~         TAM_SI_3  0.815 0.071 11.541  0.000    0.677    0.954
+      # 16             PEoU  ~ fam_class4_2_num  0.141 0.270  0.523  0.601   -0.374    0.684
+      # 17             PEoU  ~ fam_class4_3_num  0.058 0.268  0.216  0.829   -0.455    0.594
+      # 18             PEoU  ~ fam_class4_4_num  0.365 0.310  1.176  0.239   -0.237    0.979
+      # 19               PU  ~ fam_class4_2_num  0.885 0.300  2.950  0.003    0.299    1.474
+      # 20               PU  ~ fam_class4_3_num  0.592 0.287  2.064  0.039    0.026    1.151
+      # 21               PU  ~ fam_class4_4_num  0.718 0.410  1.754  0.080   -0.072    1.534
+      # 22               PU  ~             PEoU  0.587 0.111  5.267  0.000    0.367    0.803
+      # 23                E  ~ fam_class4_2_num  0.534 0.267  2.000  0.045    0.030    1.077
+      # 24                E  ~ fam_class4_3_num  0.124 0.277  0.447  0.655   -0.413    0.674
+      # 25                E  ~ fam_class4_4_num  0.643 0.316  2.036  0.042    0.026    1.263
+      # 26           TAM_SS  ~ fam_class4_2_num  0.838 0.423  1.979  0.048    0.011    1.671
+      # 27           TAM_SS  ~ fam_class4_3_num  0.463 0.432  1.071  0.284   -0.388    1.307
+      # 28           TAM_SS  ~ fam_class4_4_num  0.490 0.503  0.975  0.330   -0.493    1.479
+      # 29               SI  ~ fam_class4_2_num  0.847 0.352  2.410  0.016    0.155    1.533
+      # 30               SI  ~ fam_class4_3_num -0.228 0.325 -0.701  0.483   -0.881    0.392
+      # 31               SI  ~ fam_class4_4_num  0.640 0.428  1.495  0.135   -0.194    1.484
+      # 32         TAM_UI_1  ~             PEoU  0.029 0.140  0.204  0.839   -0.247    0.304
+      # 33         TAM_UI_1  ~               PU -0.035 0.142 -0.245  0.807   -0.324    0.234
+      # 34         TAM_UI_1  ~                E  0.084 0.148  0.571  0.568   -0.190    0.389
+      # 35         TAM_UI_1  ~           TAM_SS  0.185 0.068  2.724  0.006    0.054    0.320
+      # 36         TAM_UI_1  ~               SI  0.187 0.098  1.907  0.056    0.000    0.385
+      # 37         TAM_UI_2  ~             PEoU  0.010 0.145  0.070  0.944   -0.275    0.291
+      # 38         TAM_UI_2  ~               PU  0.189 0.118  1.597  0.110   -0.035    0.429
+      # 39         TAM_UI_2  ~                E  0.455 0.134  3.390  0.001    0.188    0.714
+      # 40         TAM_UI_2  ~           TAM_SS  0.040 0.055  0.735  0.463   -0.068    0.147
+      # 41         TAM_UI_2  ~               SI  0.011 0.080  0.138  0.890   -0.142    0.173
+      # 42         TAM_UI_3  ~             PEoU  0.154 0.174  0.885  0.376   -0.201    0.483
+      # 43         TAM_UI_3  ~               PU  0.269 0.166  1.619  0.105   -0.051    0.601
+      # 44         TAM_UI_3  ~                E  0.192 0.171  1.126  0.260   -0.141    0.529
+      # 45         TAM_UI_3  ~           TAM_SS  0.019 0.071  0.267  0.790   -0.115    0.164
+      # 46         TAM_UI_3  ~               SI  0.073 0.097  0.754  0.451   -0.111    0.270
+      # 47       TAM_PEoU_1 ~~       TAM_PEoU_1  0.357 0.064  5.573  0.000    0.237    0.488
+      # 48       TAM_PEoU_2 ~~       TAM_PEoU_2  1.401 0.272  5.144  0.000    0.881    1.948
+      # 49       TAM_PEoU_3 ~~       TAM_PEoU_3  0.508 0.123  4.139  0.000    0.270    0.751
+      # 50       TAM_PEoU_4 ~~       TAM_PEoU_4  0.517 0.099  5.206  0.000    0.328    0.717
+      # 51         TAM_PU_1 ~~         TAM_PU_1  0.427 0.094  4.545  0.000    0.248    0.616
+      # 52         TAM_PU_2 ~~         TAM_PU_2  0.739 0.134  5.493  0.000    0.480    1.007
+      # 53         TAM_PU_3 ~~         TAM_PU_3  0.429 0.072  5.955  0.000    0.298    0.580
+      # 54         TAM_PU_4 ~~         TAM_PU_4  0.845 0.133  6.351  0.000    0.590    1.111
+      # 55          TAM_E_1 ~~          TAM_E_1  0.263 0.101  2.609  0.009    0.071    0.466
+      # 56          TAM_E_2 ~~          TAM_E_2  0.390 0.155  2.514  0.012    0.092    0.701
+      # 57          TAM_E_3 ~~          TAM_E_3  0.361 0.081  4.451  0.000    0.208    0.526
+      # 58          TAM_E_4 ~~          TAM_E_4  1.216 0.198  6.132  0.000    0.850    1.627
+      # 59         TAM_SI_1 ~~         TAM_SI_1  0.297 0.164  1.817  0.069   -0.013    0.629
+      # 60         TAM_SI_2 ~~         TAM_SI_2  0.620 0.187  3.324  0.001    0.265    0.997
+      # 61         TAM_SI_3 ~~         TAM_SI_3  1.717 0.280  6.128  0.000    1.177    2.275
+      # 62         TAM_UI_1 ~~         TAM_UI_1  2.678 0.227 11.778  0.000    2.334    3.226
+      # 63         TAM_UI_2 ~~         TAM_UI_2  1.256 0.213  5.887  0.000    0.898    1.735
+      # 64         TAM_UI_3 ~~         TAM_UI_3  2.616 0.255 10.277  0.000    2.230    3.228
+      # 65           TAM_SS ~~           TAM_SS  3.519 0.364  9.680  0.000    2.890    4.315
+      # 66             PEoU ~~             PEoU  1.306 0.213  6.124  0.000    0.919    1.755
+      # 67               PU ~~               PU  1.462 0.246  5.949  0.000    1.034    1.997
+      # 68                E ~~                E  1.560 0.232  6.711  0.000    1.147    2.058
+      # 69               SI ~~               SI  2.156 0.263  8.194  0.000    1.693    2.725
+      # 70 fam_class4_2_num ~~ fam_class4_2_num  0.203 0.015 13.669  0.000    0.175    0.233
+      # 71 fam_class4_3_num ~~ fam_class4_3_num  0.231 0.010 23.074  0.000    0.212    0.251
+      # 72 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.018  7.480  0.000    0.103    0.175
+      # 73         TAM_UI_1 ~~         TAM_UI_2 -0.255 0.154 -1.654  0.098   -0.574    0.030
+      # 74         TAM_UI_1 ~~         TAM_UI_3  0.016 0.221  0.071  0.943   -0.417    0.449
+      # 75         TAM_UI_2 ~~         TAM_UI_3  0.865 0.202  4.277  0.000    0.510    1.303
+      
+      
+      #then, we perform the SEM with the dummy/treatment coded family type variables: type 2 as reference level 
+      rosiesTAM_3DVs_fam_class4_2 <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        E ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num
+        TAM_SS ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_1_num ~~ fam_class4_1_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_2_fit <- lavaan(rosiesTAM_3DVs_fam_class4_2, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_2_fit, standardized = T, fit.measures = T)
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_2_fit, sort = TRUE)
+      # selection of highest modindices:
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 368                E  ~             PEoU 76.508  0.766   0.686    0.686    0.686
+      # 350             PEoU ~~                E 76.508  1.001   0.702    0.702    0.702
+      # 356             PEoU  ~                E 76.508  0.643   0.718    0.718    0.718
+      # 360             PEoU  ~         TAM_UI_2 67.093  1.285   1.120    1.462    1.462
+      # 369                E  ~               PU 63.320  0.570   0.642    0.642    0.642
+      
+      #bootstrap model
+      rosiesTAM_3DVs_fam_class4_2_fit_boostrapped_se <- sem(rosiesTAM_3DVs_fam_class4_2, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_3DVs_fam_class4_2_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_3DVs_fam_class4_2_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      
+      # lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.797 0.082  9.671  0.000    0.637    0.960
+      # 3              PEoU =~       TAM_PEoU_3  1.011 0.075 13.532  0.000    0.855    1.148
+      # 4              PEoU =~       TAM_PEoU_4  1.066 0.076 13.996  0.000    0.909    1.207
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.919 0.059 15.653  0.000    0.801    1.032
+      # 7                PU =~         TAM_PU_3  1.031 0.055 18.694  0.000    0.922    1.139
+      # 8                PU =~         TAM_PU_4  0.774 0.069 11.192  0.000    0.638    0.909
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.929 0.062 15.097  0.000    0.811    1.052
+      # 11                E =~          TAM_E_3  0.949 0.054 17.454  0.000    0.845    1.058
+      # 12                E =~          TAM_E_4  0.768 0.080  9.610  0.000    0.613    0.926
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.968 0.126  7.689  0.000    0.717    1.211
+      # 15               SI =~         TAM_SI_3  0.815 0.072 11.333  0.000    0.676    0.958
+      # 16             PEoU  ~ fam_class4_1_num -0.141 0.265 -0.531  0.595   -0.668    0.372
+      # 17             PEoU  ~ fam_class4_3_num -0.083 0.224 -0.372  0.710   -0.529    0.350
+      # 18             PEoU  ~ fam_class4_4_num  0.224 0.272  0.822  0.411   -0.318    0.749
+      # 19               PU  ~ fam_class4_1_num -0.885 0.308 -2.874  0.004   -1.493   -0.286
+      # 20               PU  ~ fam_class4_3_num -0.292 0.200 -1.462  0.144   -0.684    0.100
+      # 21               PU  ~ fam_class4_4_num -0.167 0.357 -0.466  0.641   -0.845    0.554
+      # 22               PU  ~             PEoU  0.587 0.108  5.428  0.000    0.371    0.795
+      # 23                E  ~ fam_class4_1_num -0.534 0.257 -2.079  0.038   -1.042   -0.035
+      # 24                E  ~ fam_class4_3_num -0.410 0.231 -1.776  0.076   -0.868    0.037
+      # 25                E  ~ fam_class4_4_num  0.109 0.285  0.380  0.704   -0.460    0.659
+      # 26           TAM_SS  ~ fam_class4_1_num -0.838 0.451 -1.860  0.063   -1.711    0.056
+      # 27           TAM_SS  ~ fam_class4_3_num -0.375 0.338 -1.108  0.268   -1.021    0.304
+      # 28           TAM_SS  ~ fam_class4_4_num -0.347 0.417 -0.833  0.405   -1.155    0.479
+      # 29               SI  ~ fam_class4_1_num -0.847 0.369 -2.297  0.022   -1.597   -0.151
+      # 30               SI  ~ fam_class4_3_num -1.075 0.275 -3.915  0.000   -1.641   -0.565
+      # 31               SI  ~ fam_class4_4_num -0.208 0.384 -0.540  0.589   -0.954    0.552
+      # 32         TAM_UI_1  ~             PEoU  0.029 0.145  0.197  0.844   -0.255    0.314
+      # 33         TAM_UI_1  ~               PU -0.035 0.141 -0.247  0.805   -0.323    0.231
+      # 34         TAM_UI_1  ~                E  0.084 0.144  0.587  0.557   -0.188    0.375
+      # 35         TAM_UI_1  ~           TAM_SS  0.185 0.066  2.827  0.005    0.059    0.315
+      # 36         TAM_UI_1  ~               SI  0.187 0.094  1.989  0.047    0.010    0.379
+      # 37         TAM_UI_2  ~             PEoU  0.010 0.148  0.068  0.946   -0.291    0.290
+      # 38         TAM_UI_2  ~               PU  0.189 0.119  1.591  0.112   -0.038    0.428
+      # 39         TAM_UI_2  ~                E  0.455 0.134  3.407  0.001    0.196    0.720
+      # 40         TAM_UI_2  ~           TAM_SS  0.040 0.057  0.712  0.476   -0.070    0.152
+      # 41         TAM_UI_2  ~               SI  0.011 0.077  0.143  0.886   -0.138    0.165
+      # 42         TAM_UI_3  ~             PEoU  0.154 0.174  0.888  0.374   -0.202    0.479
+      # 43         TAM_UI_3  ~               PU  0.269 0.169  1.587  0.112   -0.046    0.618
+      # 44         TAM_UI_3  ~                E  0.192 0.163  1.182  0.237   -0.131    0.507
+      # 45         TAM_UI_3  ~           TAM_SS  0.019 0.070  0.271  0.786   -0.119    0.155
+      # 46         TAM_UI_3  ~               SI  0.073 0.099  0.742  0.458   -0.116    0.271
+      # 47       TAM_PEoU_1 ~~       TAM_PEoU_1  0.357 0.063  5.625  0.000    0.236    0.484
+      # 48       TAM_PEoU_2 ~~       TAM_PEoU_2  1.401 0.264  5.307  0.000    0.893    1.928
+      # 49       TAM_PEoU_3 ~~       TAM_PEoU_3  0.508 0.123  4.121  0.000    0.276    0.759
+      # 50       TAM_PEoU_4 ~~       TAM_PEoU_4  0.517 0.095  5.456  0.000    0.341    0.713
+      # 51         TAM_PU_1 ~~         TAM_PU_1  0.427 0.097  4.414  0.000    0.246    0.626
+      # 52         TAM_PU_2 ~~         TAM_PU_2  0.739 0.140  5.274  0.000    0.475    1.024
+      # 53         TAM_PU_3 ~~         TAM_PU_3  0.429 0.075  5.719  0.000    0.289    0.583
+      # 54         TAM_PU_4 ~~         TAM_PU_4  0.845 0.132  6.388  0.000    0.601    1.119
+      # 55          TAM_E_1 ~~          TAM_E_1  0.263 0.103  2.559  0.010    0.067    0.470
+      # 56          TAM_E_2 ~~          TAM_E_2  0.390 0.159  2.449  0.014    0.079    0.704
+      # 57          TAM_E_3 ~~          TAM_E_3  0.361 0.080  4.539  0.000    0.208    0.520
+      # 58          TAM_E_4 ~~          TAM_E_4  1.216 0.210  5.791  0.000    0.818    1.642
+      # 59         TAM_SI_1 ~~         TAM_SI_1  0.297 0.177  1.680  0.093   -0.049    0.645
+      # 60         TAM_SI_2 ~~         TAM_SI_2  0.620 0.243  2.556  0.011    0.155    1.106
+      # 61         TAM_SI_3 ~~         TAM_SI_3  1.717 0.283  6.060  0.000    1.174    2.284
+      # 62         TAM_UI_1 ~~         TAM_UI_1  2.678 0.222 12.086  0.000    2.341    3.210
+      # 63         TAM_UI_2 ~~         TAM_UI_2  1.256 0.209  6.004  0.000    0.900    1.720
+      # 64         TAM_UI_3 ~~         TAM_UI_3  2.616 0.243 10.783  0.000    2.242    3.193
+      # 65           TAM_SS ~~           TAM_SS  3.519 0.360  9.780  0.000    2.871    4.281
+      # 66             PEoU ~~             PEoU  1.306 0.220  5.951  0.000    0.900    1.761
+      # 67               PU ~~               PU  1.462 0.245  5.977  0.000    1.022    1.981
+      # 68                E ~~                E  1.560 0.237  6.574  0.000    1.115    2.046
+      # 69               SI ~~               SI  2.156 0.262  8.226  0.000    1.685    2.712
+      # 70 fam_class4_1_num ~~ fam_class4_1_num  0.155 0.018  8.725  0.000    0.122    0.192
+      # 71 fam_class4_3_num ~~ fam_class4_3_num  0.231 0.010 22.423  0.000    0.212    0.252
+      # 72 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.019  7.335  0.000    0.100    0.174
+      # 73         TAM_UI_1 ~~         TAM_UI_2 -0.255 0.155 -1.650  0.099   -0.577    0.029
+      # 74         TAM_UI_1 ~~         TAM_UI_3  0.016 0.227  0.069  0.945   -0.431    0.457
+      # 75         TAM_UI_2 ~~         TAM_UI_3  0.865 0.194  4.452  0.000    0.517    1.279
+     
+      
+      #then, we perform the SEM with the dummy/treatment coded family type variables: type 3 as reference level  
+      rosiesTAM_3DVs_fam_class4_3 <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num
+        PU ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num + PEoU
+        E ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num
+        TAM_SS ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num
+        SI ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_1_num ~~ fam_class4_1_num
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_3_fit <- lavaan(rosiesTAM_3DVs_fam_class4_3, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_3_fit, standardized = T, fit.measures = T)
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_3_fit, sort = TRUE)
+      # selection of highest modindices:
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 356             PEoU  ~                E 76.508  0.643   0.715    0.715    0.715
+      # 368                E  ~             PEoU 76.508  0.766   0.689    0.689    0.689
+      # 350             PEoU ~~                E 76.508  1.001   0.702    0.702    0.702
+      # 360             PEoU  ~         TAM_UI_2 66.564  1.275   1.110    1.441    1.441
+      # 369                E  ~               PU 63.323  0.570   0.633    0.633    0.633
+      
+      #bootstrap model
+      rosiesTAM_3DVs_fam_class4_3_fit_boostrapped_se <- sem(rosiesTAM_3DVs_fam_class4_3, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_3DVs_fam_class4_3_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_3DVs_fam_class4_3_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      
+      # lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.797 0.087  9.198  0.000    0.626    0.966
+      # 3              PEoU =~       TAM_PEoU_3  1.011 0.077 13.189  0.000    0.853    1.153
+      # 4              PEoU =~       TAM_PEoU_4  1.066 0.076 14.057  0.000    0.913    1.210
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.919 0.058 15.766  0.000    0.805    1.033
+      # 7                PU =~         TAM_PU_3  1.031 0.055 18.739  0.000    0.920    1.136
+      # 8                PU =~         TAM_PU_4  0.774 0.069 11.159  0.000    0.637    0.909
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.929 0.058 16.047  0.000    0.813    1.039
+      # 11                E =~          TAM_E_3  0.949 0.054 17.486  0.000    0.849    1.061
+      # 12                E =~          TAM_E_4  0.768 0.078  9.852  0.000    0.621    0.927
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.968 0.064 15.178  0.000    0.839    1.089
+      # 15               SI =~         TAM_SI_3  0.815 0.070 11.579  0.000    0.676    0.952
+      # 16             PEoU  ~ fam_class4_1_num -0.058 0.268 -0.216  0.829   -0.579    0.470
+      # 17             PEoU  ~ fam_class4_2_num  0.083 0.224  0.372  0.710   -0.355    0.523
+      # 18             PEoU  ~ fam_class4_4_num  0.307 0.260  1.183  0.237   -0.207    0.810
+      # 19               PU  ~ fam_class4_1_num -0.592 0.301 -1.968  0.049   -1.185   -0.005
+      # 20               PU  ~ fam_class4_2_num  0.292 0.212  1.378  0.168   -0.122    0.710
+      # 21               PU  ~ fam_class4_4_num  0.126 0.338  0.372  0.710   -0.528    0.798
+      # 22               PU  ~             PEoU  0.587 0.108  5.433  0.000    0.373    0.796
+      # 23                E  ~ fam_class4_1_num -0.124 0.274 -0.453  0.651   -0.649    0.424
+      # 24                E  ~ fam_class4_2_num  0.410 0.247  1.663  0.096   -0.063    0.904
+      # 25                E  ~ fam_class4_4_num  0.519 0.310  1.676  0.094   -0.087    1.126
+      # 26           TAM_SS  ~ fam_class4_1_num -0.463 0.429 -1.079  0.280   -1.292    0.391
+      # 27           TAM_SS  ~ fam_class4_2_num  0.375 0.344  1.090  0.276   -0.292    1.055
+      # 28           TAM_SS  ~ fam_class4_4_num  0.027 0.404  0.067  0.946   -0.767    0.818
+      # 29               SI  ~ fam_class4_1_num  0.228 0.315  0.723  0.469   -0.369    0.864
+      # 30               SI  ~ fam_class4_2_num  1.075 0.286  3.765  0.000    0.533    1.653
+      # 31               SI  ~ fam_class4_4_num  0.867 0.360  2.411  0.016    0.186    1.597
+      # 32         TAM_UI_1  ~             PEoU  0.029 0.138  0.206  0.836   -0.245    0.297
+      # 33         TAM_UI_1  ~               PU -0.035 0.149 -0.233  0.815   -0.336    0.249
+      # 34         TAM_UI_1  ~                E  0.084 0.148  0.570  0.569   -0.195    0.385
+      # 35         TAM_UI_1  ~           TAM_SS  0.185 0.069  2.679  0.007    0.048    0.319
+      # 36         TAM_UI_1  ~               SI  0.187 0.098  1.907  0.056    0.001    0.386
+      # 37         TAM_UI_2  ~             PEoU  0.010 0.145  0.070  0.945   -0.273    0.295
+      # 38         TAM_UI_2  ~               PU  0.189 0.122  1.556  0.120   -0.042    0.434
+      # 39         TAM_UI_2  ~                E  0.455 0.134  3.386  0.001    0.188    0.715
+      # 40         TAM_UI_2  ~           TAM_SS  0.040 0.055  0.728  0.467   -0.064    0.154
+      # 41         TAM_UI_2  ~               SI  0.011 0.078  0.142  0.887   -0.139    0.167
+      # 42         TAM_UI_3  ~             PEoU  0.154 0.163  0.946  0.344   -0.172    0.468
+      # 43         TAM_UI_3  ~               PU  0.269 0.180  1.495  0.135   -0.085    0.620
+      # 44         TAM_UI_3  ~                E  0.192 0.170  1.130  0.258   -0.135    0.532
+      # 45         TAM_UI_3  ~           TAM_SS  0.019 0.071  0.267  0.789   -0.112    0.167
+      # 46         TAM_UI_3  ~               SI  0.073 0.096  0.763  0.446   -0.110    0.266
+      # 47       TAM_PEoU_1 ~~       TAM_PEoU_1  0.357 0.063  5.673  0.000    0.239    0.486
+      # 48       TAM_PEoU_2 ~~       TAM_PEoU_2  1.401 0.268  5.233  0.000    0.901    1.950
+      # 49       TAM_PEoU_3 ~~       TAM_PEoU_3  0.508 0.116  4.377  0.000    0.298    0.752
+      # 50       TAM_PEoU_4 ~~       TAM_PEoU_4  0.517 0.095  5.426  0.000    0.344    0.718
+      # 51         TAM_PU_1 ~~         TAM_PU_1  0.427 0.095  4.493  0.000    0.248    0.621
+      # 52         TAM_PU_2 ~~         TAM_PU_2  0.739 0.144  5.116  0.000    0.462    1.028
+      # 53         TAM_PU_3 ~~         TAM_PU_3  0.429 0.074  5.833  0.000    0.294    0.582
+      # 54         TAM_PU_4 ~~         TAM_PU_4  0.845 0.143  5.897  0.000    0.575    1.136
+      # 55          TAM_E_1 ~~          TAM_E_1  0.263 0.096  2.737  0.006    0.090    0.467
+      # 56          TAM_E_2 ~~          TAM_E_2  0.390 0.153  2.550  0.011    0.113    0.713
+      # 57          TAM_E_3 ~~          TAM_E_3  0.361 0.082  4.406  0.000    0.197    0.518
+      # 58          TAM_E_4 ~~          TAM_E_4  1.216 0.210  5.797  0.000    0.815    1.637
+      # 59         TAM_SI_1 ~~         TAM_SI_1  0.297 0.171  1.734  0.083   -0.032    0.640
+      # 60         TAM_SI_2 ~~         TAM_SI_2  0.620 0.179  3.458  0.001    0.288    0.991
+      # 61         TAM_SI_3 ~~         TAM_SI_3  1.717 0.290  5.927  0.000    1.167    2.302
+      # 62         TAM_UI_1 ~~         TAM_UI_1  2.678 0.228 11.728  0.000    2.342    3.237
+      # 63         TAM_UI_2 ~~         TAM_UI_2  1.256 0.219  5.732  0.000    0.898    1.757
+      # 64         TAM_UI_3 ~~         TAM_UI_3  2.616 0.262  9.984  0.000    2.223    3.250
+      # 65           TAM_SS ~~           TAM_SS  3.519 0.360  9.779  0.000    2.883    4.294
+      # 66             PEoU ~~             PEoU  1.306 0.214  6.102  0.000    0.912    1.751
+      # 67               PU ~~               PU  1.462 0.239  6.123  0.000    1.042    1.978
+      # 68                E ~~                E  1.560 0.230  6.790  0.000    1.128    2.029
+      # 69               SI ~~               SI  2.156 0.258  8.365  0.000    1.692    2.702
+      # 70 fam_class4_1_num ~~ fam_class4_1_num  0.155 0.018  8.480  0.000    0.120    0.191
+      # 71 fam_class4_2_num ~~ fam_class4_2_num  0.203 0.014 14.132  0.000    0.176    0.232
+      # 72 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.018  7.532  0.000    0.103    0.174
+      # 73         TAM_UI_1 ~~         TAM_UI_2 -0.255 0.155 -1.643  0.100   -0.589    0.019
+      # 74         TAM_UI_1 ~~         TAM_UI_3  0.016 0.219  0.072  0.943   -0.437    0.422
+      # 75         TAM_UI_2 ~~         TAM_UI_3  0.865 0.204  4.251  0.000    0.515    1.313
+      
+      
+      #then, we perform the SEM with the dummy/treatment coded family type variables: type 4 as reference level  
+      rosiesTAM_3DVs_fam_class4_4 <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+      #regressions
+        PEoU ~ fam_class4_1_num + fam_class4_2_num + fam_class4_3_num
+        PU ~ fam_class4_1_num + fam_class4_2_num + fam_class4_3_num + PEoU
+        E ~ fam_class4_1_num + fam_class4_2_num + fam_class4_3_num
+        TAM_SS ~ fam_class4_1_num + fam_class4_2_num + fam_class4_3_num
+        SI ~ fam_class4_1_num + fam_class4_2_num + fam_class4_3_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_SI_3 ~~ TAM_SI_3
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_1_num ~~ fam_class4_1_num
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_4_fit <- lavaan(rosiesTAM_3DVs_fam_class4_4, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_4_fit, standardized = T, fit.measures = T)
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_4_fit, sort = TRUE)
+      # selection of highest modindices:
+      #                  lhs op              rhs     mi    epc sepc.lv sepc.all sepc.nox
+      # 368                E  ~             PEoU 76.505  0.766   0.687    0.687    0.687
+      # 350             PEoU ~~                E 76.504  1.001   0.702    0.702    0.702
+      # 356             PEoU  ~                E 76.504  0.643   0.717    0.717    0.717
+      # 369                E  ~               PU 63.318  0.570   0.631    0.631    0.631
+      # 360             PEoU  ~         TAM_UI_2 60.494  1.159   0.994    1.302    1.302
+      
+      #bootstrap model
+      rosiesTAM_3DVs_fam_class4_4_fit_boostrapped_se <- sem(rosiesTAM_3DVs_fam_class4_4, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_3DVs_fam_class4_4_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_3DVs_fam_class4_4_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      
+      #                 lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.797 0.086  9.214  0.000    0.630    0.969
+      # 3              PEoU =~       TAM_PEoU_3  1.011 0.076 13.264  0.000    0.861    1.160
+      # 4              PEoU =~       TAM_PEoU_4  1.066 0.077 13.911  0.000    0.915    1.215
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.919 0.057 16.006  0.000    0.807    1.032
+      # 7                PU =~         TAM_PU_3  1.031 0.054 18.992  0.000    0.922    1.134
+      # 8                PU =~         TAM_PU_4  0.774 0.067 11.608  0.000    0.641    0.902
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.929 0.062 14.952  0.000    0.813    1.056
+      # 11                E =~          TAM_E_3  0.949 0.053 17.846  0.000    0.845    1.053
+      # 12                E =~          TAM_E_4  0.768 0.078  9.857  0.000    0.612    0.917
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.968 0.063 15.431  0.000    0.843    1.089
+      # 15               SI =~         TAM_SI_3  0.815 0.070 11.646  0.000    0.672    0.947
+      # 16             PEoU  ~ fam_class4_1_num -0.365 0.297 -1.227  0.220   -0.923    0.242
+      # 17             PEoU  ~ fam_class4_2_num -0.224 0.263 -0.850  0.395   -0.736    0.296
+      # 18             PEoU  ~ fam_class4_3_num -0.307 0.258 -1.190  0.234   -0.801    0.210
+      # 19               PU  ~ fam_class4_1_num -0.718 0.417 -1.721  0.085   -1.551    0.085
+      # 20               PU  ~ fam_class4_2_num  0.167 0.332  0.501  0.616   -0.493    0.809
+      # 21               PU  ~ fam_class4_3_num -0.126 0.334 -0.377  0.706   -0.798    0.510
+      # 22               PU  ~             PEoU  0.587 0.109  5.376  0.000    0.366    0.794
+      # 23                E  ~ fam_class4_1_num -0.643 0.317 -2.025  0.043   -1.226    0.018
+      # 24                E  ~ fam_class4_2_num -0.109 0.299 -0.363  0.716   -0.675    0.497
+      # 25                E  ~ fam_class4_3_num -0.519 0.299 -1.736  0.083   -1.094    0.078
+      # 26           TAM_SS  ~ fam_class4_1_num -0.490 0.494 -0.993  0.321   -1.487    0.450
+      # 27           TAM_SS  ~ fam_class4_2_num  0.347 0.407  0.853  0.394   -0.451    1.146
+      # 28           TAM_SS  ~ fam_class4_3_num -0.027 0.420 -0.065  0.948   -0.854    0.794
+      # 29               SI  ~ fam_class4_1_num -0.640 0.417 -1.534  0.125   -1.464    0.171
+      # 30               SI  ~ fam_class4_2_num  0.208 0.370  0.561  0.575   -0.517    0.933
+      # 31               SI  ~ fam_class4_3_num -0.867 0.361 -2.403  0.016   -1.579   -0.164
+      # 32         TAM_UI_1  ~             PEoU  0.029 0.142  0.201  0.841   -0.257    0.301
+      # 33         TAM_UI_1  ~               PU -0.035 0.147 -0.237  0.813   -0.334    0.243
+      # 34         TAM_UI_1  ~                E  0.084 0.154  0.547  0.585   -0.202    0.402
+      # 35         TAM_UI_1  ~           TAM_SS  0.185 0.067  2.752  0.006    0.051    0.315
+      # 36         TAM_UI_1  ~               SI  0.187 0.098  1.902  0.057   -0.001    0.385
+      # 37         TAM_UI_2  ~             PEoU  0.010 0.141  0.071  0.943   -0.279    0.274
+      # 38         TAM_UI_2  ~               PU  0.189 0.116  1.635  0.102   -0.022    0.432
+      # 39         TAM_UI_2  ~                E  0.455 0.133  3.425  0.001    0.191    0.712
+      # 40         TAM_UI_2  ~           TAM_SS  0.040 0.057  0.713  0.476   -0.068    0.154
+      # 41         TAM_UI_2  ~               SI  0.011 0.078  0.142  0.887   -0.143    0.162
+      # 42         TAM_UI_3  ~             PEoU  0.154 0.171  0.901  0.367   -0.205    0.466
+      # 43         TAM_UI_3  ~               PU  0.269 0.170  1.585  0.113   -0.046    0.619
+      # 44         TAM_UI_3  ~                E  0.192 0.166  1.161  0.245   -0.131    0.518
+      # 45         TAM_UI_3  ~           TAM_SS  0.019 0.073  0.262  0.793   -0.119    0.165
+      # 46         TAM_UI_3  ~               SI  0.073 0.098  0.748  0.454   -0.114    0.270
+      # 47       TAM_PEoU_1 ~~       TAM_PEoU_1  0.357 0.065  5.509  0.000    0.236    0.490
+      # 48       TAM_PEoU_2 ~~       TAM_PEoU_2  1.401 0.263  5.331  0.000    0.888    1.918
+      # 49       TAM_PEoU_3 ~~       TAM_PEoU_3  0.508 0.121  4.188  0.000    0.274    0.749
+      # 50       TAM_PEoU_4 ~~       TAM_PEoU_4  0.517 0.101  5.144  0.000    0.324    0.719
+      # 51         TAM_PU_1 ~~         TAM_PU_1  0.427 0.094  4.540  0.000    0.248    0.616
+      # 52         TAM_PU_2 ~~         TAM_PU_2  0.739 0.138  5.343  0.000    0.473    1.015
+      # 53         TAM_PU_3 ~~         TAM_PU_3  0.429 0.074  5.825  0.000    0.292    0.581
+      # 54         TAM_PU_4 ~~         TAM_PU_4  0.845 0.134  6.292  0.000    0.597    1.123
+      # 55          TAM_E_1 ~~          TAM_E_1  0.263 0.106  2.485  0.013    0.063    0.478
+      # 56          TAM_E_2 ~~          TAM_E_2  0.390 0.164  2.387  0.017    0.068    0.709
+      # 57          TAM_E_3 ~~          TAM_E_3  0.361 0.080  4.527  0.000    0.210    0.523
+      # 58          TAM_E_4 ~~          TAM_E_4  1.216 0.204  5.973  0.000    0.849    1.647
+      # 59         TAM_SI_1 ~~         TAM_SI_1  0.297 0.162  1.837  0.066   -0.018    0.617
+      # 60         TAM_SI_2 ~~         TAM_SI_2  0.620 0.175  3.553  0.000    0.287    0.971
+      # 61         TAM_SI_3 ~~         TAM_SI_3  1.717 0.279  6.152  0.000    1.203    2.297
+      # 62         TAM_UI_1 ~~         TAM_UI_1  2.678 0.220 12.153  0.000    2.349    3.213
+      # 63         TAM_UI_2 ~~         TAM_UI_2  1.256 0.210  5.984  0.000    0.900    1.723
+      # 64         TAM_UI_3 ~~         TAM_UI_3  2.616 0.267  9.810  0.000    2.202    3.248
+      # 65           TAM_SS ~~           TAM_SS  3.519 0.354  9.943  0.000    2.916    4.304
+      # 66             PEoU ~~             PEoU  1.306 0.221  5.916  0.000    0.897    1.763
+      # 67               PU ~~               PU  1.462 0.239  6.108  0.000    1.057    1.995
+      # 68                E ~~                E  1.560 0.238  6.545  0.000    1.128    2.063
+      # 69               SI ~~               SI  2.156 0.249  8.649  0.000    1.720    2.697
+      # 70 fam_class4_1_num ~~ fam_class4_1_num  0.155 0.018  8.374  0.000    0.120    0.193
+      # 71 fam_class4_2_num ~~ fam_class4_2_num  0.203 0.014 14.305  0.000    0.176    0.232
+      # 72 fam_class4_3_num ~~ fam_class4_3_num  0.231 0.010 22.597  0.000    0.212    0.252
+      # 73         TAM_UI_1 ~~         TAM_UI_2 -0.255 0.154 -1.655  0.098   -0.577    0.027
+      # 74         TAM_UI_1 ~~         TAM_UI_3  0.016 0.221  0.071  0.943   -0.430    0.437
+      # 75         TAM_UI_2 ~~         TAM_UI_3  0.865 0.205  4.215  0.000    0.495    1.299
 ###----------------------------------------------------------------------------------------------------------------###
           
-#------------------------------------------------#
-### Model visualization ##########################
-#------------------------------------------------#
+#------------------------------------------------------#
+### Final model visualization ##########################
+#-----------------------------------------------------#
           
 ### SemPaths Model Visualization ###
        
     library(semPlot)
-    semPaths(rosiesTAM_4classes3DVs_fit, what = "col", "std", layout = "tree", rotation = 2, 
+    semPaths(rosiesTAM_3DVs_fam_class4_fit, what = "col", "std", layout = "tree", rotation = 2, 
              intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
              edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
-    title("TAM + U&G Structural Regression Model")
+    title("Structural Equation Model")
+    
+    #OR using https://cran.r-project.org/web/packages/tidySEM/vignettes/Plotting_graphs.html 
+    
+    library(tidySEM)
+    graph_sem(model = rosiesTAM_3DVs_fam_class4_fit)
     
 #########  :) Script run until here #################
+    
+    #von Flo
+    emf(file = "sent.score.monat.emf", width = 13, height = 9,
+        bg = "transparent", fg = "black", pointsize = 12,
+        family = "Arial", coordDPI = 300)
+    sentiment_score_monate_grafik
+    dev.off()
+
     
 ###----------------------------------------------------------------------------------------------------------------###
     
@@ -3434,32 +3928,81 @@ print(sessionInfo())
     
   ### see how the family types directly relate to our DVs ##########################
     # Compute the analysis of variance
-    anova <- aov(TAM_UI_1 ~ fam_class3, data = rosie_fscores) #not significant
+    anova_UI_1 <- aov(TAM_UI_1 ~ fam_class4, data = rosie_fscores) #not significant
     # Summary of the analysis
-    summary(anova) #not significant
+    summary(anova_UI_1) #not significant
     # Alternative non-parametric test
-    kruskal.test(TAM_UI_1 ~ fam_class3, data = rosie_fscores) #not significant
+    kruskal.test(TAM_UI_1 ~ fam_class4, data = rosie_fscores) #not significant
+    
+    ### >> Family types do not differ in their use intention.
 
-    # Compute the analysis of variance
-    anova <- aov(TAM_UI_2 ~ fam_class3, data = rosie_fscores) 
-    # Summary of the analysis
-    summary(anova) #close but not significant
-    # Alternative non-parametric test
-    kruskal.test(TAM_UI_2 ~ fam_class3, data = rosie_fscores) #close but not significant
     
     # Compute the analysis of variance
-    anova <- aov(TAM_UI_3 ~ fam_class3, data = rosie_fscores) 
+    anova_UI_2 <- aov(TAM_UI_2 ~ fam_class4, data = rosie_fscores) 
     # Summary of the analysis
-    summary(anova) #not significant
+    summary(anova_UI_2) #significant
     # Alternative non-parametric test
-    kruskal.test(TAM_UI_3 ~ fam_class3, data = rosie_fscores) #not significant
+    kruskal.test(TAM_UI_2 ~ fam_class4, data = rosie_fscores) #significant
     
-    ### >> no significant relationships between the family type and our DVs
+        #Where are the differences? 
+        TukeyHSD(anova_UI_2)
+        # $fam_class4
+        #           diff         lwr       upr     p adj
+        # 2-1  0.7483516 -0.01513748 1.5118408 0.0570068 
+        # 3-1  0.2926407 -0.43754551 1.0228269 0.7265694
+        # 4-1  0.9047619  0.03591961 1.7736042 0.0377129 *
+        # 3-2 -0.4557110 -1.10322068 0.1917988 0.2649373
+        # 4-2  0.1564103 -0.64420443 0.9570249 0.9574220
+        # 4-3  0.6121212 -0.15680019 1.3810426 0.1688352
+        # >> Only significant difference between class 1 and 4 
+        
+        #Checking out mean plot
+        ggplot(rosie_fscores, aes(x=factor(fam_class4), y=TAM_UI_2)) + 
+          geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+          geom_point(stat="summary", fun.y="mean") + 
+          geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+          labs(x="Family Types", y="Co-Usage Intention (mean + 95%CI)") +
+          theme_bw() +
+          theme(axis.text.x=element_text(angle=45, hjust=1)) 
+    
+        ### >> Family types 1 and 4 significantly differ in their co-usage intention, 
+        ###    with class 4 (mediators) with greater co-usage intention, which makes sense!
+        
+        
+    # Compute the analysis of variance
+    anova_UI_3 <- aov(TAM_UI_3 ~ fam_class4, data = rosie_fscores) 
+    # Summary of the analysis
+    summary(anova_UI_3) #significant
+    # Alternative non-parametric test
+    kruskal.test(TAM_UI_3 ~ fam_class4, data = rosie_fscores) #significant
+    
+          #Where are the differences? 
+          TukeyHSD(anova_UI_3)
+          # $fam_class4
+          # diff         lwr       upr     p adj
+          # 2-1  0.9412088 -0.05022595 1.9326435 0.0695303
+          # 3-1  0.3112554 -0.63693356 1.2594444 0.8297393
+          # 4-1  1.0476190 -0.08062287 2.1758610 0.0792016
+          # 3-2 -0.6299534 -1.47078215 0.2108754 0.2139714
+          # 4-2  0.1064103 -0.93323417 1.1460547 0.9934332
+          # 4-3  0.7363636 -0.26212522 1.7348525 0.2264496
+          # >> No significant differences when adjusting for multiple testing. 
+          
+          #Checking out mean plot
+          ggplot(rosie_fscores, aes(x=factor(fam_class4), y=TAM_UI_3)) + 
+            geom_jitter(colour="lightblue", alpha=0.5, width=0.1) +
+            geom_point(stat="summary", fun.y="mean") + 
+            geom_errorbar(stat="summary", fun.data="mean_se", fun.args = list(mult = 1.96), width=0) +
+            labs(x="Family Types", y="Co-Usage Intention (mean + 95%CI)") +
+            theme_bw() +
+            theme(axis.text.x=element_text(angle=45, hjust=1)) 
+          
+          ### >> Family types do not differ in their use intention.
     
     
   
 
-  ### only TAM separately from family typology ##########################
+  ### only TAM, separately from family typology ##########################
     rosiesTAM_only <- '
 
         #measurement model
@@ -3507,170 +4050,7 @@ print(sessionInfo())
     #print summary
     summary(rosiesTAM_only_fit, standardized = T, fit.measures = T)
     
-    #bootstrap model
-    rosiesTAM_only_fit_boostrapped_se <- sem(rosiesTAM_only, data = rosie_fscores, se = "bootstrap", bootstrap = 1000) 
-    summary(rosiesTAM_only_fit_boostrapped_se, fit.measures = TRUE) 
-    parameterEstimates(rosiesTAM_only_fit_boostrapped_se, 
-                       se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE, 
-                       standardized = FALSE, 
-                       fmi = FALSE, level = 0.95, boot.ci.type = "norm", 
-                       cov.std = TRUE, fmi.options = list(), 
-                       rsquare = FALSE, 
-                       remove.system.eq = TRUE, remove.eq = TRUE, 
-                       remove.ineq = TRUE, remove.def = FALSE, 
-                       remove.nonfree = FALSE, 
-                       add.attributes = FALSE, 
-                       output = "data.frame", header = FALSE)
+    ### >> Model fit is still not acceptable, so it's not the family types that add that much complexity!
     
 ###----------------------------------------------------------------------------------------------------------------###  
     
-#----------------------------------------------------------#
-### OTHER POTENTIALLY USEFUL CODE ##########################
-#----------------------------------------------------------#
-
-      
-      #testing a three factor model
-      #evaluate and improve (re-specify) the factor solution in order to obtain a satisfactory factor solution
-      
-      ### CFA FUNCTION ###
-      
-      #specify the model
-      t_f_model <- 'EE =~ x1 + x2 + x3 
-      CY =~ x4 + x5 + x6 
-      RPA =~ x7 + x8 + x9'     
-      
-      #fit the model
-      t_f_fit <- cfa(t_f_model, data = bo)
-      
-      #print summary
-      summary(t_f_fit, standardized = T, fit.measures = T)
-      
-      
-      ### LAVAAN FUNCTION ###
-      
-      #specify the model
-      t_f_model_lavaan <- 'EE  =~ 1*x1 + x2 + x3      
-      CY =~ 1*x4 + x5 + x6
-      RPA =~ 1*x7 + x8 + x9 
-      
-      #add (residual) variances
-      x1~~x1
-      x2~~x2
-      x3~~x3
-      x4~~x4
-      x5~~x5
-      x6~~x6
-      x7~~x7
-      x8~~x8
-      x9~~x9
-      EE~~EE
-      CY~~CY
-      RPA~~RPA
-      
-      #add covariances
-      EE~~CY
-      CY~~RPA
-      RPA~~EE
-      '
-      
-      #fit the model
-      t_f_model_lavaan_fit <- lavaan(t_f_model_lavaan, data = bo)
-      
-      #print summary
-      summary(t_f_model_lavaan_fit, standardized = T, fit.measures = T)
-      
-      
-      ### Higher Order Model in Lavaan ###
-      
-      #specify the model
-      ho_f_model_lavaan <- 'EE  =~ 1*x1 + x2 + x3      
-        CY =~ 1*x4 + x5 + x6
-        RPA =~ 1*x7 + x8 + x9 
-        burnout =~ 1*EE + CY + RPA
-    
-      #add (residual) variances
-      x1~~x1
-      x2~~x2
-      x3~~x3
-      x4~~x4
-      x5~~x5
-      x6~~x6
-      x7~~x7
-      x8~~x8
-      x9~~x9
-      EE~~EE
-      CY~~CY
-      RPA~~RPA
-      burnout~~burnout'
-      
-      #fit the model
-      ho_f_model_lavaan_fit <- lavaan(ho_f_model_lavaan, data = bo)
-      
-      #print summary
-      summary(ho_f_model_lavaan_fit, standardized = T, fit.measures = T)
-      
-      
-      ### SEM FUNCTION ###
-      
-      
-      #specify the model
-      model <- ‘cbcIDQ ~popular + temper + sex
-      cbcIAB ~popular + temper + sex
-      cbcIAD ~popular + temper + y’
-      #fit the model
-      fit <- sem(model, data = NewpDataSet)
-      #print summary
-      summary(fit, standardized = T)
-      
-      #specify estimator and imputation strategy
-      fit <- sem(model, data = Data, estimator = “MLR”, missing = “ML”)
-      #add intercepts
-      fit <- sem(model, data = Data, meanstructure = TRUE)
-      #use bootstrapping
-      fit <- sem(model, data = Data, se = ‘bootstrap’)
-      fit <- sem(model, data = Data, test = ‘bootstrap’)
-      
-      #adjust summary
-      #adding standardized estimates and R-square(s)
-      summary(fit, standardized = TRUE, rsq = TRUE)
-      #adding GOD indices
-      summary(fit, fit.measures = TRUE)
-      #adding modification indices
-      summary(fit, modindices = TRUE)
-      ### OR instead: depmixS4 which also allows continuous and categorical indicators https://maksimrudnev.com/2016/12/28/latent-class-analysis-in-r/#depmixS4
-      
-      
-      ### LPA ###
-      
-      library(depmixS4)
-      library(stats)
-      
-      #define model     
-      #??mix
-      #model_definition <- depmix(list(TT_1 ~ 1, TT_2 ~ 1, TT_3 ~ 1, 
-      #                            Child_Temp_Extraversion ~ 1, Child_Temp_Negative_Affectivity ~ 1, Child_Temp_Effortful_Control ~ 1,
-      #                            Child_Parasocial_1 ~ 1, Child_Parasocial_2 ~ 1, Child_Parasocial_3 ~ 1, Child_Parasocial_4 ~ 1, Child_Parasocial_5 ~ 1,
-      #                            SOCIALEKLASSE2016 ~ 1,
-      #                            Child_Age ~ 1, 
-      #                            Child_Gender ~ 1, 
-      #                            GSL ~ 1, 
-      #                            LFT ~ 1, 
-      #                            PMMS_1 ~ 1, PMMS_2 ~ 1, PMMS_3 ~ 1, PMMS_4 ~ 1, PMMS_5 ~ 1, PMMS_6 ~ 1),
-      #                       data = rosie, nstates = 2, 
-      #                       family = list(Gamma(),Gamma(),Gamma(),
-      #                                     Gamma(),Gamma(),Gamma(),
-      #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),
-      #                                     poisson(),
-      #                                     Gamma(),
-      #                                     poisson(),
-      #                                     poisson(),
-      #                                     Gamma(),
-      #                                     Gamma(),Gamma(),Gamma(),Gamma(),Gamma(),Gamma()),
-      #                       respstart=runif(44))
-      
-      #?depmixS4::GLMresponse
-      
-      #fit model       
-      #fit.mod <- fit(model_definition)   # Fit the model
-      
-      #fit.mod
