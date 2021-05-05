@@ -220,10 +220,43 @@ print(sessionInfo())
 ### ROSIE TARGET GROUP ##########################
 #-----------------------------------------------#
    
-   #filtering responses for Rosie target group (in total: 224 responses, completes: 183)
+   #how many participants failed the attention check?
+   names(rosie)
+   library(dplyr)
+   rosie_dataset_renamed_families <- dplyr::filter(rosie_dataset_renamed, Child_Nr != 1)
+   
+   source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+   crosstab(rosie_dataset_renamed_families, row.vars = "ATTENTION_CHECK", type = "row.pct")
+   # ATTENTION_CHECK      %
+   # 1   4.31
+   # 2   0.27
+   # 3   0.81
+   # 4   4.04
+   # 5   2.96
+   # 6   5.39
+   # 7  82.21
+   # Sum 100.00
+   
+        ### --> 17.78 % of families failed the attention check
+   
+   crosstab(rosie_dataset_renamed_families, row.vars = "ATTENTION_CHECK", type = "f")
+   # ATTENTION_CHECK Count
+   # 1    16
+   # 2     1
+   # 3     3
+   # 4    15
+   # 5    11
+   # 6    20
+   # 7   305
+   # Sum   371
+   
+        ### --> 66 (17.78%) families failed the attention check
+   
+   
+   #filtering responses for Rosie target group (in total: 371 responses, completes: 305)
    library(dplyr)
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Nr != 1 & STATUS == 1)
-   View(rosie_dataset_renamed_families_complete)
+   #View(rosie_dataset_renamed_families_complete)
    names(rosie_dataset_renamed_families_complete)
    
    
@@ -316,7 +349,7 @@ print(sessionInfo())
   
   #restarting dataset naming
   rosie <- rosie_dataset_renamed_families_complete
-  View(rosie)
+  #View(rosie)
   names(rosie)
   
 #---------------------------------------------------#
@@ -351,7 +384,7 @@ print(sessionInfo())
 
   #plotting the missing values for variables relevant for LCA 
   names(rosie)
-  rosie_LCArelevant <- rosie[,-c(1:59, 71:75, 81:104, 113, 115, 119:120, 123:124)] 
+  rosie_LCArelevant <- rosie[,-c(1:58, 71:75, 81:105, 113, 115, 119:120, 123:124)] 
   # View(rosie_LCArelevant)
   library(VIM)
   aggr(rosie_LCArelevant)
@@ -868,7 +901,7 @@ print(sessionInfo())
                       #create a dataframe with only outliers
                       outlier_PMMS_4_df <- rosie[outlier_scores_PMMS_4 > 3| outlier_scores_PMMS_4 < -3, ]
                       #take a peek
-                      View(outlier_PMMS_4_df)
+                      #View(outlier_PMMS_4_df)
                       head(outlier_PMMS_4_df) # >> outliers lay in observations 12, 32, 37, 99, 127, 170, 240, 247, 290, 296
                 
           #Step 1: correlations
@@ -1378,10 +1411,16 @@ print(sessionInfo())
    densityplot(rosie_fscores$TAM_UI_3)
    ##>> no reason to believe in a ceiling effect
    
-names(rosie_fscores)
+  
+   names(rosie_fscores)
    
    #getting correlations matrix for TAM-variables
-   round(cor(rosie_fscores[,c(134:136, 97, 137, 101:103)]),2)
+   require(Hmisc)
+   x <- as.matrix(rosie_fscores[,c(134:136, 97, 137, 101:103)])
+   correlation_matrix<-rcorr(x, type="pearson")
+   R <- correlation_matrix$r 
+   R
+ 
    #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SS TAM_SI_f TAM_UI_1 TAM_UI_2 TAM_UI_3
    # TAM_PEoU_f       1.00     0.42    0.60  -0.02     0.13     0.08     0.38     0.27
    # TAM_PU_f         0.42     1.00    0.60   0.20     0.41     0.12     0.48     0.38
@@ -1391,6 +1430,10 @@ names(rosie_fscores)
    # TAM_UI_1         0.08     0.12    0.10   0.14     0.20     1.00     0.02    -0.01
    # TAM_UI_2         0.38     0.48    0.56   0.15     0.19     0.02     1.00     0.58
    # TAM_UI_3         0.27     0.38    0.34   0.13     0.19    -0.01     0.58     1.00
+   
+   p <- correlation_matrix$P
+   p
+   
    
          #pairwise correlations all in one scatterplot matrix
          library(car)
@@ -1769,7 +1812,6 @@ names(rosie_fscores)
                results2
          
                # pass long-format table on to ggplot
-               install.packages("ggplot2")
                library(ggplot2)
                fit.plot<-ggplot(results2) +
                  geom_point(aes(x=Nclass,y=value),size=1) +
@@ -2588,7 +2630,7 @@ names(rosie_fscores)
        
        #print summary
        summary(rosiesTAM_measurement_2_fit, standardized = T, fit.measures = T)
-       # No significant difference in the model fit... 
+       # No significant difference in the model fit, Chi-square goes down though... 
        
        
        #check modindices, but in order to get the output we need to drop the observed variable TAM_SS, because it prevents the code from running
@@ -2620,7 +2662,9 @@ names(rosie_fscores)
              summary(rosiesTAM_measurement_adjusted_fit, standardized = T, fit.measures = T) #model fit is rarely improved
        
              #now check modindices
-             modindices(rosiesTAM_measurement_adjusted_fit, sort = TRUE) #nothing really makes theoretical sense...
+             modindices(rosiesTAM_measurement_adjusted_fit, sort = TRUE) 
+             
+                  ### --> seems like adding covariance between TAM_SI_1 and TAM_SI_2 could be a meaningful addition CHECK OUT FOR JOURNAL SUBMISSION
 
       
    #-----------------------------------------------------#
@@ -2739,7 +2783,7 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeI_fit, standardized = T, fit.measures = T)
-      ### >> Already better model fit, but still not acceptable
+      ### >> Already better model fit, Chi-Square statistic goes down, but still not acceptable
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeI_fit, sort = TRUE)
@@ -2797,7 +2841,7 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeII_fit, standardized = T, fit.measures = T)
-      ### >> Further improvement, but still not acceptable.
+      ### >> Further improvement, Chi-Square goes further down, but model is still not acceptable.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeII_fit, sort = TRUE)
@@ -2856,7 +2900,7 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, but still not good enough!
+      ### >> Model fit improved, Chi-Square goes further down a bit, but still not good enough!
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, sort = TRUE)
@@ -2915,7 +2959,7 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, but still not good enough!
+      ### >> Model fit improved, Chi-Square statistic goes down a bit more, but model is still not good enough!
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, sort = TRUE)
@@ -2974,7 +3018,7 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeV_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, but still not good enough.
+      ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeV_fit, sort = TRUE)
@@ -3034,7 +3078,7 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, but still not good enough.
+      ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, sort = TRUE)
@@ -3633,7 +3677,7 @@ names(rosie_fscores)
     #print summary
     summary(rosiesTAM_only_fit, standardized = T, fit.measures = T)
     
-    ### >> Model fit is acceptable (Chi-Suare = 0, CFI = .955, RMSEA = .065, SRMR = .055), except for the Chi-Square value, 
+    ### >> Model fit is acceptable (Chi-Suare = 0, CFI = .955, RMSEA = .065, SRMR = .055), Chi-Square statistic is also lower, 
     ###    so family types most likely add quite a bit of complexity.
     
     #bootstrap model
