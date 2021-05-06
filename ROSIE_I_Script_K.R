@@ -2592,6 +2592,8 @@ names(rosie_fscores)
        #print summary
        summary(rosiesTAM_measurement_fit, standardized = T, fit.measures = T)
        
+            ### --> Chi-Square statistic = 314.457, p = 0.00, CFI = .938, RMSEA = .087, SRMR = .079
+       
        #visualize measurement model
        #install.packages("semPlot")
        library(semPlot)
@@ -2630,7 +2632,9 @@ names(rosie_fscores)
        
        #print summary
        summary(rosiesTAM_measurement_2_fit, standardized = T, fit.measures = T)
-       # No significant difference in the model fit, Chi-square goes down though... 
+       
+             ### --> Chi-Square statistic = 233.701, p = 0.00, CFI = .947, RMSEA = .089, SRMR = .072
+             # No significant difference in the model fit, Chi-square goes down though... 
        
        
        #check modindices, but in order to get the output we need to drop the observed variable TAM_SS, because it prevents the code from running
@@ -2660,7 +2664,9 @@ names(rosie_fscores)
              
              #print summary
              summary(rosiesTAM_measurement_adjusted_fit, standardized = T, fit.measures = T) #model fit is rarely improved
-       
+                  
+                  ### --> Chi-Square statistic = 299.727, p = 0.00, CFI = .938, RMSEA = .092, SRMR = .083
+             
              #now check modindices
              modindices(rosiesTAM_measurement_adjusted_fit, sort = TRUE) 
              
@@ -2727,6 +2733,8 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_fit, standardized = T, fit.measures = T)
       
+            ### --> Chi-Square statistic = 834.594, p = 0.00, CFI = .793, RMSEA = .135, SRMR = .191
+      
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_fit, sort = TRUE)
       
@@ -2783,7 +2791,8 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeI_fit, standardized = T, fit.measures = T)
-      ### >> Already better model fit, Chi-Square statistic goes down, but still not acceptable
+      
+            ### >> Already better model fit, Chi-Square statistic does not go down, other indices improve, but model is still not acceptable
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeI_fit, sort = TRUE)
@@ -2841,7 +2850,8 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeII_fit, standardized = T, fit.measures = T)
-      ### >> Further improvement, Chi-Square goes further down, but model is still not acceptable.
+      
+            ### >> Further improvement, Chi-Square goes down, but model is still not acceptable.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeII_fit, sort = TRUE)
@@ -2900,7 +2910,8 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, Chi-Square goes further down a bit, but still not good enough!
+      
+            ### >> Model fit improved, Chi-Square goes further down a bit, but still not good enough!
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, sort = TRUE)
@@ -2959,7 +2970,8 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, Chi-Square statistic goes down a bit more, but model is still not good enough!
+      
+            ### >> Model fit improved, Chi-Square statistic goes down a bit more, but model is still not good enough!
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, sort = TRUE)
@@ -3018,7 +3030,8 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeV_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
+      
+            ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeV_fit, sort = TRUE)
@@ -3078,7 +3091,8 @@ names(rosie_fscores)
       
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, standardized = T, fit.measures = T)
-      ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
+      
+            ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, sort = TRUE)
