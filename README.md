@@ -1,32 +1,34 @@
 # Companion Material
 
 ## About this Webpage 
-On this website, you can find the statistical companion material for the paper "Virtual Assistants in Families. Understanding Parents’ Motivations to Use Virtual Assistants in the Home." This paper reports on the first study conducted as part of project Rosie. The main research aim was: *to better understand what predicts the different types of usage of VAs among families with young children (i.e., parent only, co-usage, child independently), on which characteristics those families seem to group together, and whether the identified types differ in their motivations and intentions to use VAs.*
-This website is produced directly from the project’s github repository. 
+On this website, you can find the statistical companion material for the paper *Virtual Assistants in the Family Home. Understanding Parents’ Motivations to Use Virtual Assistants with Their Child(dren)*. This paper reports on the first study conducted as part of project Rosie. The main research aim of this first study was *to better understand parents' different motivations for different types of Virtual Assistant-usage (i.e., parent only, co-usage, child independently) among different types of families with young children.*
+This website is produced directly from [the project’s GitHub repository](https://github.com/Beccallerina/virtual-assistants-in-families). 
 
 ## About Project Rosie
-Project Rosie is set to study in depth how families with young children (aged 3 - 8 years) use and eventually trust virtual assistants installed on smart speakers, like Google Home Nest or Amazon Echo, in their home. 
+Project Rosie is set to study in depth how families with young children (aged 3 - 8 years) use and eventually trust Virtual Assistants installed on smart speakers, like Google Home Nest or Amazon Echo, in their home. You can find more information about the project [here](https://ascor.uva.nl/research/phd-research-projects/youth--media-entertainment/in-rosie-we-trust-virtual-assistants-in-families.html).
 
 ## Preregistration
-[Here](https://osf.io/cj4gz/?view_only=86648383745b49ab8eb33c8f4408eb49) you can find the anonymous prergistratration plan for the first study of project Rosie. Please also see the respective amendment for changes made in the final study. 
+[Here](https://osf.io/cj4gz/?view_only=86648383745b49ab8eb33c8f4408eb49) you can find the anonymous prergistratration plan for the first study of project Rosie. Please also see the respective amendment for changes made in the final study uploaded to the study's [OSF project](https://osf.io/629b7/). 
 
 ## Analyses
-In what follows, you can find the analysis steps and essential R code that was used to fulfill the study's research aim. Please note: the dataset used for the analyses was named 'rosie'.
+In what follows, you can find the analysis steps and essential R code that was used to fulfill the study's research aim. The full R script file can be found on [GitHub](https://github.com/Beccallerina/virtual-assistants-in-families). Please note: the dataset used for the analyses was named 'rosie'.
 
 ### Data Cleaning
-We started by filtering out variables that were not of interest for Rosie.
+We started by filtering out variables that belonged to the joint research project not of interest for Rosie specifically.
 ```R
 
    rosie_dataset <- data[,-c(4:16, 42:54, 56:67, 69:80, 109:120, 138:149, 157:168, 199:291, 294:305, 307:309, 313:325, 328:329)]
    
 ```
-We proceeded by filtering out valid responses from families with at least one child between 3-8 years. We proceeded by recoding certain values of/variables to pepare for analyses.
+We proceeded by filtering for valid responses from families with at least one child between 3-8 years (e.g., failed attention check = unvalid).
 ```R
 
    #filtering responses for Rosie target group (in total: 371 responses, completes: 305)
    library(dplyr)
    rosie_dataset_renamed_families_complete <- dplyr::filter(rosie_dataset_renamed, Child_Nr != 1 & STATUS == 1)
-   
+```
+Then, we recoded certain (values of) variables to pepare for subsequent analyses.
+```R
    #recoding values of/variables FoPersU, SHL, and ICU to prepare for subsequent analyses
 
       #Frequency of personal use - FoPersU (GA_Freq_8-11)
@@ -61,7 +63,7 @@ We proceeded by filtering out valid responses from families with at least one ch
       is.numeric(rosie_dataset_renamed_families_complete$SHL)
       # View(rosie_dataset_renamed_families_complete)
 
-      #UI
+      #Use Intention
       #We asked as our DV how the families assume their usage to look like in the near future (TAM_UI_1 myself, TAM_UI_2 with my child, TAM_UI_3 child      individually)
       #We also asked how the families' usage has looked like until now (SS_cousage_1: samen met uw kind smart speaker without display, SS_cousage_2: samen met uw kind smart speaker with display, SS_childusage_1: uw kind zelfstandig without display, SS_childusage_2: uw kind zelfstandig with display)
 
@@ -126,7 +128,7 @@ Then, we proceeded with identifying any missingness in the dataset.
   ```
 
 ### Measurement Validity
-We checked for measurment validity of all existing multi-item scales (i.e., *Technology Trust, Internet Literacy, Child Temperament, Child Parasocial Attachment, Parental Media-Mediation Style, TAM-Perceived Ease of Use, TAM-Perceived Usefulness, TAM-Enjoyment, TAM-Subjective Norm*) by performing a Confirmatory Factor Analysis and by calculating Cronbach's alpha. In the following example code is shown for the variable *Internet Literacy*. This code was applied to the remaining variables likewise, always depending on whether outliers were found or not and whether the factor structure was confirmed or not.
+We checked for measurment validity of all existing multi-item scales (i.e., *Technology Trust, Internet Literacy, Child Temperament, Child Parasocial Attachment, Parental Media-Mediation Style, TAM-Perceived Ease of Use, TAM-Perceived Usefulness, TAM-Enjoyment, TAM-Subjective Norm*) by performing Confirmatory Factor Analysis and by calculating Cronbach's alpha. 
 
 ```R
 
@@ -134,9 +136,8 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
   library(lavaan)
   
 ```
- #### First descriptives and Confirmatory Factor Analysis (CFA) for all model variables built up of two or more items
- The shown code for the variable Internet Literacy serves as an example for how the CFA was done.
- 
+ #### Descriptives and Confirmatory Factor Analysis (CFA) for all model variables built up of two or more items
+The following code shown for the variable *Internet Literacy* serves as an example. This code was applied to the remaining milti-item scale variables with adjustements made depending on whether outliers were found or not and whether the factor structure was confirmed or not.
   ```R
   
        ### IL >> 5 items #########################      
@@ -237,7 +238,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
  
   ```    
       
-  #### Extract factor scores
+  #### Extracting factor scores
   
   ```R
   
@@ -262,7 +263,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
  ```
         
     
-  #### Cronbach's Alpha
+  #### Calculating Cronbach's Alpha
   
   ```R
          #Dispositional: 
@@ -374,41 +375,45 @@ Once we evaluated measurement validity, we computed additional descriptive stati
  ```
 
 ### Preregistered Analyses
-The following section shows the code used to perform our preregistered analyses, Latent Class Analysis and Structural Modelling.
+The following section shows the code used to perform our preregistered analyses, i.e., Latent Class Analysis and Structural Modelling.
 
-#### Latent Class Analysis: Individual differences (along DSMM)
+#### Latent Class Analysis: Individual differences (along first proposition of DSMM)
 
-Since LCA using poLCA package only allows categorical indicators, we converted all continuous variables into categorical ones. This way we also facilitate interpretation of classes.
+The poLCA package required categorical indicators, which is why we converted all continuous variables into categorical ones. This facilitated interpretation of classes.
    
 ##### How to meaningfully categorize?
 
-###### Dispositional: 
-      * # GSL >> as.factor
-      * rosie_fscores$PGender_f <- as.factor(rosie_fscores$GSL)
-      * # SOCIALEKLASSE2016 >> as.factor
-      * rosie_fscores$SES_f <- as.factor(rosie_fscores$SOCIALEKLASSE2016)
-      * # TT >> 3 items >> median split method because of conceptual understanding of the scale
-      * # IL >> 5 items (information + navigation) >> median split method because conceptual understanding of the scale
-      * # FoPersU >> convert into irregular vs. regular (based on weekly answer option as the cut-off)
-      * # Child_Gender > as.factor
-      * rosie_fscores$CGender_f <- as.factor(rosie_fscores$Child_Gender)
-      * # Child_Temp (Extraversion, Negative_Affectivity, Effortful_Control) >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
-      * # Child_Parasocial >> 5 items two factors (anthropomorphism & parasocial_relationship) >> median split method because conceptual understanding of the scale
-
-###### Developmental:
-      * # LFT >> mean-split
-      * # Child_Age >> age group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
-
-###### Social: 
-      * # PMMS >> 6 items (restsMed & negacMed & posacMed) >> modal split method because of conceptual understanding of the scale
-      * # current usage >> already categorical (from data cleaning)
-      * rosie_fscores$current_usage_f <- as.factor(rosie_fscores$current_usage)
-      * # household composition >> built up of Child_Nr and PERSONEN >> convert both items into factors
-      * rosie_fscores$Child_Nr_f <- as.factor(rosie_fscores$Child_Nr)
-      * rosie_fscores$HS_f <- as.factor(rosie_fscores$PERSONEN)
-      * # smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
-
-###### Categorization of continuous variables: 
+###### Dispositional variables: 
+```R
+      # GSL >> as.factor
+      rosie_fscores$PGender_f <- as.factor(rosie_fscores$GSL)
+      # SOCIALEKLASSE2016 >> as.factor
+      rosie_fscores$SES_f <- as.factor(rosie_fscores$SOCIALEKLASSE2016)
+      # TT >> 3 items >> median split method because of conceptual understanding of the scale
+      # IL >> 5 items (information + navigation) >> median split method because conceptual understanding of the scale
+      # FoPersU >> convert into irregular vs. regular (based on weekly answer option as the cut-off)
+      # Child_Gender > as.factor
+      rosie_fscores$CGender_f <- as.factor(rosie_fscores$Child_Gender)
+      # Child_Temp (Extraversion, Negative_Affectivity, Effortful_Control) >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
+      # Child_Parasocial >> 5 items two factors (anthropomorphism & parasocial_relationship) >> median split method because conceptual understanding of the scale
+ ```
+###### Developmental variables:
+```R
+      # LFT >> mean-split
+      # Child_Age >> age group "pre-schoolers 3-5 years, age group "schoolkids" 6-8 years, which means 1-3 = 1 and 4-6 = 2
+ ```
+###### Social variables: 
+```R
+      # PMMS >> 6 items (restsMed & negacMed & posacMed) >> modal split method because of conceptual understanding of the scale
+      # current usage >> already categorical (from data cleaning)
+      rosie_fscores$current_usage_f <- as.factor(rosie_fscores$current_usage)
+      # household composition >> built up of Child_Nr and PERSONEN >> convert both items into factors
+      rosie_fscores$Child_Nr_f <- as.factor(rosie_fscores$Child_Nr)
+      rosie_fscores$HS_f <- as.factor(rosie_fscores$PERSONEN)
+      # smart-household-level >> median split method because of conceptual understanding of the scale (sticking with number of devices instead of frequency)
+ ```
+###### Categorization applied:
+```R
       # - TT
       #original scale using average sum scores
       library(fame)
@@ -563,7 +568,7 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
       rosie_fscores <- rosie_fscores[,-c(145, 147, 150, 161, 164, 171, 174, 177)]
       View(rosie_fscores)
       names(rosie_fscores)
-
+ ```
 ##### Running the LCA
 
 ```R
@@ -610,14 +615,12 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
    set.seed(123)
    LCAmodel7 <- poLCA(LCAmodel, data=rosie_fscores, nclass=7, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE) 
 
-   set.seed(123)
-   LCAmodel8 <- poLCA(LCAmodel, data=rosie_fscores, nclass=8, maxiter = 1000, nrep = 10, graphs=FALSE, na.rm=TRUE) 
-
  
 ```
 
 ##### Evaluating and interpreting the LCA result
 
+###### Visualization
 ```R
 
    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6015948/pdf/atm-06-07-119.pdf (for visualizations)
@@ -699,10 +702,10 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
    zp3 <- zp3 + guides(fill = guide_legend(reverse=TRUE))
    print(zp3)
 
-
-
-   #We proceed by extracting the LCA solutions for the 4-class model 
-
+```
+###### Extracting LCA-4-class solution
+   
+```R
    #extract 4-class solution and save in fourclass object (https://osf.io/vec6s/)
    library(poLCA)
    set.seed(123)
@@ -714,11 +717,10 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
    #View(rosie_fscores)
 
    rosie_fscores$fam_class4 <- as.factor(rosie_fscores$fam_class4)
-
-
-
-   #We now recode the created fam_class variables for each model into dummy coded variables, since we need them for the SEM
-
+```
+###### Recoding 4-class-solution variables into dummies for subsequent SEM
+   
+```R
    rosie_fscores$fam_class4_1 <- ifelse(rosie_fscores$fam_class4 == "1", 1, 0) 
    rosie_fscores$fam_class4_2 <- ifelse(rosie_fscores$fam_class4 == "2", 1, 0)
    rosie_fscores$fam_class4_3 <- ifelse(rosie_fscores$fam_class4 == "3", 1, 0) 
@@ -730,9 +732,10 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
    rosie_fscores$fam_class4_4 <- as.factor(rosie_fscores$fam_class4_4)
 
    View(rosie_fscores)
-          
+```          
+###### MANOVA to test for significant differences between classes
 
-   #MANOVA 
+```R
    rosie_fscores$PGender_num <- as.numeric(rosie_fscores$PGender_f)
    rosie_fscores$SES_num <- as.numeric(rosie_fscores$SES_f)
 
@@ -758,8 +761,8 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
   #install.packages("lavaan", dependencies = T)
   library(lavaan)
       
-    
-   # Testing regression model 
+      
+   # Testing final structural model (see detailed R script for separate test of measurement model and step-wise structural-model modifications)
 
       #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
       rosie_fscores$fam_class4_1_num <- as.numeric(rosie_fscores$fam_class4_1)
@@ -822,7 +825,7 @@ Since LCA using poLCA package only allows categorical indicators, we converted a
 ### Exploratyory Analyses
 The following section shows the code used to perform further exploratory analyses.
 
-#### See how the family types directly relate to our DVs 
+#### How do the family types directly relate to our DVs?
 
 ```R
    #MANOVA 
@@ -835,9 +838,11 @@ The following section shows the code used to perform further exploratory analyse
 
 ```
 
-#### Only TAM, separately from family typology 
+#### How does TAM+U&G framework unfold separately from family typology?
 
 ```R
+   #SEM
+   
    rosiesTAM_only <- '
 
            #measurement model
