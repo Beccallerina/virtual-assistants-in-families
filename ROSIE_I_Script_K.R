@@ -2671,6 +2671,157 @@ names(rosie_fscores)
              modindices(rosiesTAM_measurement_adjusted_fit, sort = TRUE) 
              
                   ### --> seems like adding covariance between TAM_SI_1 and TAM_SI_2 could be a meaningful addition CHECK OUT FOR JOURNAL SUBMISSION
+             
+             
+                   rosiesTAM_measurement_2_try<- '
+      
+                    #measurement model
+                      PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_3 + TAM_PEoU_4
+                      PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+                      E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 
+                      SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
+                    #residual variances
+                      TAM_SS ~~ TAM_SS
+                      PEoU ~~ PEoU
+                      PU ~~ PU
+                      E ~~ E
+                      SI ~~ SI
+                      TAM_SS ~~ PEoU
+                      TAM_SS ~~ PU
+                      TAM_SS ~~ E
+                      TAM_SS ~~ SI
+                      TAM_SI_1 ~~ TAM_SI_2
+                      PEoU ~~ PU
+                      PEoU ~~ E
+                      PEoU ~~ SI
+                      PU ~~ E
+                      PU ~~ SI
+                      E ~~ SI
+                    '
+                   
+                   #fit the model
+                   rosiesTAM_measurement_2_try_fit <- cfa(rosiesTAM_measurement_2_try, data = rosie_fscores) 
+                   
+                   #print summary
+                   summary(rosiesTAM_measurement_2_try_fit, standardized = T, fit.measures = T)
+                   
+                   # lavaan 0.6-8 ended normally after 53 iterations
+                   # 
+                   # Estimator                                         ML
+                   # Optimization method                           NLMINB
+                   # Number of model parameters                        38
+                   # 
+                   # Number of observations                           305
+                   # 
+                   # Model Test User Model:
+                   #   
+                   #   Test statistic                               160.179
+                   # Degrees of freedom                                67
+                   # P-value (Chi-square)                           0.000
+                   # 
+                   # Model Test Baseline Model:
+                   #   
+                   #   Test statistic                              3210.065
+                   # Degrees of freedom                                91
+                   # P-value                                        0.000
+                   # 
+                   # User Model versus Baseline Model:
+                   #   
+                   #   Comparative Fit Index (CFI)                    0.970
+                   # Tucker-Lewis Index (TLI)                       0.959
+                   # 
+                   # Loglikelihood and Information Criteria:
+                   #   
+                   #   Loglikelihood user model (H0)              -6322.716
+                   # Loglikelihood unrestricted model (H1)      -6242.626
+                   # 
+                   # Akaike (AIC)                               12721.432
+                   # Bayesian (BIC)                             12862.804
+                   # Sample-size adjusted Bayesian (BIC)        12742.286
+                   # 
+                   # Root Mean Square Error of Approximation:
+                   #   
+                   #   RMSEA                                          0.068
+                   # 90 Percent confidence interval - lower         0.054
+                   # 90 Percent confidence interval - upper         0.081
+                   # P-value RMSEA <= 0.05                          0.017
+                   # 
+                   # Standardized Root Mean Square Residual:
+                   #   
+                   #   SRMR                                           0.042
+                   # 
+                   # Parameter Estimates:
+                   #   
+                   #   Standard errors                             Standard
+                   # Information                                 Expected
+                   # Information saturated (h1) model          Structured
+                   # 
+                   # Latent Variables:
+                   #   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+                   # PEoU =~                                                               
+                   #   TAM_PEoU_1        1.000                               1.204    0.861
+                   # TAM_PEoU_3        1.050    0.053   19.814    0.000    1.264    0.895
+                   # TAM_PEoU_4        1.018    0.055   18.456    0.000    1.227    0.848
+                   # PU =~                                                                 
+                   #   TAM_PU_1          1.000                               1.339    0.882
+                   # TAM_PU_2          0.938    0.050   18.632    0.000    1.257    0.820
+                   # TAM_PU_3          1.077    0.049   22.109    0.000    1.442    0.900
+                   # TAM_PU_4          0.830    0.048   17.295    0.000    1.112    0.785
+                   # E =~                                                                  
+                   #   TAM_E_1           1.000                               1.304    0.939
+                   # TAM_E_2           0.961    0.035   27.740    0.000    1.253    0.919
+                   # TAM_E_3           0.880    0.038   23.413    0.000    1.147    0.860
+                   # SI =~                                                                 
+                   #   TAM_SI_1          1.000                               1.014    0.640
+                   # TAM_SI_2          0.888    0.061   14.523    0.000    0.900    0.551
+                   # TAM_SI_3          1.802    0.197    9.153    0.000    1.827    1.001
+                   # 
+                   # Covariances:
+                   #   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+                   # PEoU ~~                                                               
+                   #   TAM_SS           -0.046    0.142   -0.326    0.744   -0.038   -0.020
+                   # PU ~~                                                                 
+                   #   TAM_SS            0.541    0.160    3.378    0.001    0.404    0.207
+                   # E ~~                                                                  
+                   #   TAM_SS            0.235    0.151    1.556    0.120    0.180    0.092
+                   # SI ~~                                                                 
+                   #   TAM_SS            0.511    0.130    3.936    0.000    0.503    0.258
+                   # .TAM_SI_1 ~~                                                           
+                   #   .TAM_SI_2          1.046    0.137    7.659    0.000    1.046    0.629
+                   # PEoU ~~                                                               
+                   #   PU                0.760    0.115    6.622    0.000    0.471    0.471
+                   # E                 1.054    0.121    8.729    0.000    0.672    0.672
+                   # SI                0.317    0.084    3.777    0.000    0.259    0.259
+                   # PU ~~                                                                 
+                   #   E                 1.124    0.131    8.610    0.000    0.644    0.644
+                   # SI                0.855    0.135    6.325    0.000    0.630    0.630
+                   # E ~~                                                                  
+                   #   SI                0.514    0.101    5.091    0.000    0.389    0.389
+                   # 
+                   # Variances:
+                   #                Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+                   # TAM_SS            3.820    0.309   12.349    0.000    3.820    1.000
+                   # PEoU              1.450    0.159    9.131    0.000    1.000    1.000
+                   # PU                1.793    0.187    9.610    0.000    1.000    1.000
+                   # E                 1.700    0.158   10.747    0.000    1.000    1.000
+                   # SI                1.029    0.186    5.533    0.000    1.000    1.000
+                   # .TAM_PEoU_1        0.506    0.059    8.565    0.000    0.506    0.259
+                   # .TAM_PEoU_3        0.399    0.056    7.118    0.000    0.399    0.200
+                   # .TAM_PEoU_4        0.590    0.065    9.015    0.000    0.590    0.282
+                   # .TAM_PU_1          0.512    0.058    8.785    0.000    0.512    0.222
+                   # .TAM_PU_2          0.771    0.075   10.306    0.000    0.771    0.328
+                   # .TAM_PU_3          0.489    0.061    8.042    0.000    0.489    0.190
+                   # .TAM_PU_4          0.768    0.071   10.755    0.000    0.768    0.383
+                   # .TAM_E_1           0.230    0.036    6.401    0.000    0.230    0.119
+                   # .TAM_E_2           0.288    0.037    7.772    0.000    0.288    0.155
+                   # .TAM_E_3           0.463    0.046   10.139    0.000    0.463    0.260
+                   # .TAM_SI_1          1.483    0.148    9.988    0.000    1.483    0.590
+                   # .TAM_SI_2          1.864    0.166   11.241    0.000    1.864    0.697
+                   # .TAM_SI_3         -0.009    0.283   -0.033    0.974   -0.009   -0.003
+                   
+                   
+                   ### --> Estimation did not run properly due to negative variances! 
+                   ### --> This step should not be trusted, hence measurement model should rather not be changed.
 
       
    #-----------------------------------------------------#
