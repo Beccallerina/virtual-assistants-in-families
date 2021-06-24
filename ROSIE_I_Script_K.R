@@ -410,7 +410,7 @@ print(sessionInfo())
 #------------------------------------------------------#
   
 
-### 1) CFA (Measurement model)##########################
+### 1) CFA ##########################
 
 
 #Prep: Check for normality and outliers
@@ -1247,9 +1247,6 @@ print(sessionInfo())
 
 ####---- 2) Extracting factors scores----####
 
-                
-            #Journal of Computers in human Behaviour usually reports descriptives only on demographics and does not explicitly report anything on the extracted factor scores.
-                
                 #summary of all CFA models 
                     # onefac3items_TT
                     # twofac5items_IL
@@ -1279,7 +1276,7 @@ print(sessionInfo())
                 
                 #removing unnecessary added variables from descriptives (for outliers)
                 rosie_fscores <- rosie_fscores[,-c(126:134)]
-                View(rosie_fscores)
+                #View(rosie_fscores)
                 
         
 
@@ -1417,8 +1414,8 @@ print(sessionInfo())
    #getting correlations matrix for TAM-variables
    require(Hmisc)
    x <- as.matrix(rosie_fscores[,c(134:136, 97, 137, 101:103)])
-   correlation_matrix<-rcorr(x, type="pearson")
-   R <- correlation_matrix$r 
+   correlation_matrix1<-rcorr(x, type="pearson")
+   R <- correlation_matrix1$r 
    R
  
    #            TAM_PEoU_f TAM_PU_f TAM_E_f TAM_SS TAM_SI_f TAM_UI_1 TAM_UI_2 TAM_UI_3
@@ -1431,7 +1428,7 @@ print(sessionInfo())
    # TAM_UI_2         0.38     0.48    0.56   0.15     0.19     0.02     1.00     0.58
    # TAM_UI_3         0.27     0.38    0.34   0.13     0.19    -0.01     0.58     1.00
    
-   p <- correlation_matrix$P
+   p <- correlation_matrix1$P
    p
    
    
@@ -1673,13 +1670,13 @@ names(rosie_fscores)
    
    
    #check if all new factors are included in the dataset
-   View(rosie_fscores)
+   #View(rosie_fscores)
    names(rosie_fscores)
    
    
    #removing unnecessary added variables from categorization pocedure (for outliers)
    rosie_fscores <- rosie_fscores[,-c(145, 147, 150, 161, 164, 171, 174, 177)]
-   View(rosie_fscores)
+   #View(rosie_fscores)
    names(rosie_fscores)
   
    
@@ -1753,10 +1750,6 @@ names(rosie_fscores)
    set.seed(123)
    LCAmodel7 <- poLCA(LCAmodel, data=rosie_fscores, nclass=7, maxiter = 1000, nrep = 10, graphs=TRUE, na.rm=TRUE) 
    #ALERT: iterations finished, MAXIMUM LIKELIHOOD NOT FOUND 
-   
-   set.seed(123)
-   LCAmodel8 <- poLCA(LCAmodel, data=rosie_fscores, nclass=8, maxiter = 1000, nrep = 10, graphs=FALSE, na.rm=TRUE) 
-   #>> model still converges, but class distributions get so small that it does not make sense to continue
   
    
    #-------------------------------------------#
@@ -1894,7 +1887,7 @@ names(rosie_fscores)
        rosie_fscores$fam_class4_3 <- as.factor(rosie_fscores$fam_class4_3)
        rosie_fscores$fam_class4_4 <- as.factor(rosie_fscores$fam_class4_4)
        
-       View(rosie_fscores)
+       #View(rosie_fscores)
        
   #-------------------------------------------------------#
   ### descriptives along classes ##########################
@@ -2634,7 +2627,7 @@ names(rosie_fscores)
        summary(rosiesTAM_measurement_2_fit, standardized = T, fit.measures = T)
        
              ### --> Chi-Square statistic = 233.701, p = 0.00, CFI = .947, RMSEA = .089, SRMR = .072
-             # No significant difference in the model fit, Chi-square goes down though... 
+             # No significant difference in the model fit, Chi-square goes down though... still, we keep those items in the model.
        
        
        #check modindices, but in order to get the output we need to drop the observed variable TAM_SS, because it prevents the code from running
@@ -2663,14 +2656,12 @@ names(rosie_fscores)
              rosiesTAM_measurement_adjusted_fit <- cfa(rosiesTAM_measurement_adjusted, data = rosie_fscores) 
              
              #print summary
-             summary(rosiesTAM_measurement_adjusted_fit, standardized = T, fit.measures = T) #model fit is rarely improved
-                  
-                  ### --> Chi-Square statistic = 299.727, p = 0.00, CFI = .938, RMSEA = .092, SRMR = .083
+             summary(rosiesTAM_measurement_adjusted_fit, standardized = T, fit.measures = T) 
              
              #now check modindices
              modindices(rosiesTAM_measurement_adjusted_fit, sort = TRUE) 
              
-                  ### --> seems like adding covariance between TAM_SI_1 and TAM_SI_2 could be a meaningful addition CHECK OUT FOR JOURNAL SUBMISSION
+                  ### --> seems like adding covariance between TAM_SI_1 and TAM_SI_2 could be a meaningful addition 
              
              
                    rosiesTAM_measurement_2_try<- '
@@ -2757,9 +2748,9 @@ names(rosie_fscores)
                    # Information saturated (h1) model          Structured
                    # 
                    # Latent Variables:
-                   #   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+                   #                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
                    # PEoU =~                                                               
-                   #   TAM_PEoU_1        1.000                               1.204    0.861
+                   #   TAM_PEoU_1      1.000                               1.204    0.861
                    # TAM_PEoU_3        1.050    0.053   19.814    0.000    1.264    0.895
                    # TAM_PEoU_4        1.018    0.055   18.456    0.000    1.227    0.848
                    # PU =~                                                                 
@@ -2820,13 +2811,196 @@ names(rosie_fscores)
                    # .TAM_SI_3         -0.009    0.283   -0.033    0.974   -0.009   -0.003
                    
                    
+                   ### --> Model fit improves, but:
                    ### --> Estimation did not run properly due to negative variances! 
-                   ### --> This step should not be trusted, hence measurement model should rather not be changed.
-
+                   ### --> So, this step should not be trusted, hence measurement model should rather not be changed.
+                   
+                   
+                   
+                   # Another option is to fix the factor loading of item 3 to 1.00 and check results of measurement model again:
+                   
       
-   #-----------------------------------------------------#
-   ### Testing regression model ##########################
-   #-----------------------------------------------------#
+                   rosiesTAM_measurement_3_try<- '
+      
+                    #measurement model
+                      PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_3 + TAM_PEoU_4
+                      PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+                      E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 
+                      SI =~ 1*TAM_SI_3 + TAM_SI_1 + TAM_SI_2 
+                    #residual variances
+                      TAM_SS ~~ TAM_SS
+                      PEoU ~~ PEoU
+                      PU ~~ PU
+                      E ~~ E
+                      SI ~~ SI
+                      TAM_SS ~~ PEoU
+                      TAM_SS ~~ PU
+                      TAM_SS ~~ E
+                      TAM_SS ~~ SI
+                      PEoU ~~ PU
+                      PEoU ~~ E
+                      PEoU ~~ SI
+                      PU ~~ E
+                      PU ~~ SI
+                      E ~~ SI
+                    '
+                   
+                   #fit the model
+                   rosiesTAM_measurement_3_try_fit <- cfa(rosiesTAM_measurement_3_try, data = rosie_fscores) 
+                   
+                   #print summary
+                   summary(rosiesTAM_measurement_3_try_fit, standardized = T, fit.measures = T)
+ 
+                   ### --> Chi-Square statistic = 233.701, p = 0.00, CFI = .947, RMSEA = .089, SRMR = .072
+                   ### --> This already looks better :)
+                   
+                   #now check modindices, again without SS to obtain output
+                   
+                   rosiesTAM_measurement_3_try_adjusted <- '
+                   
+                   #measurement model
+                   PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+                   PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+                   E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+                   SI =~ 1*TAM_SI_3 + TAM_SI_1 + TAM_SI_2 
+                   #residual variances
+                   PEoU ~~ PEoU
+                   PU ~~ PU
+                   E ~~ E
+                   SI ~~ SI
+                   PEoU ~~ PU
+                   PEoU ~~ E
+                   PEoU ~~ SI
+                   PU ~~ E
+                   PU ~~ SI
+                   E ~~ SI
+                   '
+                   
+                   #fit the model
+                   rosiesTAM_measurement_3_try_adjusted_fit <- cfa(rosiesTAM_measurement_3_try_adjusted, data = rosie_fscores) 
+                   
+                   modindices(rosiesTAM_measurement_3_try_adjusted_fit, sort = TRUE) 
+                   
+                   ### --> Again, covariance term between TAM_SI_1 and TAM_SI_2 is suggested.
+                   
+                   
+                   rosiesTAM_measurement_4_try<- '
+      
+                    #measurement model
+                      PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_3 + TAM_PEoU_4
+                      PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+                      E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 
+                      SI =~ 1*TAM_SI_3 + TAM_SI_1 + TAM_SI_2 
+                    #residual variances
+                      TAM_SS ~~ TAM_SS
+                      PEoU ~~ PEoU
+                      PU ~~ PU
+                      E ~~ E
+                      SI ~~ SI
+                      TAM_SS ~~ PEoU
+                      TAM_SS ~~ PU
+                      TAM_SS ~~ E
+                      TAM_SS ~~ SI
+                      TAM_SI_1 ~~ TAM_SI_2
+                      PEoU ~~ PU
+                      PEoU ~~ E
+                      PEoU ~~ SI
+                      PU ~~ E
+                      PU ~~ SI
+                      E ~~ SI
+                    '
+                   
+                   #fit the model
+                   rosiesTAM_measurement_4_try_fit <- cfa(rosiesTAM_measurement_4_try, data = rosie_fscores) 
+                   
+                   #print summary
+                   summary(rosiesTAM_measurement_4_try_fit, standardized = T, fit.measures = T)
+                   
+                   ### --> This does not change anything, TAM_SI_3 still has a negative variance! 
+                   
+                   
+                   #So, since item TAM_SI_3 measures the active contribution of setting social norms instead of adhering to them (like items 1 and 2), 
+                   #we run the measurement model without it to see if model improves more than with item 3 as reference. If so, we rather exclude this item, as it is theoretically less meaningful.
+                   
+                   
+                   rosiesTAM_measurement_5_try<- '
+      
+                    #measurement model
+                      PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_3 + TAM_PEoU_4
+                      PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+                      E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 
+                      SI =~ 1*TAM_SI_1 + TAM_SI_2 
+                    #residual variances
+                      TAM_SS ~~ TAM_SS
+                      PEoU ~~ PEoU
+                      PU ~~ PU
+                      E ~~ E
+                      SI ~~ SI
+                      TAM_SS ~~ PEoU
+                      TAM_SS ~~ PU
+                      TAM_SS ~~ E
+                      TAM_SS ~~ SI
+                      PEoU ~~ PU
+                      PEoU ~~ E
+                      PEoU ~~ SI
+                      PU ~~ E
+                      PU ~~ SI
+                      E ~~ SI
+                    '
+                   
+                   #fit the model
+                   rosiesTAM_measurement_5_try_fit <- cfa(rosiesTAM_measurement_5_try, data = rosie_fscores) 
+                   
+                   #print summary
+                   summary(rosiesTAM_measurement_5_try_fit, standardized = T, fit.measures = T)
+                   
+                   
+                   ### --> Chi-Square statistic = 135.485, p = 0.00, CFI = .972, RMSEA = .068, SRMR = .040
+                   ### --> This looks much better! 
+                   
+                   #visualize improved measurement model
+                   library(semPlot)
+                   semPaths(rosiesTAM_measurement_5_try_fit)
+                   
+                   #checking reliability again for the two-item scale
+                   #TAM_SI_reduced >> 2
+                   TAM_SI_reduced <- rosie_fscores[, c(98:99)]
+                   psych::alpha(TAM_SI_reduced) ### --> 0.86
+                   
+                   #extracting factor score of reduced scale
+                   m1h_reduced  <- ' TAM_SI_f_reducedscale  =~ TAM_SI_1 + TAM_SI_2 '
+                   onefac2items_TAM_SI <- cfa(m1h_reduced, data=rosie_fscores) 
+                   summary(onefac2items_TAM_SI, fit.measures=TRUE, standardized=TRUE)
+                   onefac2items_TAM_SIfitPredict <- as.data.frame(predict(onefac2items_TAM_SI))
+                   
+                   #adding to rosie-dataset
+                   rosie_fscores <- cbind(rosie_fscores, onefac2items_TAM_SIfitPredict) 
+                   #View(rosie_fscores)
+                   names(rosie_fscores)
+                   
+                   #rerun correlation matrix 
+                   require(Hmisc)
+                   x1 <- as.matrix(rosie_fscores[,c(134:136, 97, 180, 101:103)])
+                   correlation_matrix2<-rcorr(x1, type="pearson")
+                   R2 <- correlation_matrix2$r 
+                   R2
+                   
+                   #                   TAM_PEoU_f  TAM_PU_f    TAM_E_f      TAM_SS TAM_SI_f_reduced     TAM_UI_1   TAM_UI_2     TAM_UI_3
+                   # TAM_PEoU_f        1.00000000 0.4244577 0.60247105 -0.01641429        0.1030930  0.078317341 0.37720315  0.269483390
+                   # TAM_PU_f          0.42445768 1.0000000 0.60491748  0.19765187        0.3692951  0.124053776 0.47879820  0.375567867
+                   # TAM_E_f           0.60247105 0.6049175 1.00000000  0.09168672        0.2003569  0.101839280 0.55661985  0.341490971
+                   # TAM_SS           -0.01641429 0.1976519 0.09168672  1.00000000        0.2518569  0.144357290 0.14526895  0.133726724
+                   # TAM_SI_f_reduced  0.10309299 0.3692951 0.20035686  0.25185690        1.0000000  0.208826085 0.16679472  0.168721735
+                   # TAM_UI_1          0.07831734 0.1240538 0.10183928  0.14435729        0.2088261  1.000000000 0.02192967 -0.008846623
+                   # TAM_UI_2          0.37720315 0.4787982 0.55661985  0.14526895        0.1667947  0.021929672 1.00000000  0.584714059
+                   # TAM_UI_3          0.26948339 0.3755679 0.34149097  0.13372672        0.1687217 -0.008846623 0.58471406  1.000000000
+                   
+                   p2 <- correlation_matrix$P
+                   p2
+           
+   #------------------------------------------------------------------------------------#
+   ### Testing regression model based on old measurement model ##########################
+   #------------------------------------------------------------------------------------#
               
       #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
       rosie_fscores$fam_class4_1_num <- as.numeric(rosie_fscores$fam_class4_1)
@@ -2842,7 +3016,7 @@ names(rosie_fscores)
         PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_3 + TAM_PEoU_4 
         PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
         E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 
-        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
         PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
         PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
@@ -2884,7 +3058,7 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_fit, standardized = T, fit.measures = T)
       
-            ### --> Chi-Square statistic = 834.594, p = 0.00, CFI = .793, RMSEA = .135, SRMR = .191
+            ### --> Chi-Square statistic = 1081.356, p = 0.00, CFI = .744, RMSEA = .144, SRMR = .216
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_fit, sort = TRUE)
@@ -2943,6 +3117,7 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeI_fit, standardized = T, fit.measures = T)
       
+            ### --> Chi-Square statistic = 858.661, p = 0.00, CFI = .833, RMSEA = .110, SRMR = .145
             ### >> Already better model fit, Chi-Square statistic does not go down, other indices improve, but model is still not acceptable
       
       #check model improvements
@@ -3002,6 +3177,7 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeII_fit, standardized = T, fit.measures = T)
       
+            ### --> Chi-Square statistic = 792.378, p = 0.00, CFI = .849, RMSEA = .104, SRMR = .131
             ### >> Further improvement, Chi-Square goes down, but model is still not acceptable.
       
       #check model improvements
@@ -3062,6 +3238,7 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeIII_fit, standardized = T, fit.measures = T)
       
+            ### --> Chi-Square statistic = 717.408, p = 0.00, CFI = .868, RMSEA = .098, SRMR = .129
             ### >> Model fit improved, Chi-Square goes further down a bit, but still not good enough!
       
       #check model improvements
@@ -3122,6 +3299,7 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeIV_fit, standardized = T, fit.measures = T)
       
+            ### --> Chi-Square statistic = 674.577, p = 0.00, CFI = .878, RMSEA = .095, SRMR = .108     
             ### >> Model fit improved, Chi-Square statistic goes down a bit more, but model is still not good enough!
       
       #check model improvements
@@ -3139,10 +3317,10 @@ names(rosie_fscores)
         SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
         PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
-        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
-        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E + SI
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU 
         TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + SI
-        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PU
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num 
         TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
@@ -3182,7 +3360,8 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeV_fit, standardized = T, fit.measures = T)
       
-            ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
+            ### --> Chi-Square statistic = 652.298, p = 0.00, CFI = .883, RMSEA = .093, SRMR = .103      
+            ### >> Chi-Square goes further down, but model is still not good enough.
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeV_fit, sort = TRUE)
@@ -3199,10 +3378,10 @@ names(rosie_fscores)
         SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
         PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
-        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E + SI
         E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
         TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + SI
-        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PU
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num 
         TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
         TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
@@ -3243,7 +3422,9 @@ names(rosie_fscores)
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, standardized = T, fit.measures = T)
       
-            ### >> Model fit improved, Chi-Square goes further down, but model is still not good enough.
+            ### --> Chi-Square statistic = 612.228, p = 0.00, CFI = .893, RMSEA = .089, SRMR = .104 
+            ### >> Chi-Square goes further down, but model is still not good enough.
+      
       
       #check model improvements
       modindices(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, sort = TRUE)
@@ -3267,87 +3448,536 @@ names(rosie_fscores)
       
       #                 lhs op              rhs    est    se      z pvalue ci.lower ci.upper
       # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
-      # 2              PEoU =~       TAM_PEoU_2  0.868 0.066 13.069  0.000    0.742    1.002
-      # 3              PEoU =~       TAM_PEoU_3  1.045 0.058 17.993  0.000    0.931    1.159
-      # 4              PEoU =~       TAM_PEoU_4  1.018 0.062 16.430  0.000    0.895    1.138
+      # 2              PEoU =~       TAM_PEoU_2  0.868 0.066 13.238  0.000    0.740    0.997
+      # 3              PEoU =~       TAM_PEoU_3  1.046 0.061 17.270  0.000    0.925    1.163
+      # 4              PEoU =~       TAM_PEoU_4  1.018 0.061 16.727  0.000    0.896    1.135
       # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
-      # 6                PU =~         TAM_PU_2  0.938 0.047 20.039  0.000    0.845    1.029
-      # 7                PU =~         TAM_PU_3  1.076 0.043 25.042  0.000    0.992    1.161
-      # 8                PU =~         TAM_PU_4  0.829 0.052 15.943  0.000    0.729    0.933
+      # 6                PU =~         TAM_PU_2  0.939 0.050 18.641  0.000    0.839    1.036
+      # 7                PU =~         TAM_PU_3  1.077 0.045 23.796  0.000    0.986    1.164
+      # 8                PU =~         TAM_PU_4  0.829 0.053 15.608  0.000    0.725    0.933
       # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
-      # 10                E =~          TAM_E_2  0.961 0.037 25.857  0.000    0.888    1.033
-      # 11                E =~          TAM_E_3  0.891 0.042 21.321  0.000    0.807    0.971
-      # 12                E =~          TAM_E_4  0.823 0.052 15.816  0.000    0.723    0.927
+      # 10                E =~          TAM_E_2  0.964 0.037 26.320  0.000    0.892    1.035
+      # 11                E =~          TAM_E_3  0.892 0.040 22.248  0.000    0.816    0.973
+      # 12                E =~          TAM_E_4  0.818 0.056 14.663  0.000    0.709    0.928
       # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
-      # 14               SI =~         TAM_SI_2  0.890 0.068 13.082  0.000    0.755    1.022
-      # 15               SI =~         TAM_SI_3  1.689 0.223  7.561  0.000    1.225    2.101
-      # 16             PEoU  ~ fam_class4_2_num -0.218 0.199 -1.094  0.274   -0.606    0.175
-      # 17             PEoU  ~ fam_class4_3_num -0.166 0.218 -0.762  0.446   -0.594    0.261
-      # 18             PEoU  ~ fam_class4_4_num -0.007 0.242 -0.029  0.977   -0.493    0.455
-      # 19               PU  ~ fam_class4_2_num  0.196 0.179  1.095  0.274   -0.153    0.550
-      # 20               PU  ~ fam_class4_3_num  0.051 0.173  0.297  0.766   -0.284    0.394
-      # 21               PU  ~ fam_class4_4_num  0.059 0.275  0.215  0.829   -0.487    0.591
-      # 22               PU  ~             PEoU  0.066 0.083  0.796  0.426   -0.096    0.230
-      # 23               PU  ~                E  0.636 0.085  7.441  0.000    0.470    0.805 ***
-      # 24                E  ~ fam_class4_2_num  0.396 0.214  1.851  0.064   -0.019    0.820
-      # 25                E  ~ fam_class4_3_num  0.073 0.205  0.354  0.723   -0.328    0.476
-      # 26                E  ~ fam_class4_4_num  0.760 0.228  3.331  0.001    0.328    1.222 ***
-      # 27                E  ~             PEoU  0.706 0.090  7.876  0.000    0.528    0.880 ***
-      # 28           TAM_SS  ~ fam_class4_2_num  0.032 0.297  0.108  0.914   -0.547    0.618
-      # 29           TAM_SS  ~ fam_class4_3_num  0.142 0.314  0.453  0.651   -0.477    0.754
-      # 30           TAM_SS  ~ fam_class4_4_num  0.841 0.401  2.096  0.036    0.061    1.633 ***
-      # 31           TAM_SS  ~               SI  0.482 0.117  4.110  0.000    0.248    0.708 ***
-      # 32               SI  ~ fam_class4_2_num -0.050 0.153 -0.326  0.745   -0.343    0.257
-      # 33               SI  ~ fam_class4_3_num -0.281 0.158 -1.779  0.075   -0.590    0.030
-      # 34               SI  ~ fam_class4_4_num  0.056 0.185  0.305  0.760   -0.298    0.426
-      # 35               SI  ~               PU  0.493 0.064  7.747  0.000    0.368    0.617 ***
-      # 36         TAM_UI_1  ~             PEoU  0.062 0.117  0.530  0.596   -0.171    0.288
-      # 37         TAM_UI_1  ~               PU  0.005 0.171  0.029  0.977   -0.323    0.347
-      # 38         TAM_UI_1  ~                E  0.031 0.156  0.198  0.843   -0.274    0.337
-      # 39         TAM_UI_1  ~           TAM_SS  0.106 0.057  1.852  0.064   -0.007    0.218
-      # 40         TAM_UI_1  ~               SI  0.173 0.175  0.989  0.323   -0.181    0.507
-      # 41         TAM_UI_2  ~             PEoU  0.015 0.091  0.162  0.871   -0.161    0.197
-      # 42         TAM_UI_2  ~               PU  0.212 0.109  1.946  0.052   -0.004    0.422
-      # 43         TAM_UI_2  ~                E  0.482 0.110  4.401  0.000    0.263    0.693 ***
-      # 44         TAM_UI_2  ~           TAM_SS  0.048 0.043  1.136  0.256   -0.036    0.131
-      # 45         TAM_UI_2  ~               SI -0.031 0.110 -0.285  0.776   -0.240    0.190
-      # 46         TAM_UI_3  ~             PEoU  0.113 0.121  0.937  0.349   -0.120    0.354
-      # 47         TAM_UI_3  ~               PU  0.322 0.154  2.091  0.037    0.013    0.616 ***
-      # 48         TAM_UI_3  ~                E  0.191 0.147  1.301  0.193   -0.094    0.481
-      # 49         TAM_UI_3  ~           TAM_SS  0.062 0.055  1.126  0.260   -0.045    0.170
-      # 50         TAM_UI_3  ~               SI  0.056 0.144  0.392  0.695   -0.218    0.347
-      # 51       TAM_PEoU_1 ~~       TAM_PEoU_1  0.498 0.083  6.022  0.000    0.343    0.667
-      # 52       TAM_PEoU_2 ~~       TAM_PEoU_2  1.295 0.193  6.697  0.000    0.909    1.667
-      # 53       TAM_PEoU_3 ~~       TAM_PEoU_3  0.402 0.081  4.939  0.000    0.245    0.564
-      # 54       TAM_PEoU_4 ~~       TAM_PEoU_4  0.582 0.079  7.402  0.000    0.434    0.743
-      # 55         TAM_PU_1 ~~         TAM_PU_1  0.509 0.072  7.037  0.000    0.372    0.656
-      # 56         TAM_PU_2 ~~         TAM_PU_2  0.769 0.099  7.764  0.000    0.584    0.973
-      # 57         TAM_PU_3 ~~         TAM_PU_3  0.489 0.073  6.732  0.000    0.353    0.638
-      # 58         TAM_PU_4 ~~         TAM_PU_4  0.769 0.091  8.495  0.000    0.598    0.953
-      # 59          TAM_E_1 ~~          TAM_E_1  0.244 0.060  4.065  0.000    0.127    0.363
-      # 60          TAM_E_2 ~~          TAM_E_2  0.301 0.104  2.908  0.004    0.102    0.508
-      # 61          TAM_E_3 ~~          TAM_E_3  0.440 0.066  6.646  0.000    0.314    0.573
-      # 62          TAM_E_4 ~~          TAM_E_4  1.297 0.157  8.266  0.000    0.998    1.613
-      # 63         TAM_SI_1 ~~         TAM_SI_1  1.416 0.176  8.058  0.000    1.085    1.774
-      # 64         TAM_SI_2 ~~         TAM_SI_2  1.808 0.188  9.620  0.000    1.459    2.195
-      # 65         TAM_SI_3 ~~         TAM_SI_3  0.202 0.282  0.716  0.474   -0.327    0.780
-      # 66         TAM_SI_1 ~~         TAM_SI_2  0.984 0.168  5.859  0.000    0.668    1.327
-      # 67         TAM_UI_1 ~~         TAM_UI_1  3.179 0.192 16.542  0.000    2.887    3.640
-      # 68         TAM_UI_2 ~~         TAM_UI_2  1.242 0.164  7.553  0.000    0.959    1.603
-      # 69         TAM_UI_3 ~~         TAM_UI_3  2.790 0.221 12.631  0.000    2.413    3.279
-      # 70         TAM_UI_2 ~~         TAM_UI_3  0.880 0.164  5.374  0.000    0.584    1.226
-      # 71           TAM_SS ~~           TAM_SS  3.449 0.321 10.751  0.000    2.877    4.135
-      # 72             PEoU ~~             PEoU  1.450 0.188  7.734  0.000    1.097    1.832
-      # 73               PU ~~               PU  1.010 0.156  6.457  0.000    0.720    1.333
-      # 74                E ~~                E  0.884 0.130  6.780  0.000    0.645    1.156
-      # 75               SI ~~               SI  0.624 0.116  5.357  0.000    0.403    0.859
-      # 76 fam_class4_2_num ~~ fam_class4_2_num  0.214 0.010 20.593  0.000    0.195    0.236
-      # 77 fam_class4_3_num ~~ fam_class4_3_num  0.224 0.009 25.950  0.000    0.208    0.241
-      # 78 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.015  9.451  0.000    0.109    0.166
+      # 14               SI =~         TAM_SI_2  0.897 0.071 12.564  0.000    0.754    1.034
+      # 15               SI =~         TAM_SI_3  1.533 0.221  6.944  0.000    1.093    1.959
+      # 16             PEoU  ~ fam_class4_2_num -0.218 0.201 -1.085  0.278   -0.610    0.177 
+      # 17             PEoU  ~ fam_class4_3_num -0.166 0.198 -0.839  0.402   -0.558    0.219
+      # 18             PEoU  ~ fam_class4_4_num -0.008 0.248 -0.030  0.976   -0.514    0.458
+      # 19               PU  ~ fam_class4_2_num  0.166 0.163  1.014  0.311   -0.160    0.481
+      # 20               PU  ~ fam_class4_3_num  0.234 0.172  1.363  0.173   -0.101    0.573
+      # 21               PU  ~ fam_class4_4_num -0.015 0.229 -0.065  0.948   -0.466    0.432
+      # 22               PU  ~             PEoU  0.075 0.082  0.914  0.361   -0.088    0.232
+      # 23               PU  ~                E  0.465 0.090  5.184  0.000    0.287    0.638 **
+      # 24               PU  ~               SI  0.588 0.106  5.565  0.000    0.383    0.798 **
+      # 25                E  ~ fam_class4_2_num  0.393 0.216  1.820  0.069   -0.038    0.809
+      # 26                E  ~ fam_class4_3_num  0.071 0.211  0.338  0.735   -0.354    0.471
+      # 27                E  ~ fam_class4_4_num  0.757 0.231  3.273  0.001    0.294    1.201 **
+      # 28                E  ~             PEoU  0.707 0.086  8.220  0.000    0.534    0.871 **
+      # 29           TAM_SS  ~ fam_class4_2_num  0.023 0.290  0.080  0.936   -0.538    0.599
+      # 30           TAM_SS  ~ fam_class4_3_num  0.172 0.295  0.581  0.561   -0.404    0.754
+      # 31           TAM_SS  ~ fam_class4_4_num  0.819 0.377  2.173  0.030    0.080    1.557
+      # 32           TAM_SS  ~               SI  0.508 0.122  4.159  0.000    0.270    0.748 **
+      # 33               SI  ~ fam_class4_2_num  0.127 0.197  0.647  0.518   -0.255    0.516
+      # 34               SI  ~ fam_class4_3_num -0.319 0.202 -1.580  0.114   -0.706    0.086
+      # 35               SI  ~ fam_class4_4_num  0.349 0.251  1.391  0.164   -0.144    0.840
+      # 36         TAM_UI_1  ~             PEoU  0.066 0.120  0.547  0.584   -0.171    0.301
+      # 37         TAM_UI_1  ~               PU -0.028 0.172 -0.160  0.873   -0.367    0.307
+      # 38         TAM_UI_1  ~                E  0.043 0.157  0.273  0.785   -0.261    0.354
+      # 39         TAM_UI_1  ~           TAM_SS  0.099 0.059  1.672  0.094   -0.014    0.218
+      # 40         TAM_UI_1  ~               SI  0.217 0.172  1.263  0.207   -0.131    0.541
+      # 41         TAM_UI_2  ~             PEoU  0.012 0.088  0.141  0.888   -0.160    0.186
+      # 42         TAM_UI_2  ~               PU  0.211 0.114  1.843  0.065   -0.009    0.439
+      # 43         TAM_UI_2  ~                E  0.479 0.110  4.359  0.000    0.256    0.687 **
+      # 44         TAM_UI_2  ~           TAM_SS  0.048 0.041  1.165  0.244   -0.033    0.130
+      # 45         TAM_UI_2  ~               SI -0.014 0.108 -0.132  0.895   -0.221    0.201
+      # 46         TAM_UI_3  ~             PEoU  0.113 0.118  0.960  0.337   -0.118    0.343
+      # 47         TAM_UI_3  ~               PU  0.316 0.161  1.968  0.049    0.005    0.635
+      # 48         TAM_UI_3  ~                E  0.193 0.144  1.338  0.181   -0.097    0.468
+      # 49         TAM_UI_3  ~           TAM_SS  0.060 0.057  1.055  0.291   -0.050    0.171
+      # 50         TAM_UI_3  ~               SI  0.069 0.148  0.468  0.640   -0.216    0.363
+      # 51       TAM_PEoU_1 ~~       TAM_PEoU_1  0.499 0.085  5.900  0.000    0.337    0.668 
+      # 52       TAM_PEoU_2 ~~       TAM_PEoU_2  1.295 0.185  6.986  0.000    0.934    1.661
+      # 53       TAM_PEoU_3 ~~       TAM_PEoU_3  0.400 0.079  5.094  0.000    0.250    0.558
+      # 54       TAM_PEoU_4 ~~       TAM_PEoU_4  0.584 0.079  7.420  0.000    0.433    0.742
+      # 55         TAM_PU_1 ~~         TAM_PU_1  0.512 0.071  7.187  0.000    0.374    0.653
+      # 56         TAM_PU_2 ~~         TAM_PU_2  0.768 0.101  7.643  0.000    0.575    0.969
+      # 57         TAM_PU_3 ~~         TAM_PU_3  0.489 0.070  7.037  0.000    0.356    0.629
+      # 58         TAM_PU_4 ~~         TAM_PU_4  0.770 0.090  8.522  0.000    0.598    0.952
+      # 59          TAM_E_1 ~~          TAM_E_1  0.248 0.060  4.161  0.000    0.132    0.365
+      # 60          TAM_E_2 ~~          TAM_E_2  0.293 0.099  2.953  0.003    0.103    0.492
+      # 61          TAM_E_3 ~~          TAM_E_3  0.439 0.067  6.580  0.000    0.308    0.570
+      # 62          TAM_E_4 ~~          TAM_E_4  1.315 0.160  8.222  0.000    1.001    1.628
+      # 63         TAM_SI_1 ~~         TAM_SI_1  1.308 0.205  6.384  0.000    0.937    1.740
+      # 64         TAM_SI_2 ~~         TAM_SI_2  1.707 0.215  7.934  0.000    1.321    2.165
+      # 65         TAM_SI_3 ~~         TAM_SI_3  0.500 0.312  1.602  0.109   -0.114    1.109
+      # 66         TAM_SI_1 ~~         TAM_SI_2  0.880 0.195  4.524  0.000    0.526    1.288
+      # 67         TAM_UI_1 ~~         TAM_UI_1  3.166 0.190 16.691  0.000    2.878    3.622
+      # 68         TAM_UI_2 ~~         TAM_UI_2  1.242 0.159  7.795  0.000    0.970    1.595
+      # 69         TAM_UI_3 ~~         TAM_UI_3  2.789 0.219 12.715  0.000    2.419    3.279
+      # 70         TAM_UI_2 ~~         TAM_UI_3  0.880 0.157  5.600  0.000    0.598    1.214
+      # 71           TAM_SS ~~           TAM_SS  3.397 0.328 10.356  0.000    2.804    4.090
+      # 72             PEoU ~~             PEoU  1.450 0.179  8.113  0.000    1.122    1.823
+      # 73               PU ~~               PU  0.667 0.093  7.157  0.000    0.507    0.872
+      # 74                E ~~                E  0.880 0.128  6.901  0.000    0.654    1.154
+      # 75               SI ~~               SI  1.145 0.222  5.145  0.000    0.704    1.576
+      # 76 fam_class4_2_num ~~ fam_class4_2_num  0.214 0.010 21.686  0.000    0.196    0.235
+      # 77 fam_class4_3_num ~~ fam_class4_3_num  0.224 0.009 25.537  0.000    0.207    0.242
+      # 78 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.014  9.763  0.000    0.110    0.165
+      
+  #-------------------------------------------------------------------#
+  ### Re-run analyses with improved measurement model #################
+  #-------------------------------------------------------------------#
+      
+      rosiesTAM_3DVs_fam_class4_1_improved <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_3 + TAM_PEoU_4 
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_improved_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_improved, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_fit, standardized = T, fit.measures = T)
+      
+      ### --> Chi-Square statistic = 803.120, p = 0.00, CFI = .801, RMSEA = .132, SRMR = .204
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_improved_fit, sort = TRUE)
       
       
+      ### Change I ##########################
+      # --> adding regression path E  ~ PEoU to the model, since it is theoretically most logical that the if the PEoU is high that E is then also high
+      rosiesTAM_3DVs_fam_class4_1_improved_changeI <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_improved_changeI_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_improved_changeI, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_changeI_fit, standardized = T, fit.measures = T)
+      
+      ### --> Chi-Square statistic = 738.316, p = 0.00, CFI = .848, RMSEA = .107, SRMR = .121
+      ### >> Already better model fit, Chi-Square statistic does not go down, other indices improve, but model is still not acceptable
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_improved_changeI_fit, sort = TRUE)
+      
+      
+      ### Change II ##########################
+      #next, we add regression path PU  ~  E, since enjoyment can be assumed to be especially determining the usefulness in the family environment
+      rosiesTAM_3DVs_fam_class4_1_improved_changeII <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_improved_changeII_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_improved_changeII, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_changeII_fit, standardized = T, fit.measures = T)
+      
+      ### --> Chi-Square statistic = 672.023, p = 0.00, CFI = .865, RMSEA = .101, SRMR = .103
+      ### >> Further improvement, Chi-Square goes down, but model is still not acceptable.
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_improved_changeII_fit, sort = TRUE)
+      
+      
+      ### Change III ##########################
+      #adding covariance between TAM_UI_2 ~~ TAM_UI_3, since we already saw that child-only and co-use go hand-in-hand
+      rosiesTAM_3DVs_fam_class4_1_improved_changeIII <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_improved_changeIII_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_improved_changeIII, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_changeIII_fit, standardized = T, fit.measures = T)
+      
+      ### --> Chi-Square statistic = 597.022, p = 0.00, CFI = .885, RMSEA = .094, SRMR = .100
+      ### >> Model fit improved, Chi-Square goes further down a bit, but still not good enough!
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_improved_changeIII_fit, sort = TRUE)
+      
+      
+      ### Change IV ##########################
+      #next change: adding regression path between PU  ~  SI, since it can be assumed that a higher SI can lead to a higher perceived PU (norms influence behavior).
+      rosiesTAM_3DVs_fam_class4_1_improved_changeIV <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E + SI
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num 
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_improved_changeIV_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_improved_changeIV, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_changeIV_fit, standardized = T, fit.measures = T)
+      
+      ### --> Chi-Square statistic = 564.494, p = 0.00, CFI = .893, RMSEA = .091, SRMR = .085
+      ### >> Model fit improved, Chi-Square statistic goes down a bit more, but model is still not good enough!
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_improved_changeIV_fit, sort = TRUE)
+      
+      
+      ### Change V ##########################
+      #next change: adding regression path between TAM_SS  ~   SI, since it can be assumed that a higher social influence leads to a stronger perception of a VA being a social status symbol
+      rosiesTAM_3DVs_fam_class4_1_improved_changeV <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU + E + SI
+        E ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num + SI
+        SI ~ fam_class4_2_num + fam_class4_3_num + fam_class4_4_num
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_3DVs_fam_class4_1_improved_changeV_fit <- lavaan(rosiesTAM_3DVs_fam_class4_1_improved_changeV, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_changeV_fit, standardized = T, fit.measures = T)
+      
+      ### --> Chi-Square statistic = 539.257, p = 0.00, CFI = .900, RMSEA = .088, SRMR = .068    
+      ### >> Model fit improved, Chi-Square goes further down, all criteria is acceptable except for RMSEA.
+      
+      #check model improvements
+      modindices(rosiesTAM_3DVs_fam_class4_1_improved_changeV_fit, sort = TRUE)
+      
+      ### --> Nothing more valuable to add, so we stick with this model.
+      
+      
+      #bootstrap model
+      rosiesTAM_3DVs_fam_class4_1_improved_changeVI_fit_boostrapped_se <- sem(rosiesTAM_3DVs_fam_class4_1_improved_changeV_fit, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_3DVs_fam_class4_1_improved_changeVI_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_3DVs_fam_class4_1_improved_changeVI_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      
+      #                 lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.868 0.067 12.923  0.000    0.741    1.004
+      # 3              PEoU =~       TAM_PEoU_3  1.046 0.058 17.926  0.000    0.931    1.160
+      # 4              PEoU =~       TAM_PEoU_4  1.018 0.062 16.517  0.000    0.896    1.138
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.943 0.048 19.469  0.000    0.847    1.037
+      # 7                PU =~         TAM_PU_3  1.076 0.044 24.446  0.000    0.990    1.163
+      # 8                PU =~         TAM_PU_4  0.830 0.052 15.929  0.000    0.730    0.934
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.961 0.038 25.579  0.000    0.888    1.035
+      # 11                E =~          TAM_E_3  0.892 0.043 20.977  0.000    0.806    0.973
+      # 12                E =~          TAM_E_4  0.823 0.053 15.417  0.000    0.720    0.930
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.935 0.130  7.198  0.000    0.674    1.184 ** families 1 and 2 are different in their PEoU
+      # 15             PEoU  ~ fam_class4_2_num -0.218 0.198 -1.099  0.272   -0.604    0.173
+      # 16             PEoU  ~ fam_class4_3_num -0.166 0.217 -0.766  0.444   -0.591    0.259
+      # 17             PEoU  ~ fam_class4_4_num -0.007 0.245 -0.029  0.977   -0.500    0.460
+      # 18               PU  ~ fam_class4_2_num  0.198 0.180  1.100  0.271   -0.153    0.552
+      # 19               PU  ~ fam_class4_3_num  0.052 0.174  0.300  0.764   -0.286    0.397
+      # 20               PU  ~ fam_class4_4_num  0.061 0.271  0.226  0.822   -0.477    0.586
+      # 21               PU  ~             PEoU  0.067 0.084  0.798  0.425   -0.098    0.232
+      # 22               PU  ~                E  0.635 0.088  7.197  0.000    0.464    0.809 ** E on PU
+      # 23                E  ~ fam_class4_2_num  0.395 0.216  1.830  0.067   -0.023    0.824
+      # 24                E  ~ fam_class4_3_num  0.072 0.208  0.348  0.728   -0.334    0.480
+      # 25                E  ~ fam_class4_4_num  0.759 0.231  3.284  0.001    0.321    1.227 ** families 1 and 4 are different in their E
+      # 26                E  ~             PEoU  0.706 0.090  7.883  0.000    0.528    0.880 ** relationship between E and PEoU
+      # 27           TAM_SS  ~ fam_class4_2_num  0.046 0.298  0.155  0.877   -0.536    0.632
+      # 28           TAM_SS  ~ fam_class4_3_num  0.189 0.314  0.602  0.547   -0.425    0.806
+      # 29           TAM_SS  ~ fam_class4_4_num  0.883 0.404  2.188  0.029    0.092    1.675 * families 1 and 4 are different in their SS
+      # 30           TAM_SS  ~               SI  0.369 0.087  4.232  0.000    0.201    0.543 ** SI on SS
+      # 31               SI  ~ fam_class4_2_num -0.029 0.255 -0.115  0.908   -0.518    0.481
+      # 32               SI  ~ fam_class4_3_num -0.491 0.230 -2.137  0.033   -0.946   -0.045 * families 1 and 3 are different in their SI
+      # 33               SI  ~ fam_class4_4_num  0.078 0.304  0.258  0.796   -0.502    0.688
+      # 34               SI  ~               PU  0.422 0.066  6.384  0.000    0.293    0.552 ** PU on SI
+      # 35         TAM_UI_1  ~             PEoU  0.070 0.116  0.606  0.545   -0.161    0.294
+      # 36         TAM_UI_1  ~               PU -0.010 0.149 -0.064  0.949   -0.298    0.285
+      # 37         TAM_UI_1  ~                E  0.036 0.155  0.234  0.815   -0.267    0.340
+      # 38         TAM_UI_1  ~           TAM_SS  0.085 0.057  1.487  0.137   -0.029    0.195
+      # 39         TAM_UI_1  ~               SI  0.229 0.108  2.118  0.034    0.010    0.435 * SI on parent alone usage
+      # 40         TAM_UI_2  ~             PEoU  0.014 0.091  0.151  0.880   -0.163    0.196
+      # 41         TAM_UI_2  ~               PU  0.206 0.099  2.092  0.036    0.011    0.398 * PU on co-usage
+      # 42         TAM_UI_2  ~                E  0.482 0.109  4.416  0.000    0.265    0.693 ** E on co-usage
+      # 43         TAM_UI_2  ~           TAM_SS  0.050 0.043  1.168  0.243   -0.035    0.133
+      # 44         TAM_UI_2  ~               SI -0.023 0.066 -0.344  0.731   -0.144    0.113
+      # 45         TAM_UI_3  ~             PEoU  0.113 0.120  0.943  0.346   -0.119    0.351
+      # 46         TAM_UI_3  ~               PU  0.339 0.140  2.414  0.016    0.056    0.606 * PU on child alone usage
+      # 47         TAM_UI_3  ~                E  0.192 0.148  1.290  0.197   -0.095    0.487
+      # 48         TAM_UI_3  ~           TAM_SS  0.063 0.056  1.138  0.255   -0.046    0.173
+      # 49         TAM_UI_3  ~               SI  0.026 0.084  0.308  0.758   -0.129    0.199
+      # 50       TAM_PEoU_1 ~~       TAM_PEoU_1  0.498 0.083  6.005  0.000    0.343    0.668
+      # 51       TAM_PEoU_2 ~~       TAM_PEoU_2  1.295 0.193  6.695  0.000    0.909    1.667
+      # 52       TAM_PEoU_3 ~~       TAM_PEoU_3  0.402 0.082  4.903  0.000    0.243    0.565
+      # 53       TAM_PEoU_4 ~~       TAM_PEoU_4  0.583 0.078  7.431  0.000    0.435    0.742
+      # 54         TAM_PU_1 ~~         TAM_PU_1  0.513 0.074  6.940  0.000    0.373    0.663
+      # 55         TAM_PU_2 ~~         TAM_PU_2  0.756 0.099  7.636  0.000    0.571    0.959
+      # 56         TAM_PU_3 ~~         TAM_PU_3  0.494 0.072  6.835  0.000    0.360    0.643
+      # 57         TAM_PU_4 ~~         TAM_PU_4  0.770 0.092  8.384  0.000    0.597    0.957
+      # 58          TAM_E_1 ~~          TAM_E_1  0.245 0.061  3.999  0.000    0.126    0.367
+      # 59          TAM_E_2 ~~          TAM_E_2  0.299 0.104  2.891  0.004    0.100    0.506
+      # 60          TAM_E_3 ~~          TAM_E_3  0.440 0.068  6.516  0.000    0.311    0.576
+      # 61          TAM_E_4 ~~          TAM_E_4  1.298 0.155  8.352  0.000    1.001    1.611
+      # 62         TAM_SI_1 ~~         TAM_SI_1  0.418 0.246  1.701  0.089   -0.049    0.913
+      # 63         TAM_SI_2 ~~         TAM_SI_2  0.845 0.260  3.253  0.001    0.352    1.370
+      # 64         TAM_UI_1 ~~         TAM_UI_1  3.110 0.195 15.912  0.000    2.809    3.575
+      # 65         TAM_UI_2 ~~         TAM_UI_2  1.242 0.166  7.463  0.000    0.954    1.606
+      # 66         TAM_UI_3 ~~         TAM_UI_3  2.791 0.225 12.390  0.000    2.404    3.287
+      # 67         TAM_UI_2 ~~         TAM_UI_3  0.879 0.164  5.356  0.000    0.583    1.226
+      # 68           TAM_SS ~~           TAM_SS  3.420 0.313 10.936  0.000    2.855    4.081
+      # 69             PEoU ~~             PEoU  1.450 0.186  7.798  0.000    1.100    1.829
+      # 70               PU ~~               PU  1.007 0.154  6.534  0.000    0.721    1.325
+      # 71                E ~~                E  0.883 0.130  6.772  0.000    0.643    1.154
+      # 72               SI ~~               SI  1.689 0.271  6.244  0.000    1.176    2.237
+      # 73 fam_class4_2_num ~~ fam_class4_2_num  0.214 0.010 20.667  0.000    0.195    0.236
+      # 74 fam_class4_3_num ~~ fam_class4_3_num  0.224 0.009 25.768  0.000    0.207    0.242
+      # 75 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.014  9.557  0.000    0.109    0.165
     
-  ### Influence of family type ##########################  
+      
+  ### Influence of family type old measurement model ##########################  
   #To answer RQ2 (a, b, c, d, e) we run the SEM again with swapped our reference levels for the family types 
       
       #type 2 as reference level 
@@ -3654,6 +4284,303 @@ names(rosie_fscores)
       # 
       
  
+      
+  ### Influence of family type improved measurement model ##########################  
+  #To answer RQ2 (a, b, c, d, e) we run the SEM again with swapped our reference levels for the family types 
+      
+      #type 2 as reference level 
+      rosiesTAM_fam_class4_2_improved <- '
+
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num
+        PU ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num + PEoU + E
+        E ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num + SI
+        SI ~ fam_class4_1_num + fam_class4_3_num + fam_class4_4_num + PU
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_1_num ~~ fam_class4_1_num
+        fam_class4_3_num ~~ fam_class4_3_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_fam_class4_2_improved_fit <- lavaan(rosiesTAM_fam_class4_2_improved, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_fam_class4_2_improved_fit, standardized = T, fit.measures = T)
+      ### --> Chi-Square statistic = 434.183, p = 0.00, CFI = .925, RMSEA = .075, SRMR = .062
+      
+      #bootstrap model
+      rosiesTAM_fam_class4_2_improved_fit_boostrapped_se <- sem(rosiesTAM_fam_class4_2_improved, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_fam_class4_2_improved_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_fam_class4_2_improved_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      # 
+      #                 lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.868 0.064 13.488  0.000    0.742    0.994
+      # 3              PEoU =~       TAM_PEoU_3  1.045 0.059 17.662  0.000    0.928    1.160
+      # 4              PEoU =~       TAM_PEoU_4  1.018 0.061 16.674  0.000    0.898    1.137
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.943 0.053 17.946  0.000    0.838    1.044
+      # 7                PU =~         TAM_PU_3  1.076 0.044 24.293  0.000    0.988    1.162
+      # 8                PU =~         TAM_PU_4  0.830 0.054 15.464  0.000    0.727    0.938
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.962 0.039 24.720  0.000    0.885    1.037
+      # 11                E =~          TAM_E_3  0.891 0.041 21.639  0.000    0.813    0.974
+      # 12                E =~          TAM_E_4  0.823 0.053 15.597  0.000    0.722    0.929
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.936 0.106  8.801  0.000    0.722    1.140
+      # 15             PEoU  ~ fam_class4_1_num  0.218 0.191  1.140  0.254   -0.162    0.586 
+      # 16             PEoU  ~ fam_class4_3_num  0.052 0.175  0.296  0.767   -0.292    0.395
+      # 17             PEoU  ~ fam_class4_4_num  0.211 0.231  0.915  0.360   -0.249    0.656
+      # 18               PU  ~ fam_class4_1_num -0.198 0.172 -1.151  0.250   -0.538    0.135
+      # 19               PU  ~ fam_class4_3_num -0.145 0.135 -1.076  0.282   -0.405    0.124
+      # 20               PU  ~ fam_class4_4_num -0.137 0.245 -0.558  0.577   -0.606    0.355
+      # 21               PU  ~             PEoU  0.067 0.088  0.761  0.447   -0.106    0.239
+      # 22               PU  ~                E  0.635 0.086  7.415  0.000    0.467    0.803 **
+      # 23                E  ~ fam_class4_1_num -0.395 0.202 -1.955  0.051   -0.777    0.015
+      # 24                E  ~ fam_class4_3_num -0.323 0.134 -2.418  0.016   -0.588   -0.065
+      # 25                E  ~ fam_class4_4_num  0.364 0.158  2.307  0.021    0.060    0.678
+      # 26                E  ~             PEoU  0.706 0.087  8.130  0.000    0.533    0.873 **
+      # 27           TAM_SS  ~ fam_class4_1_num -0.046 0.286 -0.161  0.872   -0.590    0.529
+      # 28           TAM_SS  ~ fam_class4_3_num  0.143 0.271  0.529  0.597   -0.371    0.690
+      # 29           TAM_SS  ~ fam_class4_4_num  0.837 0.362  2.309  0.021    0.134    1.554
+      # 30           TAM_SS  ~               SI  0.369 0.089  4.164  0.000    0.205    0.552 **
+      # 31               SI  ~ fam_class4_1_num  0.029 0.258  0.112  0.911   -0.484    0.529
+      # 32               SI  ~ fam_class4_3_num -0.463 0.190 -2.436  0.015   -0.855   -0.110
+      # 33               SI  ~ fam_class4_4_num  0.109 0.265  0.411  0.681   -0.429    0.610
+      # 34               SI  ~               PU  0.422 0.067  6.288  0.000    0.291    0.555 **
+      # 35         TAM_UI_1  ~             PEoU  0.068 0.122  0.556  0.578   -0.174    0.306
+      # 36         TAM_UI_1  ~               PU -0.006 0.141 -0.045  0.964   -0.285    0.267
+      # 37         TAM_UI_1  ~                E  0.039 0.147  0.262  0.793   -0.242    0.335
+      # 38         TAM_UI_1  ~           TAM_SS  0.085 0.058  1.466  0.143   -0.032    0.195
+      # 39         TAM_UI_1  ~               SI  0.229 0.107  2.143  0.032    0.019    0.437
+      # 40         TAM_UI_2  ~             PEoU  0.014 0.093  0.154  0.878   -0.173    0.193
+      # 41         TAM_UI_2  ~               PU  0.205 0.098  2.086  0.037    0.017    0.403
+      # 42         TAM_UI_2  ~                E  0.482 0.109  4.421  0.000    0.268    0.695 **
+      # 43         TAM_UI_2  ~           TAM_SS  0.050 0.041  1.225  0.220   -0.029    0.130
+      # 44         TAM_UI_2  ~               SI -0.021 0.066 -0.314  0.754   -0.153    0.105
+      # 45         TAM_UI_3  ~             PEoU  0.114 0.123  0.930  0.353   -0.129    0.352
+      # 46         TAM_UI_3  ~               PU  0.337 0.135  2.491  0.013    0.078    0.609
+      # 47         TAM_UI_3  ~                E  0.192 0.141  1.361  0.174   -0.088    0.464
+      # 48         TAM_UI_3  ~           TAM_SS  0.063 0.053  1.191  0.234   -0.040    0.168
+      # 49         TAM_UI_3  ~               SI  0.029 0.088  0.331  0.741   -0.143    0.203
+      # 50       TAM_PEoU_1 ~~       TAM_PEoU_1  0.498 0.082  6.087  0.000    0.344    0.665
+      # 51       TAM_PEoU_2 ~~       TAM_PEoU_2  1.295 0.186  6.957  0.000    0.935    1.665
+      # 52       TAM_PEoU_3 ~~       TAM_PEoU_3  0.402 0.079  5.075  0.000    0.250    0.561
+      # 53       TAM_PEoU_4 ~~       TAM_PEoU_4  0.583 0.081  7.186  0.000    0.429    0.746
+      # 54         TAM_PU_1 ~~         TAM_PU_1  0.513 0.071  7.216  0.000    0.380    0.659
+      # 55         TAM_PU_2 ~~         TAM_PU_2  0.755 0.102  7.384  0.000    0.560    0.961
+      # 56         TAM_PU_3 ~~         TAM_PU_3  0.495 0.069  7.206  0.000    0.368    0.637
+      # 57         TAM_PU_4 ~~         TAM_PU_4  0.770 0.095  8.097  0.000    0.587    0.960
+      # 58          TAM_E_1 ~~          TAM_E_1  0.246 0.061  4.048  0.000    0.134    0.372
+      # 59          TAM_E_2 ~~          TAM_E_2  0.299 0.098  3.039  0.002    0.113    0.499
+      # 60          TAM_E_3 ~~          TAM_E_3  0.441 0.067  6.589  0.000    0.314    0.576
+      # 61          TAM_E_4 ~~          TAM_E_4  1.298 0.157  8.248  0.000    0.995    1.612
+      # 62         TAM_SI_1 ~~         TAM_SI_1  0.421 0.236  1.786  0.074   -0.028    0.897
+      # 63         TAM_SI_2 ~~         TAM_SI_2  0.842 0.216  3.901  0.000    0.437    1.283
+      # 64         TAM_UI_1 ~~         TAM_UI_1  3.110 0.187 16.650  0.000    2.830    3.562
+      # 65         TAM_UI_2 ~~         TAM_UI_2  1.242 0.165  7.509  0.000    0.952    1.600
+      # 66         TAM_UI_3 ~~         TAM_UI_3  2.790 0.218 12.795  0.000    2.431    3.286
+      # 67         TAM_UI_2 ~~         TAM_UI_3  0.879 0.158  5.557  0.000    0.590    1.210
+      # 68           TAM_SS ~~           TAM_SS  3.420 0.312 10.952  0.000    2.840    4.064
+      # 69             PEoU ~~             PEoU  1.450 0.181  7.997  0.000    1.117    1.828
+      # 70               PU ~~               PU  1.007 0.152  6.605  0.000    0.728    1.326
+      # 71                E ~~                E  0.883 0.131  6.743  0.000    0.656    1.169
+      # 72               SI ~~               SI  1.686 0.259  6.521  0.000    1.206    2.220
+      # 73 fam_class4_1_num ~~ fam_class4_1_num  0.152 0.014 10.964  0.000    0.126    0.180
+      # 74 fam_class4_3_num ~~ fam_class4_3_num  0.224 0.009 24.339  0.000    0.206    0.242
+      # 75 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.014  9.746  0.000    0.110    0.165
+      # 76         TAM_UI_1 ~~         TAM_UI_2 -0.145 0.131 -1.106  0.269   -0.402    0.111
+      # 77         TAM_UI_1 ~~         TAM_UI_3 -0.251 0.201 -1.251  0.211   -0.650    0.138
+      
+      #type 3 as reference level  
+      rosiesTAM_fam_class4_3_improved <- '
+      
+      #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PEoU ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num
+        PU ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num + PEoU + E
+        E ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num + PEoU
+        TAM_SS ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num + SI
+        SI ~ fam_class4_1_num + fam_class4_2_num + fam_class4_4_num + PU
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        fam_class4_1_num ~~ fam_class4_1_num
+        fam_class4_2_num ~~ fam_class4_2_num
+        fam_class4_4_num ~~ fam_class4_4_num
+      '
+      
+      #fit the model
+      rosiesTAM_fam_class4_3_improved_fit <- lavaan(rosiesTAM_fam_class4_3_improved, data = rosie_fscores) 
+      
+      #print summary
+      summary(rosiesTAM_fam_class4_3_improved_fit, standardized = T, fit.measures = T)
+      ### --> Chi-Square statistic = 421.369, p = 0.00, CFI = .929, RMSEA = .073, SRMR = .064
+      
+      #bootstrap model
+      rosiesTAM_fam_class4_3_improved_fit_boostrapped_se <- sem(rosiesTAM_fam_class4_3_improved_fit, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
+      summary(rosiesTAM_fam_class4_3_improved_fit_boostrapped_se, fit.measures = TRUE)
+      parameterEstimates(rosiesTAM_fam_class4_3_improved_fit_boostrapped_se,
+                         se = TRUE, zstat = TRUE, pvalue = TRUE, ci = TRUE,
+                         standardized = FALSE,
+                         fmi = FALSE, level = 0.95, boot.ci.type = "norm",
+                         cov.std = TRUE, fmi.options = list(),
+                         rsquare = FALSE,
+                         remove.system.eq = TRUE, remove.eq = TRUE,
+                         remove.ineq = TRUE, remove.def = FALSE,
+                         remove.nonfree = FALSE,
+                         add.attributes = FALSE,
+                         output = "data.frame", header = FALSE)
+      
+      #                 lhs op              rhs    est    se      z pvalue ci.lower ci.upper
+      # 1              PEoU =~       TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 2              PEoU =~       TAM_PEoU_2  0.868 0.066 13.083  0.000    0.742    1.002
+      # 3              PEoU =~       TAM_PEoU_3  1.046 0.058 18.084  0.000    0.932    1.158
+      # 4              PEoU =~       TAM_PEoU_4  1.018 0.060 16.967  0.000    0.898    1.133
+      # 5                PU =~         TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
+      # 6                PU =~         TAM_PU_2  0.943 0.050 18.893  0.000    0.845    1.041
+      # 7                PU =~         TAM_PU_3  1.076 0.042 25.429  0.000    0.991    1.156
+      # 8                PU =~         TAM_PU_4  0.830 0.055 15.134  0.000    0.722    0.937
+      # 9                 E =~          TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
+      # 10                E =~          TAM_E_2  0.961 0.037 26.202  0.000    0.890    1.034
+      # 11                E =~          TAM_E_3  0.892 0.041 21.579  0.000    0.811    0.973
+      # 12                E =~          TAM_E_4  0.823 0.054 15.262  0.000    0.719    0.930
+      # 13               SI =~         TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
+      # 14               SI =~         TAM_SI_2  0.935 0.122  7.663  0.000    0.694    1.172
+      # 15             PEoU  ~ fam_class4_1_num  0.166 0.202  0.823  0.411   -0.234    0.558 
+      # 16             PEoU  ~ fam_class4_2_num -0.052 0.179 -0.290  0.772   -0.407    0.295
+      # 17             PEoU  ~ fam_class4_4_num  0.159 0.238  0.667  0.505   -0.316    0.619
+      # 18               PU  ~ fam_class4_1_num -0.052 0.185 -0.283  0.778   -0.423    0.302
+      # 19               PU  ~ fam_class4_2_num  0.146 0.143  1.017  0.309   -0.140    0.421
+      # 20               PU  ~ fam_class4_4_num  0.009 0.259  0.034  0.973   -0.495    0.518
+      # 21               PU  ~             PEoU  0.067 0.089  0.757  0.449   -0.104    0.244
+      # 22               PU  ~                E  0.635 0.088  7.205  0.000    0.460    0.806 **
+      # 23                E  ~ fam_class4_1_num -0.072 0.216 -0.334  0.738   -0.485    0.361
+      # 24                E  ~ fam_class4_2_num  0.323 0.134  2.406  0.016    0.071    0.597
+      # 25                E  ~ fam_class4_4_num  0.687 0.163  4.205  0.000    0.373    1.013 **
+      # 26                E  ~             PEoU  0.706 0.086  8.189  0.000    0.532    0.870 **
+      # 27           TAM_SS  ~ fam_class4_1_num -0.189 0.309 -0.611  0.541   -0.786    0.426
+      # 28           TAM_SS  ~ fam_class4_2_num -0.143 0.272 -0.524  0.600   -0.676    0.392
+      # 29           TAM_SS  ~ fam_class4_4_num  0.694 0.369  1.882  0.060   -0.019    1.427
+      # 30           TAM_SS  ~               SI  0.369 0.085  4.328  0.000    0.204    0.538 **
+      # 31               SI  ~ fam_class4_1_num  0.491 0.242  2.030  0.042    0.021    0.970
+      # 32               SI  ~ fam_class4_2_num  0.462 0.194  2.384  0.017    0.084    0.844
+      # 33               SI  ~ fam_class4_4_num  0.570 0.269  2.115  0.034    0.034    1.090
+      # 34               SI  ~               PU  0.422 0.064  6.562  0.000    0.301    0.553 **
+      # 35         TAM_UI_1  ~             PEoU  0.070 0.123  0.573  0.566   -0.172    0.308
+      # 36         TAM_UI_1  ~               PU -0.010 0.146 -0.065  0.948   -0.302    0.272
+      # 37         TAM_UI_1  ~                E  0.036 0.152  0.239  0.811   -0.253    0.342
+      # 38         TAM_UI_1  ~           TAM_SS  0.085 0.056  1.515  0.130   -0.025    0.195
+      # 39         TAM_UI_1  ~               SI  0.229 0.104  2.215  0.027    0.025    0.431
+      # 40         TAM_UI_2  ~             PEoU  0.014 0.090  0.154  0.878   -0.159    0.193
+      # 41         TAM_UI_2  ~               PU  0.206 0.101  2.049  0.040    0.018    0.413
+      # 42         TAM_UI_2  ~                E  0.482 0.106  4.538  0.000    0.267    0.684 **
+      # 43         TAM_UI_2  ~           TAM_SS  0.050 0.042  1.193  0.233   -0.030    0.134
+      # 44         TAM_UI_2  ~               SI -0.023 0.063 -0.357  0.721   -0.148    0.100
+      # 45         TAM_UI_3  ~             PEoU  0.113 0.120  0.945  0.345   -0.126    0.342
+      # 46         TAM_UI_3  ~               PU  0.339 0.145  2.342  0.019    0.062    0.629
+      # 47         TAM_UI_3  ~                E  0.192 0.146  1.315  0.188   -0.093    0.477
+      # 48         TAM_UI_3  ~           TAM_SS  0.063 0.054  1.180  0.238   -0.041    0.170
+      # 49         TAM_UI_3  ~               SI  0.026 0.087  0.297  0.767   -0.143    0.197
+      # 50       TAM_PEoU_1 ~~       TAM_PEoU_1  0.498 0.081  6.122  0.000    0.346    0.665 
+      # 51       TAM_PEoU_2 ~~       TAM_PEoU_2  1.295 0.192  6.749  0.000    0.922    1.674 
+      # 52       TAM_PEoU_3 ~~       TAM_PEoU_3  0.402 0.076  5.316  0.000    0.260    0.556
+      # 53       TAM_PEoU_4 ~~       TAM_PEoU_4  0.583 0.080  7.300  0.000    0.436    0.749
+      # 54         TAM_PU_1 ~~         TAM_PU_1  0.513 0.070  7.348  0.000    0.379    0.653
+      # 55         TAM_PU_2 ~~         TAM_PU_2  0.756 0.099  7.648  0.000    0.565    0.953
+      # 56         TAM_PU_3 ~~         TAM_PU_3  0.494 0.070  7.049  0.000    0.362    0.637
+      # 57         TAM_PU_4 ~~         TAM_PU_4  0.770 0.100  7.727  0.000    0.583    0.973
+      # 58          TAM_E_1 ~~          TAM_E_1  0.245 0.059  4.185  0.000    0.135    0.364
+      # 59          TAM_E_2 ~~          TAM_E_2  0.299 0.095  3.145  0.002    0.123    0.496
+      # 60          TAM_E_3 ~~          TAM_E_3  0.440 0.067  6.537  0.000    0.313    0.577
+      # 61          TAM_E_4 ~~          TAM_E_4  1.298 0.156  8.300  0.000    1.001    1.614
+      # 62         TAM_SI_1 ~~         TAM_SI_1  0.418 0.233  1.796  0.073   -0.015    0.897
+      # 63         TAM_SI_2 ~~         TAM_SI_2  0.845 0.253  3.340  0.001    0.361    1.353
+      # 64         TAM_UI_1 ~~         TAM_UI_1  3.110 0.197 15.756  0.000    2.804    3.578
+      # 65         TAM_UI_2 ~~         TAM_UI_2  1.242 0.162  7.674  0.000    0.962    1.596
+      # 66         TAM_UI_3 ~~         TAM_UI_3  2.791 0.222 12.558  0.000    2.416    3.287
+      # 67         TAM_UI_2 ~~         TAM_UI_3  0.879 0.154  5.699  0.000    0.601    1.206
+      # 68           TAM_SS ~~           TAM_SS  3.420 0.318 10.738  0.000    2.865    4.113
+      # 69             PEoU ~~             PEoU  1.450 0.182  7.971  0.000    1.113    1.826
+      # 70               PU ~~               PU  1.007 0.154  6.551  0.000    0.737    1.339
+      # 71                E ~~                E  0.883 0.123  7.175  0.000    0.666    1.149
+      # 72               SI ~~               SI  1.689 0.260  6.496  0.000    1.177    2.197
+      # 73 fam_class4_1_num ~~ fam_class4_1_num  0.152 0.014 10.987  0.000    0.125    0.180
+      # 74 fam_class4_2_num ~~ fam_class4_2_num  0.214 0.010 20.995  0.000    0.195    0.235
+      # 75 fam_class4_4_num ~~ fam_class4_4_num  0.137 0.014  9.805  0.000    0.110    0.165
+      
+      
 ###----------------------------------------------------------------------------------------------------------------###
 
 #--------------------------------------------------------------------------------#
@@ -3661,7 +4588,7 @@ names(rosie_fscores)
 #--------------------------------------------------------------------------------#   
       
     #get average sum scores for each TAM-construct
-      View(rosie_fscores)
+      #View(rosie_fscores)
       library(fame)
       rosie_fscores$PEoU_avgsum <- rowMeans(rosie_fscores[, c(85:88)], na.rm = T)
       is.numeric(rosie_fscores$PEoU_avgsum)
@@ -3669,8 +4596,14 @@ names(rosie_fscores)
       is.numeric(rosie_fscores$PU_avgsum)
       rosie_fscores$E_avgsum <- rowMeans(rosie_fscores[, c(93:96)], na.rm = T)
       is.numeric(rosie_fscores$E_avgsum)
+      #using full SI scale
       rosie_fscores$SI_avgsum <- rowMeans(rosie_fscores[, c(98:100)], na.rm = T)
       is.numeric(rosie_fscores$SI_avgsum)
+      #using reduced SI scale
+      rosie_fscores$SI_reduced_avgsum <- rowMeans(rosie_fscores[, c(98:99)], na.rm = T)
+      is.numeric(rosie_fscores$SI_reduced_avgsum)
+      
+      names(rosie_fscores)
       
     #get descriptives per family type
       library(psych)
@@ -3682,7 +4615,7 @@ names(rosie_fscores)
 ### Final model visualization ##########################
 #------------------------------------------------------#
           
-### SemPaths Model Visualization ###
+### SemPaths Model Visualization with old measurement model ###
        
     library(semPlot)
     semPaths(rosiesTAM_3DVs_fam_class4_1_changeVI_fit, what = "col", "std", layout = "tree", rotation = 2, 
@@ -3694,6 +4627,20 @@ names(rosie_fscores)
     
     library(tidySEM)
     graph_sem(model = rosiesTAM_3DVs_fam_class4_1_changeVI_fit)
+    
+
+### SemPaths Model Visualization with improved measurement model ###
+    
+    library(semPlot)
+    semPaths(rosiesTAM_3DVs_fam_class4_1_improved_changeV_fit, what = "col", "std", layout = "tree", rotation = 2, 
+             intercepts = F, residuals = F, curve = 2, nCharNodes = 0,
+             edge.label.cex = 1, edge.color = "black", sizeMan = 10, sizeMan2 = 5)
+    title("Structural Equation Model")
+    
+    #OR using https://cran.r-project.org/web/packages/tidySEM/vignettes/Plotting_graphs.html 
+    
+    library(tidySEM)
+    graph_sem(model = rosiesTAM_3DVs_fam_class4_1_improved_changeV_fit)
     
     #Those model visualizations are way too complex. We better visualize the final model by hand.
     
@@ -3792,19 +4739,18 @@ names(rosie_fscores)
     
   
 
-  ### only TAM, separately from family typology ##########################
+  ### only TAM, separately from family typology, based on old measurement model ##########################
     rosiesTAM_only <- '
 
         #measurement model
-           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
         PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
         E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
         SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
       #regressions
-        PU ~ PEoU + E
+        PU ~ PEoU + E + SI
         E ~  PEoU
         TAM_SS ~ SI
-        SI ~ PU
         TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
         TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
         TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
@@ -3842,8 +4788,7 @@ names(rosie_fscores)
     #print summary
     summary(rosiesTAM_only_fit, standardized = T, fit.measures = T)
     
-    ### >> Model fit is acceptable (Chi-Suare = 0, CFI = .955, RMSEA = .065, SRMR = .055), Chi-Square statistic is also lower, 
-    ###    so family types most likely add quite a bit of complexity.
+    ### >> Model fit is acceptable (Chi-Square = 0, CFI = .942, RMSEA = .073, SRMR = .113), Chi-Square statistic is also lower
     
     #bootstrap model
     rosiesTAM_only_fit_boostrapped_se <- sem(rosiesTAM_only_fit, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
@@ -3860,67 +4805,256 @@ names(rosie_fscores)
                        add.attributes = FALSE,
                        output = "data.frame", header = FALSE)
     
-    #            lhs op        rhs    est    se      z pvalue ci.lower ci.upper
+    #           lhs op        rhs    est    se      z pvalue ci.lower ci.upper
     # 1        PEoU =~ TAM_PEoU_1  1.000 0.000     NA     NA    1.000    1.000
-    # 2        PEoU =~ TAM_PEoU_2  0.868 0.065 13.335  0.000    0.741    0.996
-    # 3        PEoU =~ TAM_PEoU_3  1.041 0.060 17.477  0.000    0.922    1.156
-    # 4        PEoU =~ TAM_PEoU_4  1.017 0.061 16.695  0.000    0.895    1.134
+    # 2        PEoU =~ TAM_PEoU_2  0.868 0.065 13.364  0.000    0.744    0.999
+    # 3        PEoU =~ TAM_PEoU_3  1.042 0.058 17.921  0.000    0.926    1.154
+    # 4        PEoU =~ TAM_PEoU_4  1.017 0.059 17.168  0.000    0.899    1.131
     # 5          PU =~   TAM_PU_1  1.000 0.000     NA     NA    1.000    1.000
-    # 6          PU =~   TAM_PU_2  0.938 0.050 18.815  0.000    0.839    1.034
-    # 7          PU =~   TAM_PU_3  1.077 0.045 23.936  0.000    0.987    1.163
-    # 8          PU =~   TAM_PU_4  0.830 0.053 15.789  0.000    0.727    0.933
+    # 6          PU =~   TAM_PU_2  0.939 0.049 19.204  0.000    0.843    1.035
+    # 7          PU =~   TAM_PU_3  1.078 0.043 24.822  0.000    0.989    1.159
+    # 8          PU =~   TAM_PU_4  0.831 0.054 15.423  0.000    0.725    0.936
     # 9           E =~    TAM_E_1  1.000 0.000     NA     NA    1.000    1.000
-    # 10          E =~    TAM_E_2  0.963 0.036 26.832  0.000    0.892    1.032
-    # 11          E =~    TAM_E_3  0.892 0.040 22.392  0.000    0.816    0.972
-    # 12          E =~    TAM_E_4  0.823 0.055 15.002  0.000    0.717    0.932
+    # 10          E =~    TAM_E_2  0.966 0.039 24.806  0.000    0.892    1.044
+    # 11          E =~    TAM_E_3  0.892 0.041 21.543  0.000    0.815    0.977
+    # 12          E =~    TAM_E_4  0.818 0.053 15.493  0.000    0.717    0.924
     # 13         SI =~   TAM_SI_1  1.000 0.000     NA     NA    1.000    1.000
-    # 14         SI =~   TAM_SI_2  0.888 0.072 12.415  0.000    0.746    1.026
-    # 15         SI =~   TAM_SI_3  1.725 0.227  7.610  0.000    1.260    2.149
-    # 16         PU  ~       PEoU  0.054 0.085  0.638  0.524   -0.108    0.226
-    # 17         PU  ~          E  0.648 0.080  8.099  0.000    0.489    0.802 ***
-    # 18          E  ~       PEoU  0.706 0.086  8.222  0.000    0.535    0.872 ***
-    # 19     TAM_SS  ~         SI  0.508 0.124  4.082  0.000    0.263    0.751 ***
-    # 20         SI  ~         PU  0.495 0.064  7.726  0.000    0.368    0.619 ***
-    # 21   TAM_UI_1  ~       PEoU  0.058 0.119  0.486  0.627   -0.175    0.291
-    # 22   TAM_UI_1  ~         PU  0.011 0.168  0.068  0.946   -0.323    0.335
-    # 23   TAM_UI_1  ~          E  0.035 0.157  0.222  0.825   -0.265    0.351
-    # 24   TAM_UI_1  ~     TAM_SS  0.107 0.058  1.846  0.065   -0.005    0.224
-    # 25   TAM_UI_1  ~         SI  0.162 0.164  0.987  0.324   -0.173    0.471
-    # 26   TAM_UI_2  ~       PEoU  0.023 0.087  0.260  0.795   -0.147    0.193
-    # 27   TAM_UI_2  ~         PU  0.214 0.104  2.064  0.039    0.015    0.422 ***
-    # 28   TAM_UI_2  ~          E  0.473 0.111  4.258  0.000    0.247    0.682 ***
-    # 29   TAM_UI_2  ~     TAM_SS  0.049 0.040  1.219  0.223   -0.030    0.128
-    # 30   TAM_UI_2  ~         SI -0.031 0.098 -0.315  0.753   -0.218    0.167
-    # 31   TAM_UI_3  ~       PEoU  0.128 0.115  1.115  0.265   -0.099    0.352
-    # 32   TAM_UI_3  ~         PU  0.327 0.147  2.224  0.026    0.043    0.620 ***
-    # 33   TAM_UI_3  ~          E  0.174 0.143  1.223  0.221   -0.112    0.447
-    # 34   TAM_UI_3  ~     TAM_SS  0.063 0.055  1.144  0.253   -0.044    0.171
-    # 35   TAM_UI_3  ~         SI  0.055 0.140  0.392  0.695   -0.214    0.334
-    # 36 TAM_PEoU_1 ~~ TAM_PEoU_1  0.493 0.083  5.914  0.000    0.334    0.661
-    # 37 TAM_PEoU_2 ~~ TAM_PEoU_2  1.291 0.182  7.079  0.000    0.936    1.651
-    # 38 TAM_PEoU_3 ~~ TAM_PEoU_3  0.410 0.080  5.127  0.000    0.257    0.570
-    # 39 TAM_PEoU_4 ~~ TAM_PEoU_4  0.581 0.078  7.476  0.000    0.432    0.737
-    # 40   TAM_PU_1 ~~   TAM_PU_1  0.511 0.072  7.101  0.000    0.373    0.655
-    # 41   TAM_PU_2 ~~   TAM_PU_2  0.771 0.098  7.851  0.000    0.582    0.967
-    # 42   TAM_PU_3 ~~   TAM_PU_3  0.489 0.069  7.121  0.000    0.358    0.627
-    # 43   TAM_PU_4 ~~   TAM_PU_4  0.766 0.089  8.560  0.000    0.596    0.947
-    # 44    TAM_E_1 ~~    TAM_E_1  0.247 0.060  4.127  0.000    0.130    0.364
-    # 45    TAM_E_2 ~~    TAM_E_2  0.297 0.098  3.017  0.003    0.109    0.494
-    # 46    TAM_E_3 ~~    TAM_E_3  0.441 0.066  6.711  0.000    0.312    0.569
-    # 47    TAM_E_4 ~~    TAM_E_4  1.298 0.154  8.405  0.000    0.995    1.601
-    # 48   TAM_SI_1 ~~   TAM_SI_1  1.438 0.174  8.265  0.000    1.115    1.797
-    # 49   TAM_SI_2 ~~   TAM_SI_2  1.828 0.189  9.663  0.000    1.480    2.221
-    # 50   TAM_SI_3 ~~   TAM_SI_3  0.134 0.285  0.472  0.637   -0.408    0.709
-    # 51   TAM_SI_1 ~~   TAM_SI_2  1.006 0.168  5.987  0.000    0.690    1.349
-    # 52   TAM_UI_1 ~~   TAM_UI_1  3.181 0.188 16.949  0.000    2.892    3.628
-    # 53   TAM_UI_2 ~~   TAM_UI_2  1.245 0.160  7.765  0.000    0.970    1.599
-    # 54   TAM_UI_3 ~~   TAM_UI_3  2.791 0.221 12.657  0.000    2.415    3.280
-    # 55   TAM_UI_2 ~~   TAM_UI_3  0.883 0.157  5.621  0.000    0.600    1.216
-    # 56     TAM_SS ~~     TAM_SS  3.543 0.323 10.957  0.000    2.925    4.193
-    # 57       PEoU ~~       PEoU  1.463 0.181  8.103  0.000    1.116    1.824
-    # 58         PU ~~         PU  1.011 0.153  6.607  0.000    0.727    1.327
-    # 59          E ~~          E  0.953 0.133  7.182  0.000    0.705    1.225
-    # 60         SI ~~         SI  0.634 0.124  5.105  0.000    0.388    0.874
+    # 14         SI =~   TAM_SI_2  0.893 0.071 12.621  0.000    0.755    1.033
+    # 15         SI =~   TAM_SI_3  1.581 0.219  7.211  0.000    1.138    1.997
+    # 16         PU  ~       PEoU  0.072 0.078  0.920  0.358   -0.083    0.225
+    # 17         PU  ~          E  0.459 0.078  5.849  0.000    0.305    0.612 **
+    # 18         PU  ~         SI  0.581 0.107  5.412  0.000    0.373    0.794 **
+    # 19          E  ~       PEoU  0.707 0.086  8.255  0.000    0.539    0.875 **
+    # 20     TAM_SS  ~         SI  0.528 0.119  4.420  0.000    0.295    0.763 **
+    # 21   TAM_UI_1  ~       PEoU  0.060 0.120  0.498  0.618   -0.177    0.296
+    # 22   TAM_UI_1  ~         PU -0.017 0.175 -0.099  0.921   -0.357    0.329
+    # 23   TAM_UI_1  ~          E  0.045 0.158  0.285  0.776   -0.262    0.357
+    # 24   TAM_UI_1  ~     TAM_SS  0.102 0.057  1.771  0.076   -0.008    0.217
+    # 25   TAM_UI_1  ~         SI  0.201 0.174  1.155  0.248   -0.147    0.536
+    # 26   TAM_UI_2  ~       PEoU  0.020 0.087  0.229  0.819   -0.148    0.193
+    # 27   TAM_UI_2  ~         PU  0.218 0.110  1.978  0.048    0.010    0.441
+    # 28   TAM_UI_2  ~          E  0.469 0.104  4.514  0.000    0.261    0.668 **
+    # 29   TAM_UI_2  ~     TAM_SS  0.049 0.042  1.181  0.238   -0.031    0.134
+    # 30   TAM_UI_2  ~         SI -0.019 0.106 -0.176  0.861   -0.229    0.186
+    # 31   TAM_UI_3  ~       PEoU  0.127 0.113  1.122  0.262   -0.096    0.349
+    # 32   TAM_UI_3  ~         PU  0.326 0.161  2.027  0.043    0.021    0.651
+    # 33   TAM_UI_3  ~          E  0.175 0.143  1.221  0.222   -0.111    0.450
+    # 34   TAM_UI_3  ~     TAM_SS  0.061 0.054  1.140  0.254   -0.043    0.168
+    # 35   TAM_UI_3  ~         SI  0.061 0.144  0.420  0.674   -0.218    0.348
+    # 36 TAM_PEoU_1 ~~ TAM_PEoU_1  0.494 0.082  5.987  0.000    0.335    0.658
+    # 37 TAM_PEoU_2 ~~ TAM_PEoU_2  1.291 0.194  6.647  0.000    0.916    1.677
+    # 38 TAM_PEoU_3 ~~ TAM_PEoU_3  0.409 0.081  5.062  0.000    0.256    0.572
+    # 39 TAM_PEoU_4 ~~ TAM_PEoU_4  0.582 0.078  7.461  0.000    0.439    0.745
+    # 40   TAM_PU_1 ~~   TAM_PU_1  0.514 0.074  6.908  0.000    0.369    0.661
+    # 41   TAM_PU_2 ~~   TAM_PU_2  0.770 0.104  7.401  0.000    0.572    0.980
+    # 42   TAM_PU_3 ~~   TAM_PU_3  0.489 0.072  6.774  0.000    0.355    0.638
+    # 43   TAM_PU_4 ~~   TAM_PU_4  0.766 0.093  8.264  0.000    0.589    0.953
+    # 44    TAM_E_1 ~~    TAM_E_1  0.250 0.062  4.001  0.000    0.135    0.380
+    # 45    TAM_E_2 ~~    TAM_E_2  0.288 0.098  2.938  0.003    0.101    0.485
+    # 46    TAM_E_3 ~~    TAM_E_3  0.441 0.065  6.736  0.000    0.315    0.571
+    # 47    TAM_E_4 ~~    TAM_E_4  1.317 0.159  8.282  0.000    1.014    1.638
+    # 48   TAM_SI_1 ~~   TAM_SI_1  1.343 0.204  6.597  0.000    0.971    1.768
+    # 49   TAM_SI_2 ~~   TAM_SI_2  1.743 0.201  8.682  0.000    1.374    2.161
+    # 50   TAM_SI_3 ~~   TAM_SI_3  0.407 0.316  1.289  0.197   -0.205    1.034
+    # 51   TAM_SI_1 ~~   TAM_SI_2  0.916 0.191  4.795  0.000    0.565    1.313
+    # 52   TAM_UI_1 ~~   TAM_UI_1  3.171 0.187 16.914  0.000    2.887    3.622
+    # 53   TAM_UI_2 ~~   TAM_UI_2  1.245 0.158  7.876  0.000    0.972    1.592
+    # 54   TAM_UI_3 ~~   TAM_UI_3  2.791 0.222 12.568  0.000    2.421    3.292
+    # 55   TAM_UI_2 ~~   TAM_UI_3  0.883 0.158  5.591  0.000    0.595    1.214
+    # 56     TAM_SS ~~     TAM_SS  3.494 0.338 10.332  0.000    2.862    4.188
+    # 57       PEoU ~~       PEoU  1.463 0.189  7.750  0.000    1.100    1.840
+    # 58         PU ~~         PU  0.681 0.097  7.019  0.000    0.502    0.882
+    # 59          E ~~          E  0.949 0.140  6.768  0.000    0.681    1.230
+    # 60         SI ~~         SI  1.169 0.230  5.079  0.000    0.704    1.606
     
+    
+    
+  ### only TAM, separately from family typology, based on improved measurement model ##########################
+    rosiesTAM_only_improved <- '
+
+        #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+        SI =~ 1*TAM_SI_1 + TAM_SI_2 
+      #regressions
+        PU ~ PEoU + E + SI
+        E ~ PEoU
+        TAM_SS ~ SI
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + SI
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + SI 
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + SI 
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_SI_1 ~~ TAM_SI_1
+        TAM_SI_2 ~~ TAM_SI_2
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        SI ~~ SI
+        '
+    
+    #fit the model 
+          # the basic model revealed a negative variance for SI item 2
+          # this negative variance disappeared after adding E ~ PEoU, PU ~ E, TAM_UI_2 ~~ TAM_UI_3, PU ~ SI => model runs and has almost acceptable fit: Chi-Square statistic = 309.594, p = 0.00, CFI = .946, RMSEA = .072, SRMR = .085
+          # and when adding TAM_SS ~ SI model fit becomes acceptable: Chi-Square statistic = 289.337, p = 0.00, CFI = .952, RMSEA = .069, SRMR = .078 --> also better than with original measurement model so improving measurement model is meaningful! AND: added regression paths git kind of confirmed
+    rosiesTAM_only_improved_fit <- lavaan(rosiesTAM_only_improved, data = rosie_fscores)
+
+    #print summary
+    summary(rosiesTAM_only_improved_fit, standardized = T, fit.measures = T)
+   
+    
+    ### Out of curiosity, we check how the model runs without SI altogether:
+    
+    rosiesTAM_only_improved3 <- '
+
+        #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+      #regressions
+        PU ~ PEoU + E
+        E ~ PEoU
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS 
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS  
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS  
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        '
+    
+    #fit the model
+    rosiesTAM_only_improved3_fit <- lavaan(rosiesTAM_only_improved3, data = rosie_fscores)
+    
+    #print summary
+    summary(rosiesTAM_only_improved3_fit, standardized = T, fit.measures = T)
+    ### --> # the basic model has bad fit: Chi-Square statistic = 543.856, p = 0.00, CFI = .860, RMSEA = .124, SRMR = .254
+    
+    
+    ### --> Model by McLean & Osei-Frimpong controls for technology expertise, age, gender, and household size. So, to stay as close as possible to their model conditions, we rerun the model above controlling for these aspects:
+    
+    #names(rosie_fscores)
+    #View(rosie_fscores)
+    rosiesTAM_only_improved4 <- '
+
+        #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+      #regressions
+        PU ~ PEoU + FoPersU + LFT + GSL + PERSONEN
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS + FoPersU + LFT + GSL + PERSONEN
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS + FoPersU + LFT + GSL + PERSONEN
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS + FoPersU + LFT + GSL + PERSONEN
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        '
+    
+    #fit the model
+    rosiesTAM_only_improved4_fit <- lavaan(rosiesTAM_only_improved4, data = rosie_fscores)
+    
+    #print summary
+    summary(rosiesTAM_only_improved4_fit, standardized = T, fit.measures = T)
+    ### --> Model runs, but is still far away from acceptable model fit. 
+    
+    
+    #So, we make step-wise adjustments again instead..
+    rosiesTAM_only_improved5 <- '
+
+        #measurement model
+        PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+        PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
+        E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
+      #regressions
+        PU ~ PEoU + E 
+        E ~ PEoU 
+        TAM_UI_1 ~ PEoU + PU + E + TAM_SS 
+        TAM_UI_2 ~ PEoU + PU + E + TAM_SS  
+        TAM_UI_3 ~ PEoU + PU + E + TAM_SS 
+      #residual variances
+        TAM_PEoU_1 ~~ TAM_PEoU_1
+        TAM_PEoU_2 ~~ TAM_PEoU_2
+        TAM_PEoU_3 ~~ TAM_PEoU_3
+        TAM_PEoU_4 ~~ TAM_PEoU_4
+        TAM_PU_1 ~~ TAM_PU_1
+        TAM_PU_2 ~~ TAM_PU_2
+        TAM_PU_3 ~~ TAM_PU_3
+        TAM_PU_4 ~~ TAM_PU_4
+        TAM_E_1 ~~ TAM_E_1
+        TAM_E_2 ~~ TAM_E_2
+        TAM_E_3 ~~ TAM_E_3
+        TAM_E_4 ~~ TAM_E_4
+        TAM_UI_1 ~~ TAM_UI_1
+        TAM_UI_2 ~~ TAM_UI_2
+        TAM_UI_3 ~~ TAM_UI_3
+        TAM_UI_2 ~~ TAM_UI_3
+        TAM_SS ~~ TAM_SS
+        PEoU ~~ PEoU
+        PU ~~ PU
+        E ~~ E
+        '
+    
+    #fit the model
+          # the basic model has bad fit: Chi-Square statistic = 543.856, p = 0.00, CFI = .860, RMSEA = .124, SRMR = .254
+          # after adding E ~ PEoU, PU ~ E, TAM_UI_2 ~~ TAM_UI_3 => model has acceptable fit: Chi-Square statistic = 244.183, p = 0.00, CFI = .953, RMSEA = .074, SRMR = .061
+    rosiesTAM_only_improved5_fit <- lavaan(rosiesTAM_only_improved5, data = rosie_fscores)
+    
+    #print summary
+    summary(rosiesTAM_only_improved5_fit, standardized = T, fit.measures = T)
+    
+    ### --> Running the SEM-TAM model only with the improved measurement model actually reveals much better fit! 
+    ### --> From this, we conclude that the measurement improvement is meaningful to make and that the added regression paths get actually confirmed!
 ###----------------------------------------------------------------------------------------------------------------###  
     
