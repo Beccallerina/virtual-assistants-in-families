@@ -2,16 +2,12 @@
 
 ## About this Webpage 
 On this website, you can find the statistical companion material for the paper *Virtual Assistants in the Family Home. Understanding Parents’ Motivations to Use Virtual Assistants with Their Child(dren)*. This paper reports on the first study conducted as part of project Rosie. The main research aim of this first study was *to better understand parents' different motivations for different types of Virtual Assistant-usage (i.e., parent only, co-usage, child independently) among different types of families with young children.*
-This website is produced directly from [the project’s GitHub repository](https://github.com/Beccallerina/virtual-assistants-in-families). 
-
-## About Project Rosie
-Project Rosie is set to study in depth how families with young children (aged 3 - 8 years) use and eventually trust Virtual Assistants (i.e., Google Assistant) installed on smart speakers in their home. You can find more information about the project [here](https://ascor.uva.nl/research/phd-research-projects/youth--media-entertainment/in-rosie-we-trust-virtual-assistants-in-families.html).
 
 ## Preregistration
 [Here](https://osf.io/cj4gz/?view_only=86648383745b49ab8eb33c8f4408eb49) you can find the anonymous prergistratration plan for the first study of project Rosie. Please also see the respective amendment for changes made in the final study uploaded to the study's [OSF project](https://osf.io/629b7/). 
 
 ## Analyses
-In what follows, you can find the analysis steps and essential R code that was used to fulfill the study's research aim. The full R script file can be found on [GitHub](https://github.com/Beccallerina/virtual-assistants-in-families). Please note: the dataset used for the analyses was named 'rosie'.
+In what follows, you can find the analysis steps and essential R code that was used to fulfill the study's research aim. Please note: the dataset used for the analyses was named 'rosie'.
 
 ### Data Cleaning
 We started by filtering out variables that belonged to the joint research project not of interest for Rosie specifically.
@@ -137,7 +133,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
   
 ```
  #### Descriptives and Confirmatory Factor Analysis (CFA) for all model variables built up of two or more items
-The following code shown for the variable *Internet Literacy* serves as an example. This code was applied to the remaining milti-item scale variables with adjustements made depending on whether outliers were found or not and whether the factor structure was confirmed or not.
+The following code shown for the variable *Internet Literacy* serves as an example. This code was applied to the remaining milti-item scale DSMM-variables with adjustements made depending on whether outliers were found or not and whether the factor structure was confirmed or not.
   ```R
   
        ### IL >> 5 items #########################      
@@ -257,7 +253,7 @@ The following code shown for the variable *Internet Literacy* serves as an examp
                                    threefac2items_PMMSfitPredict, onefac4items_TAM_PeoUfitPredict, onefac4items_TAM_PUfitPredict,  onefac4items_TAM_EfitPredict,
                                    onefac3items_TAM_SIfitPredict) 
                          
-            #removing unnecessary added variables from descriptives (for outliers)
+            #removing unnecessary added variables from descriptives (from outliers)
             rosie_fscores <- rosie_fscores[,-c(126:134)]
 
  ```
@@ -266,7 +262,7 @@ The following code shown for the variable *Internet Literacy* serves as an examp
   #### Calculating Cronbach's Alpha
   
   ```R
-         #Dispositional: 
+         #DSMM-Dispositional: 
 
             #TT >> 3 items
             TT <- rosie[, c(110:112)]
@@ -280,9 +276,9 @@ The following code shown for the variable *Internet Literacy* serves as an examp
             Child_Parasocial <- rosie[, c(76:80)]
             psych::alpha(Child_Parasocial) 
 
-         #Developmental: NONE
+         #DSMM-Developmental: NONE
 
-         #Social: 
+         #DSMM-Social: 
 
             #PMMS >> 6 items 
             PMMS <- rosie[, c(65:70)]
@@ -391,7 +387,7 @@ The poLCA package required categorical indicators, which is why we converted all
       rosie_fscores$SES_f <- as.factor(rosie_fscores$SOCIALEKLASSE2016)
       # TT >> 3 items >> median split method because of conceptual understanding of the scale
       # IL >> 5 items (information + navigation) >> median split method because conceptual understanding of the scale
-      # FoPersU >> convert into irregular vs. regular (based on weekly answer option as the cut-off)
+      # FoPersU >> convert into irregular vs. regular (based on '2-3 times a month' answer option as the cut-off)
       # Child_Gender > as.factor
       rosie_fscores$CGender_f <- as.factor(rosie_fscores$Child_Gender)
       # Child_Temp (Extraversion, Negative_Affectivity, Effortful_Control) >> scale ranged from -3 over 0 to +3, so since conceptually everything < 0 is a more or less clear "no", we categorize this way: ≤ 3 = 1, ≥ 4 = 2 
@@ -564,7 +560,7 @@ The poLCA package required categorical indicators, which is why we converted all
       names(rosie_fscores)
 
 
-      #removing unnecessary added variables from categorization pocedure (for outliers)
+      #removing unnecessary added variables from categorization pocedure 
       rosie_fscores <- rosie_fscores[,-c(145, 147, 150, 161, 164, 171, 174, 177)]
       View(rosie_fscores)
       names(rosie_fscores)
@@ -761,8 +757,8 @@ The poLCA package required categorical indicators, which is why we converted all
   #install.packages("lavaan", dependencies = T)
   library(lavaan)
       
-      
-   # Testing final structural model (see detailed R script for separate test of measurement model and step-wise structural-model modifications)
+ 
+   # Testing final structural model (see detailed R script for separate test of measurement model, improvement, and step-wise structural-model modifications)
 
       #first, we need to set the dummy coded family classes as numeric to be able to put it in our SEM
       rosie_fscores$fam_class4_1_num <- as.numeric(rosie_fscores$fam_class4_1)
@@ -819,6 +815,7 @@ The poLCA package required categorical indicators, which is why we converted all
 
       #print summary
       summary(rosiesTAM_3DVs_fam_class4_1_fit, standardized = T, fit.measures = T)
+          
     
 ```
 
@@ -838,15 +835,15 @@ The following section shows the code used to perform further exploratory analyse
 
 ```
 
-#### How does TAM+U&G framework unfold separately from family typology?
+#### How does TAM+U&G framework unfold separately without the family typology?
 
 ```R
    #SEM
    
    rosiesTAM_only <- '
 
-           #measurement model
-              PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
+         #measurement model
+           PEoU =~ 1*TAM_PEoU_1 + TAM_PEoU_2 + TAM_PEoU_3 + TAM_PEoU_4
            PU =~ 1*TAM_PU_1 + TAM_PU_2 + TAM_PU_3 + TAM_PU_4
            E =~ 1*TAM_E_1 + TAM_E_2 + TAM_E_3 + TAM_E_4
            SI =~ 1*TAM_SI_1 + TAM_SI_2 + TAM_SI_3
@@ -891,9 +888,6 @@ The following section shows the code used to perform further exploratory analyse
 
    #print summary
    summary(rosiesTAM_only_fit, standardized = T, fit.measures = T)
-
-   ### >> Model fit is acceptable (Chi-Suare = 0, CFI = .955, RMSEA = .065, SRMR = .055), Chi-Square statistic is also lower, 
-   ###    so family types most likely add quite a bit of complexity.
 
    #bootstrap model
    rosiesTAM_only_fit_boostrapped_se <- sem(rosiesTAM_only_fit, data = rosie_fscores,se = "bootstrap", bootstrap = 1000)
