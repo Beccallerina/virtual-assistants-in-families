@@ -1,13 +1,16 @@
 # Companion Material
 
 ## About this Webpage 
-On this website, you can find the statistical companion material for the paper *Virtual Assistants in the Family Home. Understanding Parents’ Motivations to Use Virtual Assistants with Their Child(dren)*. This paper reports on the first study conducted as part of project Rosie. The main research aim of this first study was *to better understand parents' different motivations for different types of Virtual Assistant-usage (i.e., parent only, co-usage, child independently) among different types of families with young children.*
-
-## Preregistration
-[Here](https://osf.io/629b7/?view_only=1cd5e3d4d5ab49e782da6f14de972b0c) you can find the anonymous OSF-project page the first study of this research project. Please also see the respective amendment for changes made in the final study. 
+On this website, you can find the statistical companion material for the paper *Virtual Assistants in the Family Home. Understanding Parents’ Motivations to Use Virtual Assistants with Their Child(dren)*. The main research aim of this study was *to disentangle (1) different types of families with (2) different motivations for (3) different forms of VA-usage (i.e., parent only VA-use, VA-co-use, child independent VA-use)*. 
 
 ## Analyses
-In what follows, you can find the analysis steps and essential R code that was used to fulfill the study's research aim. The full R script is uploaded on OSF. Please note: the dataset used for the analyses was named 'rosie'.
+In what follows, you can find an overview of the main analysis steps with respective R code. 
+
+Please note:
+
+1: The full R script can be found on [OSF](https://osf.io/629b7/?view_only=1cd5e3d4d5ab49e782da6f14de972b0c). 
+
+2: The dataset used for the analyses was named 'rosie'.
 
 ### Data Cleaning
 We started by filtering out variables that belonged to the joint research project not of interest for Rosie specifically.
