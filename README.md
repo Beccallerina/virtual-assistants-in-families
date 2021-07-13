@@ -10,7 +10,7 @@ Please note:
 
 1: The full R script can be found on [OSF](https://osf.io/629b7/?view_only=1cd5e3d4d5ab49e782da6f14de972b0c). 
 
-2: The dataset used for the analyses was named 'rosie'.
+2: The data set used for the analyses was named 'rosie'.
 
 ### Data Cleaning
 We started by filtering out variables that belonged to the joint research project not of interest for Rosie specifically.
