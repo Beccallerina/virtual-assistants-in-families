@@ -8,7 +8,7 @@ In what follows, you can find an overview of the main analysis steps with respec
 
 Please note:
 
-1: The full R script can be found on [OSF](https://osf.io/629b7/?view_only=1cd5e3d4d5ab49e782da6f14de972b0c). 
+1: The full R script can be found on [OSF](https://osf.io/em5xs/?view_only=1cd5e3d4d5ab49e782da6f14de972b0c). 
 
 2: The data set used for the analyses was named 'rosie'.
 
