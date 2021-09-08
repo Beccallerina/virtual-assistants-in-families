@@ -137,6 +137,7 @@ We checked for measurment validity of all existing multi-item scales (i.e., *Tec
 ```
  #### Descriptives and Confirmatory Factor Analysis (CFA) for all model variables built up of two or more items
 The following code shown for the variable *Internet Literacy* serves as an example. This code was applied to the remaining milti-item scale DSMM-variables with adjustements made depending on whether outliers were found or not and whether the factor structure was confirmed or not.
+
   ```R
   
        ### IL >> 5 items #########################      
@@ -260,8 +261,7 @@ The following code shown for the variable *Internet Literacy* serves as an examp
             rosie_fscores <- rosie_fscores[,-c(126:134)]
 
  ```
-        
-    
+          
   #### Calculating Cronbach's Alpha
   
   ```R
